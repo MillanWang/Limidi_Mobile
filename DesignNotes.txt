@@ -1,0 +1,36 @@
+Communications with Desktop server
+    -RTP-MIDI software seems promissing, but depends greatly on RN_Expo supporting those messages. This would be best to make it DAW independant.
+    -Backup would be to set up an API type server that takes requests and translates them into midi messages
+    -Avoid the built in FL studio API SDK so that we ain't married to that DAW as tempting as it is for my personal use case 
+
+Play Mode
+    -Using elements transmits signals to the desktop local server to then get translated to a MIDI signal the DAW can handle
+
+
+Elements
+    -Vertical sliders. Similar to mixers
+    -Tapable drum pads
+
+Grid Edit Mode
+    -Edit levels? Simplified vs Full Control
+    -Every element tapable and opens that element's edit window. 
+    -Elements will have grid square dimensions and the user will be able to move them around. Position customization
+    -Need to have some templates. Pads only, sliders only, half and half
+    -Maybe reserve one square grid to be for choosing the page. Number of pages will be limited by hardware tho cause that much media at once will be big
+
+Element Edit Modes
+    -Should be a modal type window that still leaves the grid partially visible
+    -Transparency/opacity control
+    Pad Edit Mode
+        -Options: 
+            MIDI Channel? (Probably a rarer use case for )
+            Note letter
+            Octave
+            Velocity mode : {set constant, random in given range, x-gradient, y-gradient}
+            Styling : {static color, static image, 2 step color interpolation, 2 step image interpolation, looping video animation}
+
+    Slider Edit mode
+        -Options:
+            Percentage based value ranges
+            id number? Need more research on if that would be useful
+            Styling : {sliderType, coloring}
