@@ -1,15 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
-import EditScreenInfo from '../components/EditScreenInfo';
+
+import GridElement from '../components/GridElement';
+
+import { Button } from "@rneui/themed";
 import { Text, View } from '../components/Themed';
 
 export default function TabTwoScreen() {
+  const [isPlayMode, setIsPlayMode] = useState(true);
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabTwoScreen.tsx" />
+      <GridElement defaultName="First" isPlayMode={isPlayMode}></GridElement>
+      <Button onPress={() => { setIsPlayMode(!isPlayMode) }}>TOGGLE PLAY MODE</Button>
     </View>
   );
 }
