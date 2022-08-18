@@ -4,6 +4,7 @@ import {
   // Button
 } from 'react-native';
 
+
 import EditScreenInfo from '../components/EditScreenInfo';
 import { Text, View } from '../components/Themed';
 import { RootTabScreenProps } from '../types';
@@ -13,7 +14,13 @@ import { Button } from "@rneui/themed";
 import {
   NOTE,
   MidiMessageProps,
+} from '../constants/MIDI_Notes';
+
+import {
   DesktopAppCommunicationsProps,
+} from '../constants/Communications';
+
+import {
   sendMidiMessage
 } from '../services/MIDI_HTTP_Service'
 
@@ -31,7 +38,7 @@ const makeNoteOnVelocity100 = (note: NOTE): MidiMessageProps => {
   }
 
 };
-const killNote = (note: NOTE) => {
+const killNote = async (note: NOTE) => {
   sendMidiMessage(
     testDesktopComms, {
     note: note,
@@ -45,29 +52,40 @@ const killNote = (note: NOTE) => {
 
 export default function TabOneScreen({ navigation }: RootTabScreenProps<'TabOne'>) {
 
-  const [sampleText, setSampleText] = useState("hey");
+  const [currentNote, setCurrentNote] = useState("Most recent note here");
+
+
 
   const x = (note: MidiMessageProps, msg: string) => {
-    setSampleText(msg);
+    setCurrentNote(msg);
     sendMidiMessage(testDesktopComms, note);
   }
+
+
   return (
     <View style={styles.container}>
-      <Button title="C" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.C), "C") }} onPressOut={() => { killNote(NOTE.C) }} />
-      <Button title="Db" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Db), "Db") }} onPressOut={() => { killNote(NOTE.Db) }} />
-      <Button title="D" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.D), "D") }} onPressOut={() => { killNote(NOTE.D) }} />
-      <Button title="Eb" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Eb), "Eb") }} onPressOut={() => { killNote(NOTE.Eb) }} />
-      <Button title="E" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.E), "E") }} onPressOut={() => { killNote(NOTE.E) }} />
-      <Button title="F" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.F), "F") }} onPressOut={() => { killNote(NOTE.F) }} />
-      <Button title="Gb" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Gb), "Gb") }} onPressOut={() => { killNote(NOTE.Gb) }} />
-      <Button title="G" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.G), "G") }} onPressOut={() => { killNote(NOTE.G) }} />
-      <Button title="Ab" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Ab), "Ab") }} onPressOut={() => { killNote(NOTE.Ab) }} />
-      <Button title="A" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.A), "A") }} onPressOut={() => { killNote(NOTE.A) }} />
-      <Button title="Bb" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Bb), "Bb") }} onPressOut={() => { killNote(NOTE.Bb) }} />
-      <Button title="B" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.B), "B") }} onPressOut={() => { killNote(NOTE.B) }} />
-      <Text style={styles.title}>{sampleText}</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="/screens/TabOneScreen.tsx" />
+
+      <Text style={styles.title}>{currentNote}</Text>
+
+
+      <View style={styles.sampleButtonKeyboard}>
+        <Button title="C" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.C), "C") }} onPressOut={() => { killNote(NOTE.C) }} />
+        <Button title="Db" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Db), "Db") }} onPressOut={() => { killNote(NOTE.Db) }} />
+        <Button title="D" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.D), "D") }} onPressOut={() => { killNote(NOTE.D) }} />
+        <Button title="Eb" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Eb), "Eb") }} onPressOut={() => { killNote(NOTE.Eb) }} />
+        <Button title="E" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.E), "E") }} onPressOut={() => { killNote(NOTE.E) }} />
+        <Button title="F" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.F), "F") }} onPressOut={() => { killNote(NOTE.F) }} />
+        <Button title="Gb" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Gb), "Gb") }} onPressOut={() => { killNote(NOTE.Gb) }} />
+        <Button title="G" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.G), "G") }} onPressOut={() => { killNote(NOTE.G) }} />
+        <Button title="Ab" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Ab), "Ab") }} onPressOut={() => { killNote(NOTE.Ab) }} />
+        <Button title="A" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.A), "A") }} onPressOut={() => { killNote(NOTE.A) }} />
+        <Button title="Bb" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.Bb), "Bb") }} onPressOut={() => { killNote(NOTE.Bb) }} />
+        <Button title="B" onPressIn={() => { x(makeNoteOnVelocity100(NOTE.B), "B") }} onPressOut={() => { killNote(NOTE.B) }} />
+      </View>
+
+
+      {/* <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+      <EditScreenInfo path="/screens/TabOneScreen.tsx" /> */}
     </View>
   );
 }
@@ -89,4 +107,9 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  sampleButtonKeyboard: {
+    flex: 2,
+    // height: 3,
+    // width: 1234,
+  }
 });
