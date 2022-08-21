@@ -1,21 +1,34 @@
-export const enum NOTE {
+export enum NOTE {
     C = "C",
-    Db = "Db",
+    Db = "Db/C#",
     D = "D",
-    Eb = "Eb",
+    Eb = "Eb/D#",
     E = "E",
     F = "F",
-    Gb = "Gb",
+    Gb = "Gb/F#",
     G = "G",
-    Ab = "Ab",
+    Ab = "Ab/G#",
     A = "A",
-    Bb = "Bb",
+    Bb = "Bb/A#",
     B = "B"
 }
 
+export function getNoteKeyFromNoteNumber(noteNumber: number): string {
+    return Object.keys(NOTE)[noteNumber];
+}
+
 export interface MidiMessageProps {
-    note: NOTE,
-    octave: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10,
-    velocity: number // 0-127,
+    note: string,
+    octave: number, // 0-10
+    velocity: number, // 0-127
     isNoteOn: boolean
+}
+
+export function createMidiMessage(noteNumber: number, octave: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
+    return {
+        note: Object.keys(NOTE)[noteNumber],
+        octave: octave,
+        velocity: velocity,
+        isNoteOn: isNoteOn,
+    };
 }

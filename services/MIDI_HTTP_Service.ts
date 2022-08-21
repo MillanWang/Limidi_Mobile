@@ -1,11 +1,30 @@
 import { MidiMessageProps } from '../constants/MIDI_Notes';
-import { DesktopAppCommunicationsProps } from '../constants/Communications';
 
-//Some 2 tier functional programming shall need to be done here TODO 
+export class MIDI_HTTP_Service {
+    private ip: string;
+    private port: string;
 
-export const sendMidiMessage = async (desktopAppCommunicationsProps: DesktopAppCommunicationsProps, midiMessageProps: MidiMessageProps) => {
-    const { ip, port } = desktopAppCommunicationsProps;
-    const { note, octave, velocity, isNoteOn } = midiMessageProps;
-    fetch(`http://${ip}:${port}/MIDI_Input/?note=${note}&octave=${octave}&velocity=${velocity}&isNoteOn=${isNoteOn}`);
-    return;
+    constructor(ip: string, port: string) {
+        this.ip = ip;
+        this.port = port;
+    }
+
+    setIP(ip: string) {
+        this.ip = ip;
+    }
+
+    setPort(port: string) {
+        this.port = port;
+    }
+
+    async sendMidiMessage(midiMessageProps: MidiMessageProps) {
+        const { note, octave, velocity, isNoteOn } = midiMessageProps;
+        try {
+
+            fetch(`http://${this.ip}:${this.port}/MIDI_Input/?note=${note}&octave=${octave}&velocity=${velocity}&isNoteOn=${isNoteOn}`);
+        } catch (e) {
+
+            console.log(e);
+        }
+    }
 };
