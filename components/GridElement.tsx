@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Dispatch, SetStateAction, useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, View } from 'react-native';
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
@@ -7,6 +7,8 @@ import {
     Dialog,
     Input,
     Slider,
+    Tab,
+    TabView
 } from "@rneui/themed";
 
 import {
@@ -39,9 +41,6 @@ export default function GridElement(
     const [dialogVisible, setDialogVisible] = useState(false);
 
 
-    function toggleDialogVisible() {
-        setDialogVisible(!dialogVisible);
-    };
 
     function playModeTouchStartHandler() {
 
@@ -91,76 +90,156 @@ export default function GridElement(
                     <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
                     <Text>Octave: {octave}</Text>
                     <Text>Velocity: {velocity}</Text>
-                    <Button onPress={toggleDialogVisible}>
+                    <Button onPress={() => { setDialogVisible(true) }}>
                         EDIT
                     </Button>
 
                 </View>
             }
 
-            <Dialog isVisible={dialogVisible} >
+            <GridElementEditDialog
+                dialogVisible={dialogVisible}
+                setDialogVisible={setDialogVisible}
+                elementName={elementName}
+                setElementName={setElementName}
+                noteNumber={noteNumber}
+                setNoteNumber={setNoteNumber}
+                octave={octave}
+                setOctave={setOctave}
+                velocity={velocity}
+                setVelocity={setVelocity}
+            />
 
-                {/* TODOs 
-                    -Name editing
-                    -Note selection
-                    -Octave selection
-                    -Velocity selection
-                */}
-                {/* Name control */}
-                <View>
-                    <Text>Name:</Text>
-                    <Input
-                        value={elementName}
-                        onChangeText={value => setElementName(value)}
-                    ></Input>
-                </View>
-
-                {/* Note Control */}
-                <View>
-                    <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
-                    <Slider
-                        maximumValue={11}
-                        minimumValue={0}
-                        step={1}
-                        value={noteNumber}
-                        onValueChange={setNoteNumber}
-                    />
-
-                </View>
-
-
-                {/* Octave Control */}
-                <View>
-                    <Text>Octave: {octave}</Text>
-                    <Slider
-                        maximumValue={10}
-                        minimumValue={0}
-                        step={1}
-                        value={octave}
-                        onValueChange={setOctave}
-                    />
-                </View>
-
-                {/* Velocity Control */}
-                <View>
-                    <Text>Velocity: {velocity}</Text>
-                    <Slider
-                        maximumValue={127}
-                        minimumValue={0}
-                        step={1}
-                        value={velocity}
-                        onValueChange={setVelocity}
-                    />
-                </View>
-
-
-                <Button onPress={toggleDialogVisible}>Close</Button>
-
-            </Dialog>
         </View>
     );
 }; // end of GridElement
 
+interface GridElementEditDialogProps extends GridElementEditMidiProps {
+    dialogVisible: boolean, setDialogVisible(dialogVisible: boolean): void,
+}
+
+
+
+function GridElementEditDialog(
+    {
+        dialogVisible, setDialogVisible,
+        elementName, setElementName,
+        noteNumber, setNoteNumber,
+        octave, setOctave,
+        velocity, setVelocity,
+    }: GridElementEditDialogProps) {
+
+    const [tabIndex, setTabIndex] = React.useState(0);
+
+    return (
+        <Dialog isVisible={dialogVisible} style={{ height: 500 }}>
+            <View >
+
+                {/* TODO:Tabs are cursed. Honestly probably better off implementing it myself with buttons. Only one hook needed to track the current tab*/}
+                <Tab
+                    value={tabIndex}
+                    onChange={(e) => setTabIndex(e)}
+                    variant="primary"
+                >
+                    <Tab.Item>Tab</Tab.Item>
+                    <Tab.Item>Tab2</Tab.Item>
+                </Tab>
+
+                <TabView
+                    value={tabIndex}
+                    onChange={setTabIndex}
+                    animationType="spring"
+                    containerStyle={{ height: 200 }}>
+                    <TabView.Item style={{ backgroundColor: 'red', width: '100%', height: 100 }}>
+                        <Text>1</Text>
+                    </TabView.Item>
+                    <TabView.Item style={{ backgroundColor: 'blue', width: '100%', height: 100 }}>
+                        <Text>2</Text>
+                    </TabView.Item>
+                </TabView>
+
+                <GridElementEditMidiOptionsTab
+                    elementName={elementName} setElementName={setElementName}
+                    noteNumber={noteNumber} setNoteNumber={setNoteNumber}
+                    octave={octave} setOctave={setOctave}
+                    velocity={velocity} setVelocity={setVelocity}
+                />
+
+                <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
+            </View>
+        </Dialog>
+    );
+} //end GridElementEditDialog
+
+
+interface GridElementEditMidiProps {
+    // MIDI Options
+    elementName: string, setElementName(elementName: string): void,
+    noteNumber: number, setNoteNumber(noteNumber: number): void,
+    octave: number, setOctave(octave: number): void,
+    velocity: number, setVelocity(velocity: number): void,
+
+}
+
+function GridElementEditMidiOptionsTab(
+    {
+        elementName, setElementName,
+        noteNumber, setNoteNumber,
+        octave, setOctave,
+        velocity, setVelocity,
+    }: GridElementEditMidiProps) {
+
+    return (
+        <View>
+            {/* Name control */}
+            <View>
+                <Text>Name:</Text>
+                <Input
+                    value={elementName}
+                    onChangeText={value => setElementName(value)}
+                ></Input>
+            </View>
+
+            {/* Note Control */}
+            <View>
+                <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
+                <Slider
+                    maximumValue={11}
+                    minimumValue={0}
+                    step={1}
+                    value={noteNumber}
+                    onValueChange={setNoteNumber}
+                />
+
+            </View>
+
+
+            {/* Octave Control */}
+            <View>
+                <Text>Octave: {octave}</Text>
+                <Slider
+                    maximumValue={10}
+                    minimumValue={0}
+                    step={1}
+                    value={octave}
+                    onValueChange={setOctave}
+                />
+            </View>
+
+            {/* Velocity Control */}
+            <View>
+                <Text>Velocity: {velocity}</Text>
+                <Slider
+                    maximumValue={127}
+                    minimumValue={0}
+                    step={1}
+                    value={velocity}
+                    onValueChange={setVelocity}
+                />
+            </View>
+        </View>
+    );
+}// end GridElementEditMidiOptionsTab
 
 const styles = StyleSheet.create({
     gridElementContainer: {
