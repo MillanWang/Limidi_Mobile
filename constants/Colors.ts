@@ -17,3 +17,7 @@ export default {
     tabIconSelected: tintColorDark,
   },
 };
+
+export const DEFAULT_TEXT_COLOR = '#FFFFFF'; //Pure white
+export const DEFAULT_UNPRESSED_COLOR = '#333333'; //Dark dark grey
+export const DEFAULT_PRESSED_COLOR = '#EEEEEE'; //Light light grey

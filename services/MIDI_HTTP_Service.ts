@@ -18,13 +18,19 @@ export class MIDI_HTTP_Service {
     }
 
     async sendMidiMessage(midiMessageProps: MidiMessageProps) {
-        const { note, octave, velocity, isNoteOn } = midiMessageProps;
-        try {
+        const {
+            note,
+            octave,
+            velocity,
+            isNoteOn
+        } = midiMessageProps;
 
-            fetch(`http://${this.ip}:${this.port}/MIDI_Input/?note=${note}&octave=${octave}&velocity=${velocity}&isNoteOn=${isNoteOn}`);
-        } catch (e) {
-
-            console.log(e);
-        }
+        fetch(`http://${this.ip}:${this.port}/MIDI_Input/?note=${note}&octave=${octave}&velocity=${velocity}&isNoteOn=${isNoteOn}`,
+            {
+                method: 'GET',
+            }
+        ).then((response) => {
+            if (!response.ok) { console.log(`${Date.now()} MIDI Input fault`); }
+        });
     }
 };

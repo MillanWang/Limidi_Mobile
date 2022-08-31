@@ -1,20 +1,34 @@
-import React, { Dispatch, SetStateAction, useState } from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, View } from 'react-native';
-import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
+import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import {
+    Animated,
+    StyleSheet,
+
+    TouchableOpacity,
+    View
+} from 'react-native';
+
 import {
     Button,
     Dialog,
     Input,
     Slider,
-    Tab,
-    TabView
+    Text,
 } from "@rneui/themed";
 
+import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
 import {
     createMidiMessage,
     NOTE,
 } from '../constants/MIDI_Notes';
+
+
+import ColorPicker from 'react-native-wheel-color-picker'
+import {
+    DEFAULT_TEXT_COLOR,
+    DEFAULT_UNPRESSED_COLOR,
+    DEFAULT_PRESSED_COLOR,
+} from '../constants/Colors'
+
 
 interface GridElementProps {
     MIDI_HTTP_Service: MIDI_HTTP_Service,
@@ -34,9 +48,15 @@ export default function GridElement(
 
     const [elementName, setElementName] = useState(defaultName);
 
+    // MIDI Settings
     const [noteNumber, setNoteNumber] = useState(defaultNoteNumber);
     const [octave, setOctave] = useState(5);
     const [velocity, setVelocity] = useState(100);
+
+    //Style Settings
+    const [textColor, setTextColor] = useState(DEFAULT_TEXT_COLOR);
+    const [unpressedColor, setUnpressedColor] = useState(DEFAULT_UNPRESSED_COLOR);
+    const [pressedColor, setPressedColor] = useState(DEFAULT_PRESSED_COLOR);
 
     const [dialogVisible, setDialogVisible] = useState(false);
 
@@ -49,6 +69,7 @@ export default function GridElement(
         // event.nativeEvent.locationY
 
         if (isPlayMode) {
+            fadeOut();
             MIDI_HTTP_Service.sendMidiMessage(
                 createMidiMessage(
                     noteNumber,
@@ -62,6 +83,7 @@ export default function GridElement(
 
     function playModeTouchEndHandler() {
         if (isPlayMode) {
+            fadeIn();
             MIDI_HTTP_Service.sendMidiMessage(
                 createMidiMessage(
                     noteNumber,
@@ -73,52 +95,84 @@ export default function GridElement(
         }
     }
 
+
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+    const fadeIn = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+    };
+    const fadeOut = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 5,
+            useNativeDriver: true
+        }).start();
+    };
+
+
     return (
-        <View style={styles.gridElementContainer} onTouchStart={playModeTouchStartHandler} onTouchEnd={playModeTouchEndHandler}>
+        <View style={{ ...styles.gridElementContainer, backgroundColor: pressedColor, }}>
+            <Animated.View
+                style={{
+                    ...styles.gridElementContainer,
+                    opacity: fadeAnim,
+                    backgroundColor: unpressedColor,
+                }}
+                onTouchStart={playModeTouchStartHandler}
+                onTouchEnd={playModeTouchEndHandler}
+            >
 
-            {/* Play Mode */}
-            {isPlayMode &&
-                <View style={styles.playModeView} >
-                    <Text>{elementName}</Text>
-                </View>
-            }
+                {/* Play Mode */}
+                {isPlayMode &&
+                    <View style={styles.playModeView} >
+                        <Text style={{ color: textColor }}>
+                            {elementName}
+                        </Text>
+                    </View>
+                }
 
-            {/* Edit mode */}
-            {!isPlayMode &&
-                <View>
-                    <Text>Name: {elementName}</Text>
-                    <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
-                    <Text>Octave: {octave}</Text>
-                    <Text>Velocity: {velocity}</Text>
-                    <Button onPress={() => { setDialogVisible(true) }}>
-                        EDIT
-                    </Button>
+                {/* Edit mode */}
+                {!isPlayMode &&
+                    <View>
+                        <Text style={{ color: textColor }}>
+                            Name: {elementName}{'\n'}
+                            Note: {Object.values(NOTE)[noteNumber]}{'\n'}
+                            Octave: {octave}{'\n'}
+                            Velocity: {velocity}
+                        </Text>
 
-                </View>
-            }
+                        <Button onPress={() => { setDialogVisible(true) }}>
+                            EDIT
+                        </Button>
+                    </View>
+                }
 
-            <GridElementEditDialog
-                dialogVisible={dialogVisible}
-                setDialogVisible={setDialogVisible}
-                elementName={elementName}
-                setElementName={setElementName}
-                noteNumber={noteNumber}
-                setNoteNumber={setNoteNumber}
-                octave={octave}
-                setOctave={setOctave}
-                velocity={velocity}
-                setVelocity={setVelocity}
-            />
+                {/* Edit Dialog - MIDI & Style Settings */}
+                <GridElementEditDialog
+                    dialogVisible={dialogVisible} setDialogVisible={setDialogVisible}
+                    elementName={elementName} setElementName={setElementName}
 
+                    noteNumber={noteNumber} setNoteNumber={setNoteNumber}
+                    octave={octave} setOctave={setOctave}
+                    velocity={velocity} setVelocity={setVelocity}
+
+                    textColor={textColor} setTextColor={setTextColor}
+                    unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
+                    pressedColor={pressedColor} setPressedColor={setPressedColor}
+                />
+
+            </Animated.View>
         </View>
     );
 }; // end of GridElement
 
-interface GridElementEditDialogProps extends GridElementEditMidiProps {
+
+interface GridElementEditDialogProps extends GridElementEditMidiProps, GridElementEditStyleProps {
     dialogVisible: boolean, setDialogVisible(dialogVisible: boolean): void,
 }
-
-
 
 function GridElementEditDialog(
     {
@@ -127,43 +181,45 @@ function GridElementEditDialog(
         noteNumber, setNoteNumber,
         octave, setOctave,
         velocity, setVelocity,
+        textColor, setTextColor,
+        unpressedColor, setUnpressedColor,
+        pressedColor, setPressedColor,
     }: GridElementEditDialogProps) {
 
     const [tabIndex, setTabIndex] = React.useState(0);
 
     return (
-        <Dialog isVisible={dialogVisible} style={{ height: 500 }}>
-            <View >
+        <Dialog isVisible={dialogVisible} >
+            <View style={{ height: 500 }}>
 
-                {/* TODO:Tabs are cursed. Honestly probably better off implementing it myself with buttons. Only one hook needed to track the current tab*/}
-                <Tab
-                    value={tabIndex}
-                    onChange={(e) => setTabIndex(e)}
-                    variant="primary"
-                >
-                    <Tab.Item>Tab</Tab.Item>
-                    <Tab.Item>Tab2</Tab.Item>
-                </Tab>
+                {/* MIDI/Style Tab Selection */}
+                <View style={{ flexDirection: 'row' }}>
+                    <Button onPress={() => { setTabIndex(0) }}>
+                        <Text>MIDI Settings</Text>
+                    </Button>
 
-                <TabView
-                    value={tabIndex}
-                    onChange={setTabIndex}
-                    animationType="spring"
-                    containerStyle={{ height: 200 }}>
-                    <TabView.Item style={{ backgroundColor: 'red', width: '100%', height: 100 }}>
-                        <Text>1</Text>
-                    </TabView.Item>
-                    <TabView.Item style={{ backgroundColor: 'blue', width: '100%', height: 100 }}>
-                        <Text>2</Text>
-                    </TabView.Item>
-                </TabView>
+                    <Button onPress={() => { setTabIndex(1) }}>
+                        <Text>Style Settings</Text>
+                    </Button>
+                </View>
 
-                <GridElementEditMidiOptionsTab
-                    elementName={elementName} setElementName={setElementName}
-                    noteNumber={noteNumber} setNoteNumber={setNoteNumber}
-                    octave={octave} setOctave={setOctave}
-                    velocity={velocity} setVelocity={setVelocity}
-                />
+
+                {tabIndex === 0 &&
+                    <GridElementEditMidiSettingsTab
+                        elementName={elementName} setElementName={setElementName}
+                        noteNumber={noteNumber} setNoteNumber={setNoteNumber}
+                        octave={octave} setOctave={setOctave}
+                        velocity={velocity} setVelocity={setVelocity}
+                    />
+                }
+
+                {tabIndex === 1 &&
+                    <GridElementEditStyleSettingsTab
+                        textColor={textColor} setTextColor={setTextColor}
+                        unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
+                        pressedColor={pressedColor} setPressedColor={setPressedColor}
+                    />
+                }
 
                 <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
             </View>
@@ -181,14 +237,13 @@ interface GridElementEditMidiProps {
 
 }
 
-function GridElementEditMidiOptionsTab(
+function GridElementEditMidiSettingsTab(
     {
         elementName, setElementName,
         noteNumber, setNoteNumber,
         octave, setOctave,
         velocity, setVelocity,
     }: GridElementEditMidiProps) {
-
     return (
         <View>
             {/* Name control */}
@@ -241,20 +296,52 @@ function GridElementEditMidiOptionsTab(
     );
 }// end GridElementEditMidiOptionsTab
 
+
+interface GridElementEditStyleProps {
+    textColor: string, setTextColor(color: string): void,
+    unpressedColor: string, setUnpressedColor(color: string): void,
+    pressedColor: string, setPressedColor(color: string): void,
+}
+function GridElementEditStyleSettingsTab(
+    {
+        textColor, setTextColor,
+        unpressedColor, setUnpressedColor,
+        pressedColor, setPressedColor,
+    }: GridElementEditStyleProps) {
+    return (
+        <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-evenly' }}>
+            <ColorSelector colorTitle="Text Color : " color={textColor} setColor={setTextColor} />
+            <ColorSelector colorTitle="Unpressed Color : " color={unpressedColor} setColor={setUnpressedColor} />
+            <ColorSelector colorTitle="Pressed Color : " color={pressedColor} setColor={setPressedColor} />
+        </View>
+    );
+}
+
+interface ColorSelectorProps {
+    colorTitle: string,
+    color: string,
+    setColor(color: string): void
+}
+function ColorSelector({ colorTitle, color, setColor, }: ColorSelectorProps) {
+    return (
+        <View style={{ width: 200, height: 200 }}>
+            <ColorPicker color={color} onColorChangeComplete={setColor} />
+            <Text>{colorTitle}{color}</Text>
+        </View>
+    );
+}
+
+
 const styles = StyleSheet.create({
     gridElementContainer: {
-        // flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'grey',
         height: 200,
         width: 200,
         margin: 10,
     },
     playModeView: {
-        // height: 200,
-        // width: 200,
-        backgroundColor: "green"
+
     }
 
 });

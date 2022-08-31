@@ -15,7 +15,7 @@ import { Button } from "@rneui/themed";
 
 import GridElement from '../components/GridElement';
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-const midiService = new MIDI_HTTP_Service("192.168.0.13", "4848"); //THIS SHOULD EVENTUALLY BE A PROP FOR ALL TABS
+const midiService = new MIDI_HTTP_Service("192.168.0.12", "4848"); //THIS SHOULD EVENTUALLY BE A PROP FOR ALL TABS
 
 
 
