@@ -7901,7 +7901,7 @@
   "resolved" "https://registry.npmjs.org/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
   "version" "4.5.0"
 
-"lodash@^4.17.11", "lodash@^4.17.13", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.4", "lodash@^4.17.5", "lodash@^4.7.0", "lodash@>=3.5 <5":
+"lodash@*", "lodash@^4.17.11", "lodash@^4.17.13", "lodash@^4.17.14", "lodash@^4.17.15", "lodash@^4.17.19", "lodash@^4.17.20", "lodash@^4.17.21", "lodash@^4.17.4", "lodash@^4.17.5", "lodash@^4.7.0", "lodash@>=3.5 <5":
   "integrity" "sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg=="
   "resolved" "https://registry.npmjs.org/lodash/-/lodash-4.17.21.tgz"
   "version" "4.17.21"
@@ -10132,6 +10132,16 @@
     "flow-parser" "^0.121.0"
     "jscodeshift" "^0.13.1"
     "nullthrows" "^1.1.1"
+
+"react-native-dropdown-picker@^5.4.2":
+  "integrity" "sha512-cZBPyN+k52jA9XguFnKoF5tLf31z6gjZ8GijO/pfVNSSEtPwZ14UTUrr87JiiOnMh5K/O2kRzZ/jZN8D0MmUMA=="
+  "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.4.2.tgz"
+  "version" "5.4.2"
+
+"react-native-element-dropdown@^2.2.0":
+  "integrity" "sha512-ViD10x3Cubpi1/Vy8ym543ucMTkFnTRSEl96/nYnIo9MOL1tD6eGMIAF5GnPraumgFK+GdTJimJUYSlEGjlFxA=="
+  "resolved" "https://registry.npmjs.org/react-native-element-dropdown/-/react-native-element-dropdown-2.2.0.tgz"
+  "version" "2.2.0"
 
 "react-native-elevation@^1.0.0":
   "integrity" "sha512-BWIKcEYtzjRV6GpkX0Km5/w2E7fgIcywiQOT7JZTc5NSbv/YI9kpFinB9lRFsOoRVGmiqq/O3VfP/oH2clIiBA=="

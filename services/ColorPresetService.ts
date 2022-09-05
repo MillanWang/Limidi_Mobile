@@ -17,12 +17,8 @@ export class ColorPresetService {
         this.colorPresets = new Array<ColorPreset>();
     };
 
-    getAllColorPresets(alphabeticallySorted: boolean = false) {
-        if (alphabeticallySorted) {
-            return null;
-        } else {
-            return this.colorPresets;
-        }
+    getAllColorPresets() {
+        return this.colorPresets;
     };
 
     getColorPreset(presetNameToGet: string): ColorPreset | null {
@@ -98,7 +94,7 @@ export class ColorPreset {
     setPresetName(presetName: string): void { this.presetName = presetName; }
     isNameMatching(presetName: string): boolean { return this.presetName === presetName }
 
-    getColors() {
+    getColors(): PresetColors {
         return {
             textColor: this.textColor,
             unpressedColor: this.unpressedColor,
@@ -113,3 +109,8 @@ export class ColorPreset {
     }
 }
 
+interface PresetColors {
+    textColor: string,
+    unpressedColor: string,
+    pressedColor: string,
+}

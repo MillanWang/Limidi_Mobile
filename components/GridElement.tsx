@@ -2,7 +2,6 @@ import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
 import {
     Animated,
     StyleSheet,
-
     TouchableOpacity,
     View
 } from 'react-native';
@@ -22,35 +21,48 @@ import {
 } from '../constants/MIDI_Notes';
 
 
-import ColorPicker from 'react-native-wheel-color-picker'
+import ColorPicker from 'react-native-wheel-color-picker'; //https://github.com/Naeemur/react-native-wheel-color-picker
 import {
     DEFAULT_TEXT_COLOR,
     DEFAULT_UNPRESSED_COLOR,
     DEFAULT_PRESSED_COLOR,
 } from '../constants/Colors'
+import { ColorPresetService } from '../services/ColorPresetService';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 
 interface GridElementProps {
+    //Services
     MIDI_HTTP_Service: MIDI_HTTP_Service,
-    defaultName: string,
-    defaultNoteNumber: number,
+    colorPresetService: ColorPresetService,
+
+    //Initialization props
+    initialName: string,
+    initialNoteNumber: number,
+    initialOctave: number,
+
+    //Grid Controls
     isPlayMode: boolean,
 };
 
 export default function GridElement(
     {
         MIDI_HTTP_Service,
-        defaultName,
-        defaultNoteNumber,
+        colorPresetService,
+
+        initialName,
+        initialNoteNumber,
+        initialOctave,
+
         isPlayMode
     }: GridElementProps
 ) {
 
-    const [elementName, setElementName] = useState(defaultName);
+    const [elementName, setElementName] = useState(initialName);
 
     // MIDI Settings
-    const [noteNumber, setNoteNumber] = useState(defaultNoteNumber);
-    const [octave, setOctave] = useState(5);
+    const [noteNumber, setNoteNumber] = useState(initialNoteNumber);
+    const [octave, setOctave] = useState(initialOctave);
     const [velocity, setVelocity] = useState(100);
 
     //Style Settings
@@ -114,10 +126,10 @@ export default function GridElement(
 
 
     return (
-        <View style={{ ...styles.gridElementContainer, backgroundColor: pressedColor, }}>
+        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: pressedColor, }}>
             <Animated.View
                 style={{
-                    ...styles.gridElementContainer,
+                    ...styles.gridElementBasePressedView,
                     opacity: fadeAnim,
                     backgroundColor: unpressedColor,
                 }}
@@ -127,7 +139,7 @@ export default function GridElement(
 
                 {/* Play Mode */}
                 {isPlayMode &&
-                    <View style={styles.playModeView} >
+                    <View style={styles.gridElementUnpressedView} >
                         <Text style={{ color: textColor }}>
                             {elementName}
                         </Text>
@@ -136,14 +148,17 @@ export default function GridElement(
 
                 {/* Edit mode */}
                 {!isPlayMode &&
-                    <View>
+                    <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
                         <Text style={{ color: textColor }}>
                             Name: {elementName}{'\n'}
                             Note: {Object.values(NOTE)[noteNumber]}{'\n'}
                             Octave: {octave}{'\n'}
-                            Velocity: {velocity}
+                            Velocity: {velocity}{'\n'}
+                            {'\n'}
+                            Text Color: {textColor}{'\n'}
+                            Unpressed Color: {unpressedColor}{'\n'}
+                            Pressed Color: {pressedColor}{'\n'}
                         </Text>
-
                         <Button onPress={() => { setDialogVisible(true) }}>
                             EDIT
                         </Button>
@@ -159,6 +174,7 @@ export default function GridElement(
                     octave={octave} setOctave={setOctave}
                     velocity={velocity} setVelocity={setVelocity}
 
+                    colorPresetService={colorPresetService}
                     textColor={textColor} setTextColor={setTextColor}
                     unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
                     pressedColor={pressedColor} setPressedColor={setPressedColor}
@@ -177,10 +193,13 @@ interface GridElementEditDialogProps extends GridElementEditMidiProps, GridEleme
 function GridElementEditDialog(
     {
         dialogVisible, setDialogVisible,
+
         elementName, setElementName,
         noteNumber, setNoteNumber,
         octave, setOctave,
         velocity, setVelocity,
+
+        colorPresetService,
         textColor, setTextColor,
         unpressedColor, setUnpressedColor,
         pressedColor, setPressedColor,
@@ -201,6 +220,11 @@ function GridElementEditDialog(
                     <Button onPress={() => { setTabIndex(1) }}>
                         <Text>Style Settings</Text>
                     </Button>
+                    <Button onPress={() => { setDialogVisible(false) }}>
+                        <Text>
+                            SAVE
+                        </Text>
+                    </Button>
                 </View>
 
 
@@ -215,13 +239,14 @@ function GridElementEditDialog(
 
                 {tabIndex === 1 &&
                     <GridElementEditStyleSettingsTab
+                        colorPresetService={colorPresetService}
                         textColor={textColor} setTextColor={setTextColor}
                         unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
                         pressedColor={pressedColor} setPressedColor={setPressedColor}
                     />
                 }
 
-                <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
+
             </View>
         </Dialog>
     );
@@ -298,21 +323,63 @@ function GridElementEditMidiSettingsTab(
 
 
 interface GridElementEditStyleProps {
+    colorPresetService: ColorPresetService,
+
     textColor: string, setTextColor(color: string): void,
     unpressedColor: string, setUnpressedColor(color: string): void,
     pressedColor: string, setPressedColor(color: string): void,
 }
 function GridElementEditStyleSettingsTab(
     {
+        colorPresetService,
         textColor, setTextColor,
         unpressedColor, setUnpressedColor,
         pressedColor, setPressedColor,
     }: GridElementEditStyleProps) {
+
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState(null);
+    const [items, setItems] = useState(colorPresetService.getAllColorPresets().map(preset => {
+        return {
+            label: preset.getPresetName(),
+            value: preset.getPresetName()
+        }
+    }));
+
+    function setColorsToPreset(presetName: string | null) {
+        if (presetName) {
+            const presetColors = colorPresetService.getColorPreset(presetName)?.getColors();
+            if (presetColors) {
+                setTextColor(presetColors.textColor);
+                setUnpressedColor(presetColors.unpressedColor);
+                setPressedColor(presetColors.pressedColor);
+            }
+        }
+    }
+
     return (
-        <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-evenly' }}>
-            <ColorSelector colorTitle="Text Color : " color={textColor} setColor={setTextColor} />
-            <ColorSelector colorTitle="Unpressed Color : " color={unpressedColor} setColor={setUnpressedColor} />
-            <ColorSelector colorTitle="Pressed Color : " color={pressedColor} setColor={setPressedColor} />
+        <View style={{ flex: 1, flexDirection: "column", }}>
+            <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-evenly', }}>
+                <ColorSelector colorTitle="Text Color : " color={textColor} setColor={setTextColor} />
+                <ColorSelector colorTitle="Unpressed Color : " color={unpressedColor} setColor={setUnpressedColor} />
+                <ColorSelector colorTitle="Pressed Color : " color={pressedColor} setColor={setPressedColor} />
+
+            </View>
+            {/* Color Presets */}
+            <View
+                style={{ height: 150 }}
+            >
+                {/* Save current as preset */}
+                {/* Load preset */}
+                <DropDownPicker
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen} setValue={setValue} setItems={setItems}
+                    onChangeValue={setColorsToPreset}
+                />
+            </View>
         </View>
     );
 }
@@ -325,23 +392,28 @@ interface ColorSelectorProps {
 function ColorSelector({ colorTitle, color, setColor, }: ColorSelectorProps) {
     return (
         <View style={{ width: 200, height: 200 }}>
-            <ColorPicker color={color} onColorChangeComplete={setColor} />
-            <Text>{colorTitle}{color}</Text>
+            <ColorPicker color={color} onColorChange={setColor} thumbSize={35} swatches={false} />
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text>{colorTitle}</Text>
+                <View style={{ marginRight: 5, height: 10, width: 20, backgroundColor: color }}></View>
+                <Text>{color}</Text>
+            </View>
         </View>
     );
 }
 
 
 const styles = StyleSheet.create({
-    gridElementContainer: {
+    gridElementBasePressedView: {
+        flex: 1,
+    },
+    gridElementUnpressedView: {
+        flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
-        height: 200,
-        width: 200,
-        margin: 10,
+        borderWidth: 1,
     },
-    playModeView: {
-
+    gridElementEditView: {
+        flexDirection: "row"
     }
-
 });

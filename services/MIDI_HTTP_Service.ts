@@ -9,15 +9,15 @@ export class MIDI_HTTP_Service {
         this.port = port;
     }
 
-    setIP(ip: string) {
+    setIP(ip: string): void {
         this.ip = ip;
     }
 
-    setPort(port: string) {
+    setPort(port: string): void {
         this.port = port;
     }
 
-    async sendMidiMessage(midiMessageProps: MidiMessageProps) {
+    async sendMidiMessage(midiMessageProps: MidiMessageProps): Promise<void> {
         const {
             note,
             octave,
@@ -33,4 +33,11 @@ export class MIDI_HTTP_Service {
             if (!response.ok) { console.log(`${Date.now()} MIDI Input fault`); }
         });
     }
+
+
+    // FUNCTION SKELETONS - TODO WHEN DESKTOP UPDATE IS IN
+    async getMidiOutputDevices(): Promise<string[]> { return ['TODO', 'Index in returned array is the device ID']; }
+    async setMidiOutputDevice(id: number): Promise<void> { }
+
+
 };
