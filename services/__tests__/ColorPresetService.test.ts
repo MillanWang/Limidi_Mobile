@@ -1,11 +1,7 @@
 import * as React from 'react';
 
 import { ColorPresetService, ColorPreset } from "../ColorPresetService";
-import {
-    DEFAULT_TEXT_COLOR,
-    DEFAULT_UNPRESSED_COLOR,
-    DEFAULT_PRESSED_COLOR,
-} from '../../constants/Colors';
+import { DEFAULT_COLOR_PRESET } from '../../constants/Colors';
 
 describe('ColorPresetService', () => {
 
@@ -55,9 +51,9 @@ describe('ColorPresetService', () => {
         const preset = cps.getColorPreset("nice");
         expect(preset).toBeDefined();
 
-        expect(preset?.getColors().textColor).toEqual(DEFAULT_TEXT_COLOR);
-        expect(preset?.getColors().unpressedColor).toEqual(DEFAULT_UNPRESSED_COLOR);
-        expect(preset?.getColors().pressedColor).toEqual(DEFAULT_PRESSED_COLOR);
+        expect(preset?.getColors().textColor).toEqual(DEFAULT_COLOR_PRESET.textColor);
+        expect(preset?.getColors().unpressedColor).toEqual(DEFAULT_COLOR_PRESET.unpressedColor);
+        expect(preset?.getColors().pressedColor).toEqual(DEFAULT_COLOR_PRESET.pressedColor);
     });
 
     it('cannot create presets with duplicate names', () => {
@@ -69,9 +65,9 @@ describe('ColorPresetService', () => {
         expect(preset).toBeDefined();
 
         // Colors are not overwritten by the new addition attempt
-        expect(preset?.getColors().textColor).toEqual(DEFAULT_TEXT_COLOR);
-        expect(preset?.getColors().unpressedColor).toEqual(DEFAULT_UNPRESSED_COLOR);
-        expect(preset?.getColors().pressedColor).toEqual(DEFAULT_PRESSED_COLOR);
+        expect(preset?.getColors().textColor).toEqual(DEFAULT_COLOR_PRESET.textColor);
+        expect(preset?.getColors().unpressedColor).toEqual(DEFAULT_COLOR_PRESET.unpressedColor);
+        expect(preset?.getColors().pressedColor).toEqual(DEFAULT_COLOR_PRESET.pressedColor);
     });
 
 

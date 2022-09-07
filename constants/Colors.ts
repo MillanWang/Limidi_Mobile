@@ -18,6 +18,16 @@ export default {
   },
 };
 
-export const DEFAULT_TEXT_COLOR = '#FFFFFF'; //Pure white
-export const DEFAULT_UNPRESSED_COLOR = '#333333'; //Dark dark grey
-export const DEFAULT_PRESSED_COLOR = '#EEEEEE'; //Light light grey
+
+export interface PresetColors {
+  textColor: string,
+  unpressedColor: string,
+  pressedColor: string,
+}
+
+export const DEFAULT_COLOR_PRESET: PresetColors = {
+  textColor: '#FFFFFF', //Pure white
+  unpressedColor: '#333333', //Dark dark grey
+  pressedColor: '#EEEEEE', //Light light grey
+}
+

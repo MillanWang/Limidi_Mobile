@@ -1,7 +1,6 @@
 import {
-    DEFAULT_TEXT_COLOR,
-    DEFAULT_UNPRESSED_COLOR,
-    DEFAULT_PRESSED_COLOR,
+    PresetColors,
+    DEFAULT_COLOR_PRESET
 } from '../constants/Colors'
 
 /**
@@ -85,9 +84,9 @@ export class ColorPreset {
 
     constructor(presetName: string, textColor?: string, unpressedColor?: string, pressedColor?: string,) {
         this.presetName = presetName;
-        this.textColor = textColor ?? DEFAULT_TEXT_COLOR;
-        this.unpressedColor = unpressedColor ?? DEFAULT_UNPRESSED_COLOR;
-        this.pressedColor = pressedColor ?? DEFAULT_PRESSED_COLOR;
+        this.textColor = textColor ?? DEFAULT_COLOR_PRESET.textColor;
+        this.unpressedColor = unpressedColor ?? DEFAULT_COLOR_PRESET.unpressedColor;
+        this.pressedColor = pressedColor ?? DEFAULT_COLOR_PRESET.pressedColor;
     }
 
     getPresetName(): string { return this.presetName; }
@@ -109,8 +108,3 @@ export class ColorPreset {
     }
 }
 
-interface PresetColors {
-    textColor: string,
-    unpressedColor: string,
-    pressedColor: string,
-}
