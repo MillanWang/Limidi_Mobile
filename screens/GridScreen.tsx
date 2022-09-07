@@ -10,10 +10,12 @@ import { Icon } from '@rneui/themed';
 
 
 import GridElement from '../components/GridElement';
+import GridEditDialog from '../components/GridEditDialog/GridEditDialog';
 
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
 import { ColorPresetService } from '../services/ColorPresetService';
 import { DEFAULT_COLOR_PRESET } from '../constants/Colors';
+
 
 
 const midiService = new MIDI_HTTP_Service("192.168.0.12", "4848");
@@ -27,7 +29,7 @@ export default function GridScreen() {
 
 
     const [isPlayMode, setIsPlayMode] = useState(true);
-
+    const [showGridEditDialog, setShowGridEditDialog] = useState(false);
 
 
     return (
@@ -38,9 +40,13 @@ export default function GridScreen() {
                 <Text style={styles.playOrEditText}>{isPlayMode ? "PLAY" : "EDIT"}</Text>
                 {!!!isPlayMode &&
                     <View style={{}}>
-                        <Icon name='settings' color='#ffffff' style={{}} />
+                        <Icon name='settings' color='#ffffff' style={{}} onPress={() => { setShowGridEditDialog(true) }} />
                     </View>
                 }
+                <GridEditDialog
+                    isVisible={showGridEditDialog} setIsVisible={setShowGridEditDialog}
+                    midiService={midiService}
+                />
             </View>
 
 

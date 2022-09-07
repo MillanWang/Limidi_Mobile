@@ -29,25 +29,16 @@ export default function GridElementEditDialog(
 
     return (
         <Dialog isVisible={dialogVisible} >
+
+
+            {/* MIDI/Style Tab Selection */}
+            <View style={{ flexDirection: 'row' }}>
+                <Button onPress={() => { setTabIndex(0) }}>MIDI Settings</Button>
+                <Button onPress={() => { setTabIndex(1) }}>Style Settings</Button>
+                <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
+            </View>
+
             <View style={{ height: 500 }}>
-
-                {/* MIDI/Style Tab Selection */}
-                <View style={{ flexDirection: 'row' }}>
-                    <Button onPress={() => { setTabIndex(0) }}>
-                        <Text>MIDI Settings</Text>
-                    </Button>
-
-                    <Button onPress={() => { setTabIndex(1) }}>
-                        <Text>Style Settings</Text>
-                    </Button>
-                    <Button onPress={() => { setDialogVisible(false) }}>
-                        <Text>
-                            SAVE
-                        </Text>
-                    </Button>
-                </View>
-
-
                 {tabIndex === 0 &&
                     <GridElementEditMidiSettingsTab
                         elementName={elementName} setElementName={setElementName}
@@ -71,3 +62,6 @@ export default function GridElementEditDialog(
         </Dialog>
     );
 } //end GridElementEditDialog
+
+
+// TODO : There should be some degree of shared styling between this individual and grid level dialog option windows
