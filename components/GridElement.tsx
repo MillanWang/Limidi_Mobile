@@ -37,7 +37,6 @@ interface GridElementProps {
     //Initialization props
     initialName: string,
     initialNoteNumber: number,
-    initialOctave: number,
 
     //Grid Controls
     isPlayMode: boolean,
@@ -50,7 +49,6 @@ export default function GridElement(
 
         initialName,
         initialNoteNumber,
-        initialOctave,
 
         isPlayMode
     }: GridElementProps
@@ -59,8 +57,8 @@ export default function GridElement(
     const [elementName, setElementName] = useState(initialName);
 
     // MIDI Settings
-    const [noteNumber, setNoteNumber] = useState(initialNoteNumber);
-    const [octave, setOctave] = useState(initialOctave);
+    const [noteNumber, setNoteNumber] = useState(initialNoteNumber % 12); //MODULUS 12 is for chromatic scale only. Eventually need better system for scale presets
+    const [octave, setOctave] = useState(Math.floor(initialNoteNumber / 12));
     const [velocity, setVelocity] = useState(100);
 
     //Style Settings
@@ -151,14 +149,7 @@ export default function GridElement(
                 {!isPlayMode &&
                     <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
                         <Text style={{ color: textColor }}>
-                            Name: {elementName}{'\n'}
-                            Note: {Object.values(NOTE)[noteNumber]}{'\n'}
-                            Octave: {octave}{'\n'}
-                            Velocity: {velocity}{'\n'}
-                            {'\n'}
-                            Text Color: {textColor}{'\n'}
-                            Unpressed Color: {unpressedColor}{'\n'}
-                            Pressed Color: {pressedColor}{'\n'}
+                            Edit {elementName}
                         </Text>
                     </View>
                 }
@@ -197,6 +188,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
     },
     gridElementEditView: {
-        flexDirection: "row"
+        flexDirection: "row",
+        borderColor: '#ffffff'
     }
 });

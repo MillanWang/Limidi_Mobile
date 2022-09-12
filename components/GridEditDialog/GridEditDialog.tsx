@@ -12,13 +12,19 @@ import {
 
 import { GridEditNetworkSettingsTab, GridEditNetworkSettingsTabProps } from './GridEditDialogTabs/GridEditNetworkSettingsTab';
 
+import { GridEditGridSettingsTab, GridEditGridSettingsTabProps } from './GridEditDialogTabs/GridEditGridSettingsTab';
 
-
-interface GridEditDialogProps extends GridEditNetworkSettingsTabProps {
-    isVisible: boolean, setIsVisible(isVisible: boolean): void
+export interface GridEditDialogProps extends GridEditNetworkSettingsTabProps, GridEditGridSettingsTabProps {
+    isVisible: boolean, setIsVisible(isVisible: boolean): void,
 };
 
-export default function GridEditDialog({ isVisible, setIsVisible, midiService }: GridEditDialogProps) {
+export default function GridEditDialog({
+    isVisible, setIsVisible,
+    initialNoteNumber, setInitialNoteNumber,
+    columnCount, setColumnCount,
+    rowCount, setRowCount,
+    midiHttpService
+}: GridEditDialogProps) {
     const [tabIndex, setTabIndex] = React.useState(0);
     return (
         <Dialog isVisible={isVisible}>
@@ -33,8 +39,11 @@ export default function GridEditDialog({ isVisible, setIsVisible, midiService }:
                 {/* Grid settings */}
                 {tabIndex === 0 &&
                     <Text>
-                        #rows, #columns,
-                        {/* Eventually do a layout preset management thing */}
+                        <GridEditGridSettingsTab
+                            initialNoteNumber={initialNoteNumber} setInitialNoteNumber={setInitialNoteNumber}
+                            columnCount={columnCount} setColumnCount={setColumnCount}
+                            rowCount={rowCount} setRowCount={setRowCount}
+                        />
                     </Text>
                 }
 
@@ -47,7 +56,7 @@ export default function GridEditDialog({ isVisible, setIsVisible, midiService }:
 
                 {/* Network Settings */}
                 {tabIndex === 2 &&
-                    <GridEditNetworkSettingsTab midiService={midiService} />
+                    <GridEditNetworkSettingsTab midiHttpService={midiHttpService} />
                 }
             </View>
 

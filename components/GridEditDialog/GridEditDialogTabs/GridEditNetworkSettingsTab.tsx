@@ -9,17 +9,17 @@ import { Input, Slider, } from "@rneui/themed";
 import { MIDI_HTTP_Service } from '../../../services/MIDI_HTTP_Service';
 
 export interface GridEditNetworkSettingsTabProps {
-    midiService: MIDI_HTTP_Service
+    midiHttpService: MIDI_HTTP_Service
 }
-export function GridEditNetworkSettingsTab({ midiService }: GridEditNetworkSettingsTabProps) {
+export function GridEditNetworkSettingsTab({ midiHttpService }: GridEditNetworkSettingsTabProps) {
     return (
         <View>
             {/* TODO : IP address and port validation. Should be impossible to enter invalid ones. Shouild also figure out how to get this via QR code scan on desktop cause typing is no fun */}
             <Text>IP Address </Text>
-            <Input keyboardType='number-pad' defaultValue={midiService.getIP()} onChangeText={value => midiService.setIP(value)}></Input>
+            <Input keyboardType='number-pad' defaultValue={midiHttpService.getIP()} onChangeText={value => midiHttpService.setIP(value)}></Input>
 
             <Text>Port</Text>
-            <Input keyboardType='number-pad' defaultValue={midiService.getPort()} onChangeText={value => midiService.setPort(value)}></Input>
+            <Input keyboardType='number-pad' defaultValue={midiHttpService.getPort()} onChangeText={value => midiHttpService.setPort(value)}></Input>
 
             <Text>MIDI Device</Text>
         </View>

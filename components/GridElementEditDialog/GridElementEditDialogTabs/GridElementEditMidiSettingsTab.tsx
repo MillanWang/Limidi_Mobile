@@ -34,13 +34,9 @@ export function GridElementEditMidiSettingsTab(
             <View>
                 <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
                 <Slider
-                    maximumValue={11}
-                    minimumValue={0}
-                    step={1}
-                    value={noteNumber}
-                    onValueChange={setNoteNumber}
+                    maximumValue={11} minimumValue={0} step={1}
+                    value={noteNumber} onValueChange={setNoteNumber}
                 />
-
             </View>
 
 
@@ -48,11 +44,8 @@ export function GridElementEditMidiSettingsTab(
             <View>
                 <Text>Octave: {octave}</Text>
                 <Slider
-                    maximumValue={10}
-                    minimumValue={0}
-                    step={1}
-                    value={octave}
-                    onValueChange={setOctave}
+                    maximumValue={10} minimumValue={0} step={1}
+                    value={octave} onValueChange={setOctave}
                 />
             </View>
 
@@ -60,11 +53,8 @@ export function GridElementEditMidiSettingsTab(
             <View>
                 <Text>Velocity: {velocity}</Text>
                 <Slider
-                    maximumValue={127}
-                    minimumValue={0}
-                    step={1}
-                    value={velocity}
-                    onValueChange={setVelocity}
+                    maximumValue={127} minimumValue={0} step={1}
+                    value={velocity} onValueChange={setVelocity}
                 />
             </View>
         </View>
