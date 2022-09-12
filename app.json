@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Milli_MIDI",
-    "slug": "Milli_MIDI",
+    "name": "LiMIDI",
+    "slug": "LiMIDI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",

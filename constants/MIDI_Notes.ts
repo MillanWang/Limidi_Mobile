@@ -14,7 +14,7 @@ export enum NOTE {
 }
 
 export function getNoteKeyFromNoteNumber(noteNumber: number): string {
-    return Object.keys(NOTE)[noteNumber];
+    return `${Object.keys(NOTE)[noteNumber % 12]}${Math.floor(noteNumber / 12)}`;
 }
 
 export interface MidiMessageProps {

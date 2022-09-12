@@ -17,3 +17,17 @@ export default {
     tabIconSelected: tintColorDark,
   },
 };
+
+
+export interface PresetColors {
+  textColor: string,
+  unpressedColor: string,
+  pressedColor: string,
+}
+
+export const DEFAULT_COLOR_PRESET: PresetColors = {
+  textColor: '#FFFFFF', //Pure white
+  unpressedColor: '#333333', //Dark dark grey
+  pressedColor: '#EEEEEE', //Light light grey
+}
+
