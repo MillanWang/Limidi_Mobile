@@ -61,7 +61,6 @@ export default function GridElement(
     const [isVelocityVertical, setIsVelocityVertical] = useState(true);
 
     //Style Settings
-    const [textColor, setTextColor] = useState(DEFAULT_COLOR_PRESET.textColor);
     const [unpressedColor, setUnpressedColor] = useState(DEFAULT_COLOR_PRESET.unpressedColor);
     const [pressedColor, setPressedColor] = useState(DEFAULT_COLOR_PRESET.pressedColor);
 
@@ -146,7 +145,7 @@ export default function GridElement(
                 {/* Play Mode */}
                 {isPlayMode &&
                     <View style={styles.gridElementUnpressedView} >
-                        <Text style={{ color: textColor }}>
+                        <Text style={{ color: pressedColor }}>
                             {elementName}
                         </Text>
                     </View>
@@ -155,7 +154,7 @@ export default function GridElement(
                 {/* Edit mode */}
                 {!isPlayMode &&
                     <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
-                        <Text style={{ color: textColor }}>
+                        <Text style={{ color: pressedColor }}>
                             Edit {elementName}
                         </Text>
                     </View>
@@ -173,7 +172,6 @@ export default function GridElement(
                     isVelocityVertical={isVelocityVertical} setIsVelocityVertical={setIsVelocityVertical}
 
                     colorPresetService={colorPresetService}
-                    textColor={textColor} setTextColor={setTextColor}
                     unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
                     pressedColor={pressedColor} setPressedColor={setPressedColor}
                 />

@@ -22,7 +22,6 @@ export default function GridElementEditDialog(
         isVelocityVertical, setIsVelocityVertical,
 
         colorPresetService,
-        textColor, setTextColor,
         unpressedColor, setUnpressedColor,
         pressedColor, setPressedColor,
     }: GridElementEditDialogProps) {
@@ -53,13 +52,10 @@ export default function GridElementEditDialog(
                 {tabIndex === 1 &&
                     <GridElementEditStyleSettingsTab
                         colorPresetService={colorPresetService}
-                        textColor={textColor} setTextColor={setTextColor}
                         unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
                         pressedColor={pressedColor} setPressedColor={setPressedColor}
                     />
                 }
-
-
             </View>
 
             <View style={{ flexDirection: 'row', }}>

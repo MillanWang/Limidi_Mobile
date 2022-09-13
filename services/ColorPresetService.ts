@@ -31,7 +31,7 @@ export class ColorPresetService {
 
     createColorPreset(presetName: string, colorPreset?: PresetColors): boolean {
         if (this.doesPresetNameExist(presetName)) return false; // Names must be unique
-        this.colorPresets.push(new ColorPreset(presetName, colorPreset?.textColor, colorPreset?.unpressedColor, colorPreset?.pressedColor))
+        this.colorPresets.push(new ColorPreset(presetName, colorPreset?.unpressedColor, colorPreset?.pressedColor))
 
         return true;
     };
@@ -48,13 +48,13 @@ export class ColorPresetService {
         return true;
     };
 
-    updateColorPresetColors(presetName: string, textColor: string, unpressedColor: string, pressedColor: string,): boolean {
+    updateColorPresetColors(presetName: string, unpressedColor: string, pressedColor: string,): boolean {
 
         const colorPresetToUpdate = this.getColorPreset(presetName);
 
         if (!!!colorPresetToUpdate) return false; // If ever trying to update a color preset that does not exist
 
-        colorPresetToUpdate?.setColors(textColor, unpressedColor, pressedColor);
+        colorPresetToUpdate?.setColors(unpressedColor, pressedColor);
         this.colorPresets.push(this.colorPresets.splice(this.colorPresets.indexOf(colorPresetToUpdate), 1)[0]); //Move to the back of the array so that most recently edited is easily accessed
         return true;
     };
@@ -76,14 +76,12 @@ export class ColorPresetService {
 
 export class ColorPreset {
     private presetName: string;
-    private textColor: string;
     private unpressedColor: string;
     private pressedColor: string;
 
 
-    constructor(presetName: string, textColor?: string, unpressedColor?: string, pressedColor?: string,) {
+    constructor(presetName: string, unpressedColor?: string, pressedColor?: string,) {
         this.presetName = presetName;
-        this.textColor = textColor ?? DEFAULT_COLOR_PRESET.textColor;
         this.unpressedColor = unpressedColor ?? DEFAULT_COLOR_PRESET.unpressedColor;
         this.pressedColor = pressedColor ?? DEFAULT_COLOR_PRESET.pressedColor;
     }
@@ -94,14 +92,12 @@ export class ColorPreset {
 
     getColors(): PresetColors {
         return {
-            textColor: this.textColor,
             unpressedColor: this.unpressedColor,
             pressedColor: this.pressedColor,
         };
     }
 
-    setColors(textColor: string, unpressedColor: string, pressedColor: string,) {
-        this.textColor = textColor;
+    setColors(unpressedColor: string, pressedColor: string,) {
         this.unpressedColor = unpressedColor;
         this.pressedColor = pressedColor;
     }
