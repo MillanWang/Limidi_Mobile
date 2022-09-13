@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { Input, Slider, Text, } from "@rneui/themed";
+import { Input, Slider, Text, Switch, } from "@rneui/themed";
 
 import { NOTE, } from '../../../constants/MIDI_Notes';
 
@@ -11,8 +11,10 @@ export interface GridElementEditMidiProps {
     elementName: string, setElementName(elementName: string): void,
     noteNumber: number, setNoteNumber(noteNumber: number): void,
     octave: number, setOctave(octave: number): void,
-    velocity: number, setVelocity(velocity: number): void,
 
+    isVelocityVertical: boolean, setIsVelocityVertical(isVelocityVertical: boolean): void,
+    velocityFloor: number, setVelocityFloor(velocityFloor: number): void,
+    velocityCeiling: number, setVelocityCeiling(velocityCeiling: number): void,
 }
 
 export function GridElementEditMidiSettingsTab(
@@ -20,8 +22,23 @@ export function GridElementEditMidiSettingsTab(
         elementName, setElementName,
         noteNumber, setNoteNumber,
         octave, setOctave,
-        velocity, setVelocity,
+        velocityFloor, setVelocityFloor,
+        velocityCeiling, setVelocityCeiling,
+        isVelocityVertical, setIsVelocityVertical,
     }: GridElementEditMidiProps) {
+
+    function changeVelocityFloor(value: number): void {
+        setVelocityFloor(value);
+        if (velocityFloor > velocityCeiling) {
+            setVelocityCeiling(value);
+        }
+    }
+    function changeVelocityCeiling(value: number): void {
+        setVelocityCeiling(value);
+        if (velocityCeiling < velocityFloor) {
+            setVelocityFloor(value);
+        }
+    }
     return (
         <View>
             {/* Name control */}
@@ -51,10 +68,18 @@ export function GridElementEditMidiSettingsTab(
 
             {/* Velocity Control */}
             <View>
-                <Text>Velocity: {velocity}</Text>
+                <Text>Velocity Direction: {isVelocityVertical ? "Vertical" : "Horizontal"}</Text>
+                <Switch value={isVelocityVertical} onChange={() => setIsVelocityVertical(!isVelocityVertical)}></Switch>
+                <Text>Velocity Floor: {velocityFloor}</Text>
                 <Slider
                     maximumValue={127} minimumValue={0} step={1}
-                    value={velocity} onValueChange={setVelocity}
+                    value={velocityFloor} onValueChange={changeVelocityFloor}
+                />
+
+                <Text>Velocity Ceiling: {velocityCeiling}</Text>
+                <Slider
+                    maximumValue={127} minimumValue={0} step={1}
+                    value={velocityCeiling} onValueChange={changeVelocityCeiling}
                 />
             </View>
         </View>

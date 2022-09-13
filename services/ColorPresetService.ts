@@ -29,10 +29,9 @@ export class ColorPresetService {
         return null; //Not found
     };
 
-    createColorPreset(presetName: string, textColor?: string, unpressedColor?: string, pressedColor?: string,): boolean {
+    createColorPreset(presetName: string, colorPreset?: PresetColors): boolean {
         if (this.doesPresetNameExist(presetName)) return false; // Names must be unique
-
-        this.colorPresets.push(new ColorPreset(presetName, textColor, unpressedColor, pressedColor))
+        this.colorPresets.push(new ColorPreset(presetName, colorPreset?.textColor, colorPreset?.unpressedColor, colorPreset?.pressedColor))
 
         return true;
     };

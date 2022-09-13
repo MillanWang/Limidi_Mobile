@@ -16,9 +16,17 @@ import { DEFAULT_COLOR_PRESET } from '../constants/Colors';
 const midiHttpService = new MIDI_HTTP_Service("192.168.0.12", "4848");
 const colorPresetService = new ColorPresetService();
 
-colorPresetService.createColorPreset("Default", DEFAULT_COLOR_PRESET.textColor, DEFAULT_COLOR_PRESET.unpressedColor, DEFAULT_COLOR_PRESET.pressedColor);
-colorPresetService.createColorPreset("Hulk", '#26ffcc', '#330c29', '#0eed45');
-colorPresetService.createColorPreset("Frost", '#1cccae', '#012975', '#2ad9ed');
+colorPresetService.createColorPreset("Default", DEFAULT_COLOR_PRESET);
+colorPresetService.createColorPreset("Hulk", {
+    textColor: '#26ffcc',
+    unpressedColor: '#330c29',
+    pressedColor: '#0eed45'
+});
+colorPresetService.createColorPreset("Frost", {
+    textColor: '#1cccae',
+    unpressedColor: '#012975',
+    pressedColor: '#2ad9ed'
+});
 
 export default function GridScreen() {
 
