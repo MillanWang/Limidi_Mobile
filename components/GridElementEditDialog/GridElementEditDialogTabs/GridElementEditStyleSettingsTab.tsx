@@ -1,10 +1,7 @@
 
 import React, { useState } from 'react';
-import { View } from 'react-native';
-import { Text, } from "@rneui/themed";
-
-import ColorPicker from 'react-native-wheel-color-picker'; //https://github.com/Naeemur/react-native-wheel-color-picker
-import DropDownPicker from 'react-native-dropdown-picker';
+import { View, ScrollView } from 'react-native';
+import { Button, Icon, Text, } from "@rneui/themed";
 
 import { ColorSelector } from '../../ColorSelector';
 import { ColorPresetService } from '../../../services/ColorPresetService';
@@ -13,7 +10,6 @@ import { ColorPresetService } from '../../../services/ColorPresetService';
 export interface GridElementEditStyleProps {
     colorPresetService: ColorPresetService,
 
-    textColor: string, setTextColor(color: string): void,
     unpressedColor: string, setUnpressedColor(color: string): void,
     pressedColor: string, setPressedColor(color: string): void,
 }
@@ -21,51 +17,67 @@ export interface GridElementEditStyleProps {
 export function GridElementEditStyleSettingsTab(
     {
         colorPresetService,
-        textColor, setTextColor,
+
         unpressedColor, setUnpressedColor,
         pressedColor, setPressedColor,
     }: GridElementEditStyleProps) {
 
 
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState(colorPresetService.getAllColorPresets().map(preset => {
-        return {
-            label: preset.getPresetName(),
-            value: preset.getPresetName()
-        }
-    }));
+    const [currentPreset, setCurrentPreset] = useState('Default');
+
 
     function setColorsToPreset(presetName: string | null) {
         if (presetName) {
+            setCurrentPreset(presetName);
             const presetColors = colorPresetService.getColorPreset(presetName)?.getColors();
             if (presetColors) {
-                setTextColor(presetColors.textColor);
                 setUnpressedColor(presetColors.unpressedColor);
                 setPressedColor(presetColors.pressedColor);
             }
         }
     }
 
+    function updatePresetColors() {
+        colorPresetService.updateColorPresetColors(currentPreset, unpressedColor, pressedColor);
+    }
+
+
     return (
         <View style={{ flex: 1, flexDirection: "column", }}>
             <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-evenly', }}>
-                <ColorSelector colorTitle="Text Color : " color={textColor} setColor={setTextColor} />
                 <ColorSelector colorTitle="Unpressed Color : " color={unpressedColor} setColor={setUnpressedColor} />
                 <ColorSelector colorTitle="Pressed Color : " color={pressedColor} setColor={setPressedColor} />
 
             </View>
             {/* Color Presets */}
-            <View style={{ height: 150 }} >
+            <View style={{ height: 150, flexDirection: 'row' }} >
                 {/* Save current as preset */}
+
                 {/* Load preset */}
-                <DropDownPicker
-                    open={open}
-                    value={value}
-                    items={items}
-                    setOpen={setOpen} setValue={setValue} setItems={setItems}
-                    onChangeValue={setColorsToPreset}
-                />
+                <ScrollView style={{ width: "60 %" }}>
+                    {colorPresetService.getAllColorPresets().map(preset => {
+                        return (
+                            <View
+                                style={{ borderWidth: 1, height: 30, flexDirection: 'row', backgroundColor: preset.getColors().unpressedColor }}
+                                key={`ColorPreset_${preset.getPresetName()}`}
+                                onTouchEndCapture={() => setColorsToPreset(preset.getPresetName())}
+                            >
+                                <Text style={{ alignSelf: "center", color: preset.getColors().pressedColor }}>
+                                    {preset.getPresetName()}
+                                </Text>
+                                {currentPreset === preset.getPresetName() &&
+
+                                    <Icon name="done" color={preset.getColors().pressedColor} />
+                                }
+                            </View>
+                        );
+                    })}
+                </ScrollView>
+                <View style={{ width: "40 %" }}>
+                    <Text>Current Preset : {currentPreset}</Text>
+                    <Button onPress={updatePresetColors}>Update Preset Colors</Button>
+                </View>
+
             </View>
         </View>
     );

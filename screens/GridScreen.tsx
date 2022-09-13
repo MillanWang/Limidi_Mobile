@@ -17,15 +17,29 @@ const midiHttpService = new MIDI_HTTP_Service("192.168.0.12", "4848");
 const colorPresetService = new ColorPresetService();
 
 colorPresetService.createColorPreset("Default", DEFAULT_COLOR_PRESET);
-colorPresetService.createColorPreset("Hulk", {
-    textColor: '#26ffcc',
-    unpressedColor: '#330c29',
-    pressedColor: '#0eed45'
-});
 colorPresetService.createColorPreset("Frost", {
-    textColor: '#1cccae',
     unpressedColor: '#012975',
     pressedColor: '#2ad9ed'
+});
+colorPresetService.createColorPreset("Grape", {
+    unpressedColor: '#540075',
+    pressedColor: '#c047ed'
+});
+colorPresetService.createColorPreset("Slime", {
+    unpressedColor: '#0e4c00',
+    pressedColor: '#44ed1e'
+});
+colorPresetService.createColorPreset("Lava", {
+    unpressedColor: '#4c0001',
+    pressedColor: '#ed003f'
+});
+colorPresetService.createColorPreset("Banana", {
+    unpressedColor: '#586600',
+    pressedColor: '#e1ef00'
+});
+colorPresetService.createColorPreset("Hulk", {
+    unpressedColor: '#330c29',
+    pressedColor: '#0eed45'
 });
 
 export default function GridScreen() {
