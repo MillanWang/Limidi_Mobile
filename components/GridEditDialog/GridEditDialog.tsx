@@ -32,7 +32,7 @@ export default function GridEditDialog({
                 <Button onPress={() => { setTabIndex(0) }}>Grid Settings</Button>
                 <Button onPress={() => { setTabIndex(1) }}>Color Preset Settings</Button>
                 <Button onPress={() => { setTabIndex(2) }}>Network Settings</Button>
-                <Button onPress={() => { setIsVisible(false) }}>SAVE</Button>
+
             </View>
 
             <View style={{ height: 500 }}>
@@ -58,6 +58,9 @@ export default function GridEditDialog({
                 {tabIndex === 2 &&
                     <GridEditNetworkSettingsTab midiHttpService={midiHttpService} />
                 }
+            </View>
+            <View style={{ flexDirection: 'row', }}>
+                <Button onPress={() => { setIsVisible(false) }}>SAVE</Button>
             </View>
 
         </Dialog>

@@ -17,7 +17,9 @@ export default function GridElementEditDialog(
         elementName, setElementName,
         noteNumber, setNoteNumber,
         octave, setOctave,
-        velocity, setVelocity,
+        velocityFloor, setVelocityFloor,
+        velocityCeiling, setVelocityCeiling,
+        isVelocityVertical, setIsVelocityVertical,
 
         colorPresetService,
         textColor, setTextColor,
@@ -30,12 +32,10 @@ export default function GridElementEditDialog(
     return (
         <Dialog isVisible={dialogVisible} >
 
-
             {/* MIDI/Style Tab Selection */}
             <View style={{ flexDirection: 'row' }}>
                 <Button onPress={() => { setTabIndex(0) }}>MIDI Settings</Button>
                 <Button onPress={() => { setTabIndex(1) }}>Style Settings</Button>
-                <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
             </View>
 
             <View style={{ height: 500 }}>
@@ -44,7 +44,9 @@ export default function GridElementEditDialog(
                         elementName={elementName} setElementName={setElementName}
                         noteNumber={noteNumber} setNoteNumber={setNoteNumber}
                         octave={octave} setOctave={setOctave}
-                        velocity={velocity} setVelocity={setVelocity}
+                        velocityFloor={velocityFloor} setVelocityFloor={setVelocityFloor}
+                        velocityCeiling={velocityCeiling} setVelocityCeiling={setVelocityCeiling}
+                        isVelocityVertical={isVelocityVertical} setIsVelocityVertical={setIsVelocityVertical}
                     />
                 }
 
@@ -58,6 +60,10 @@ export default function GridElementEditDialog(
                 }
 
 
+            </View>
+
+            <View style={{ flexDirection: 'row', }}>
+                <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
             </View>
         </Dialog>
     );

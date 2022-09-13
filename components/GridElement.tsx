@@ -1,16 +1,11 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     Animated,
     StyleSheet,
-    TouchableOpacity,
     View
 } from 'react-native';
 
 import {
-    Button,
-    Dialog,
-    Input,
-    Slider,
     Text,
 } from "@rneui/themed";
 
@@ -21,12 +16,11 @@ import {
 } from '../constants/MIDI_Notes';
 
 import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
-import ColorPicker from 'react-native-wheel-color-picker'; //https://github.com/Naeemur/react-native-wheel-color-picker
 import {
     DEFAULT_COLOR_PRESET
 } from '../constants/Colors'
 import { ColorPresetService } from '../services/ColorPresetService';
-import DropDownPicker from 'react-native-dropdown-picker';
+
 
 
 interface GridElementProps {
@@ -54,12 +48,17 @@ export default function GridElement(
     }: GridElementProps
 ) {
 
+    const [elementHeight, setElementHeight] = useState(1);
+    const [elementWidth, setElementWidth] = useState(1);
+
     const [elementName, setElementName] = useState(initialName);
 
     // MIDI Settings
     const [noteNumber, setNoteNumber] = useState(initialNoteNumber % 12); //MODULUS 12 is for chromatic scale only. Eventually need better system for scale presets
     const [octave, setOctave] = useState(Math.floor(initialNoteNumber / 12));
-    const [velocity, setVelocity] = useState(100);
+    const [velocityFloor, setVelocityFloor] = useState(80);
+    const [velocityCeiling, setVelocityCeiling] = useState(110);
+    const [isVelocityVertical, setIsVelocityVertical] = useState(true);
 
     //Style Settings
     const [textColor, setTextColor] = useState(DEFAULT_COLOR_PRESET.textColor);
@@ -70,11 +69,7 @@ export default function GridElement(
 
 
 
-    function playModeTouchStartHandler() {
-
-        // Eventually use these to make a tap position depended velocity control. event being an input param to this function
-        // event.nativeEvent.locationX
-        // event.nativeEvent.locationY
+    function playModeTouchStartHandler(event: any) {
 
         if (isPlayMode) {
             fadeOut();
@@ -82,7 +77,7 @@ export default function GridElement(
                 createMidiMessage(
                     noteNumber,
                     octave,
-                    velocity,
+                    getVelocityValue(event),
                     true //Note is on
                 )
             );
@@ -106,6 +101,18 @@ export default function GridElement(
         }
     }
 
+    function getVelocityValue(event: any): number {
+        if (isVelocityVertical) {
+            return Math.floor(velocityFloor + (velocityCeiling - velocityFloor) * (1 - event.nativeEvent.locationY / elementHeight))
+        } else {
+            return Math.floor(velocityFloor + (velocityCeiling - velocityFloor) * (event.nativeEvent.locationX / elementWidth))
+        }
+    }
+
+    function onLayout(event: any) {
+        setElementHeight(event.nativeEvent.layout.height);
+        setElementWidth(event.nativeEvent.layout.width);
+    }
 
     const fadeAnim = useRef(new Animated.Value(1)).current;
     const fadeIn = () => {
@@ -125,7 +132,7 @@ export default function GridElement(
 
 
     return (
-        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: pressedColor, }}>
+        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: pressedColor, }} onLayout={onLayout}>
             <Animated.View
                 style={{
                     ...styles.gridElementBasePressedView,
@@ -161,7 +168,9 @@ export default function GridElement(
 
                     noteNumber={noteNumber} setNoteNumber={setNoteNumber}
                     octave={octave} setOctave={setOctave}
-                    velocity={velocity} setVelocity={setVelocity}
+                    velocityFloor={velocityFloor} setVelocityFloor={setVelocityFloor}
+                    velocityCeiling={velocityCeiling} setVelocityCeiling={setVelocityCeiling}
+                    isVelocityVertical={isVelocityVertical} setIsVelocityVertical={setIsVelocityVertical}
 
                     colorPresetService={colorPresetService}
                     textColor={textColor} setTextColor={setTextColor}

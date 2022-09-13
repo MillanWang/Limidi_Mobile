@@ -58,7 +58,11 @@ describe('ColorPresetService', () => {
 
     it('cannot create presets with duplicate names', () => {
         expect(cps.createColorPreset("nice")).toBeTruthy();
-        expect(cps.createColorPreset("nice", "#123123", "#123123", "#123123")).toBeFalsy(); //duplicate names illegal even with different colors
+        expect(cps.createColorPreset("nice", {
+            textColor: '#26ffcc',
+            unpressedColor: '#330c29',
+            pressedColor: '#0eed45'
+        })).toBeFalsy(); //duplicate names illegal even with different colors
         expect(cps.getAllColorPresets()).toHaveLength(1); // did not create
 
         const preset = cps.getColorPreset("nice");
@@ -145,7 +149,11 @@ describe('ColorPresetService', () => {
 
     it('can edit the colors of a specified preset', () => {
         const originalSampleColor = "#eeeeee";
-        expect(cps.createColorPreset("nice", originalSampleColor, originalSampleColor, originalSampleColor)).toBeTruthy();
+        expect(cps.createColorPreset("nice", {
+            textColor: originalSampleColor,
+            unpressedColor: originalSampleColor,
+            pressedColor: originalSampleColor
+        })).toBeTruthy();
         let preset = cps.getColorPreset("nice");
         expect(preset).toBeDefined();
         expect(preset?.getColors().textColor).toEqual(originalSampleColor);
@@ -166,7 +174,11 @@ describe('ColorPresetService', () => {
         const originalSampleColor = "#eeeeee";
         let preset;
         testNames.forEach((name: string) => {
-            expect(cps.createColorPreset(name, originalSampleColor, originalSampleColor, originalSampleColor)).toBeTruthy();
+            expect(cps.createColorPreset(name, {
+                textColor: originalSampleColor,
+                unpressedColor: originalSampleColor,
+                pressedColor: originalSampleColor
+            })).toBeTruthy();
             preset = cps.getColorPreset(name);
             expect(preset).toBeDefined();
             expect(preset?.getColors().textColor).toEqual(originalSampleColor);
