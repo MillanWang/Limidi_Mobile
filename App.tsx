@@ -16,11 +16,10 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
+
         <StatusBar />
 
-
         <GridScreen />
-
 
       </SafeAreaProvider>
     );

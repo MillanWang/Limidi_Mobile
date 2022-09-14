@@ -1,15 +1,15 @@
 export enum NOTE {
     C = "C",
-    Db = "Db/C#",
+    Db = "C# / Db",
     D = "D",
-    Eb = "Eb/D#",
+    Eb = "D# / Eb",
     E = "E",
     F = "F",
-    Gb = "Gb/F#",
+    Gb = "F# / Gb",
     G = "G",
-    Ab = "Ab/G#",
+    Ab = "G# / Ab",
     A = "A",
-    Bb = "Bb/A#",
+    Bb = "A# / Bb",
     B = "B"
 }
 
