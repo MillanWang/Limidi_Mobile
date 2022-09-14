@@ -1,7 +1,5 @@
 Features before demo
 
 -Crud operation of color presets
--Scrollviews for selecting colors and (midi devices)
 -Scale service
--Piano shaped note picker
 

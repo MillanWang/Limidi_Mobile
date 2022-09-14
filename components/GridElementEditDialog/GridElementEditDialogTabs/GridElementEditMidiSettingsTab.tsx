@@ -5,11 +5,11 @@ import { Input, Slider, Text, Switch, } from "@rneui/themed";
 
 import { NOTE, } from '../../../constants/MIDI_Notes';
 
+import { Piano, PianoProps } from '../../Piano';
 
-export interface GridElementEditMidiProps {
+export interface GridElementEditMidiProps extends PianoProps {
     // MIDI Options
     elementName: string, setElementName(elementName: string): void,
-    noteNumber: number, setNoteNumber(noteNumber: number): void,
     octave: number, setOctave(octave: number): void,
 
     isVelocityVertical: boolean, setIsVelocityVertical(isVelocityVertical: boolean): void,
@@ -47,13 +47,11 @@ export function GridElementEditMidiSettingsTab(
                 <Input value={elementName} onChangeText={value => setElementName(value)} />
             </View>
 
+
             {/* Note Control */}
             <View>
                 <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
-                <Slider
-                    maximumValue={11} minimumValue={0} step={1}
-                    value={noteNumber} onValueChange={setNoteNumber}
-                />
+                <Piano noteNumber={noteNumber} setNoteNumber={setNoteNumber} />
             </View>
 
 
