@@ -10,28 +10,37 @@ import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
 import { ColorPresetService } from '../services/ColorPresetService';
 
 import { getNoteKeyFromNoteNumber } from '../constants/MIDI_Notes';
+import { ScaleService } from '../services/ScaleService';
 
 
 export interface GridElementRowProps {
     isPlayMode: boolean,
     columnCount: number,
-    firstNoteNumber: number,
     midiHttpService: MIDI_HTTP_Service,
-    colorPresetService: ColorPresetService
+    colorPresetService: ColorPresetService,
+    scaleService: ScaleService
 }
 
-export function GridElementRow({ isPlayMode, columnCount, firstNoteNumber, midiHttpService, colorPresetService }: GridElementRowProps) {
+export function GridElementRow({
+    isPlayMode,
+    columnCount,
+    midiHttpService,
+    colorPresetService,
+    scaleService
+}: GridElementRowProps) {
     let gridElements: JSX.Element[] = [];
 
     for (let i = 0; i < columnCount; i++) {
+        const currentNoteNumber = scaleService.getNextNoteNumber();
         gridElements.push(
             <GridElement
                 MIDI_HTTP_Service={midiHttpService}
                 colorPresetService={colorPresetService}
-                initialName={`${getNoteKeyFromNoteNumber(firstNoteNumber + i)}`}
-                initialNoteNumber={firstNoteNumber + i}
+                initialName={`${getNoteKeyFromNoteNumber(currentNoteNumber)}`}
+                // initialNoteNumber={firstNoteNumber + i}
+                initialNoteNumber={currentNoteNumber}
                 isPlayMode={isPlayMode}
-                key={`gridElement_column${i}_row${firstNoteNumber / columnCount}`}
+                key={`gridElement_note${currentNoteNumber}`}
             />
         );
     }

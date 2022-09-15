@@ -11,10 +11,14 @@ import { GridScreenToolbar } from '../components/GridScreenToolbar';
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
 import { ColorPresetService } from '../services/ColorPresetService';
 import { DEFAULT_COLOR_PRESET } from '../constants/Colors';
+import { Scale, ScaleService } from '../services/ScaleService';
 
 
 const midiHttpService = new MIDI_HTTP_Service("192.168.0.12", "4848");
 const colorPresetService = new ColorPresetService();
+const scaleService = new ScaleService();
+// scaleService.setScale(Scale.Aeolian);
+
 
 colorPresetService.createColorPreset("Default", DEFAULT_COLOR_PRESET);
 colorPresetService.createColorPreset("Frost", {
@@ -63,6 +67,7 @@ export default function GridScreen() {
                 columnCount={columnCount} setColumnCount={setColumnCount}
                 rowCount={rowCount} setRowCount={setRowCount}
                 midiHttpService={midiHttpService}
+                scaleService={scaleService}
             />
 
             <GridElementGrid
@@ -72,6 +77,7 @@ export default function GridScreen() {
                 rowCount={rowCount}
                 midiHttpService={midiHttpService}
                 colorPresetService={colorPresetService}
+                scaleService={scaleService}
             />
 
         </View>

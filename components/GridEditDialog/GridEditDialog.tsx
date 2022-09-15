@@ -23,7 +23,8 @@ export default function GridEditDialog({
     initialNoteNumber, setInitialNoteNumber,
     columnCount, setColumnCount,
     rowCount, setRowCount,
-    midiHttpService
+    midiHttpService,
+    scaleService
 }: GridEditDialogProps) {
     const [tabIndex, setTabIndex] = React.useState(0);
     return (
@@ -43,6 +44,7 @@ export default function GridEditDialog({
                             initialNoteNumber={initialNoteNumber} setInitialNoteNumber={setInitialNoteNumber}
                             columnCount={columnCount} setColumnCount={setColumnCount}
                             rowCount={rowCount} setRowCount={setRowCount}
+                            scaleService={scaleService}
                         />
                     </Text>
                 }

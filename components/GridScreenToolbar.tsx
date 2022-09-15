@@ -20,6 +20,7 @@ export function GridScreenToolbar({
     columnCount, setColumnCount,
     rowCount, setRowCount,
     midiHttpService,
+    scaleService
 }: GridScreenToolbarProps) {
     return (
         <View style={styles.headerOptions}>
@@ -38,6 +39,7 @@ export function GridScreenToolbar({
                 columnCount={columnCount} setColumnCount={setColumnCount}
                 rowCount={rowCount} setRowCount={setRowCount}
                 midiHttpService={midiHttpService}
+                scaleService={scaleService}
             />
         </View>
     );

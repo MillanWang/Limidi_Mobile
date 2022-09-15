@@ -8,6 +8,7 @@ import { GridElementRow } from '../components/GridElementRow';
 
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
 import { ColorPresetService } from '../services/ColorPresetService';
+import { ScaleService } from '../services/ScaleService';
 
 
 
@@ -17,10 +18,11 @@ export interface GridElementGridProps {
     rowCount: number,
     columnCount: number,
     midiHttpService: MIDI_HTTP_Service,
-    colorPresetService: ColorPresetService
+    colorPresetService: ColorPresetService,
+    scaleService: ScaleService
 }
 
-export function GridElementGrid({ isPlayMode, initialNoteNumber, rowCount, columnCount, midiHttpService, colorPresetService }: GridElementGridProps) {
+export function GridElementGrid({ isPlayMode, initialNoteNumber, rowCount, columnCount, midiHttpService, colorPresetService, scaleService }: GridElementGridProps) {
 
     // 1x1 smallest, 12x12 biggest. Anything in between is ok
     rowCount = Math.min(Math.max(1, rowCount), 12);
@@ -33,9 +35,10 @@ export function GridElementGrid({ isPlayMode, initialNoteNumber, rowCount, colum
             <GridElementRow
                 isPlayMode={isPlayMode}
                 columnCount={columnCount}
-                firstNoteNumber={initialNoteNumber + i * columnCount}
+                // firstNoteNumber={initialNoteNumber + i * columnCount}
                 midiHttpService={midiHttpService}
                 colorPresetService={colorPresetService}
+                scaleService={scaleService}
                 key={`GridElementRow_${i}`}
             />
         );
