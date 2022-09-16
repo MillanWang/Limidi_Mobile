@@ -2,6 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux'
+import { store } from './redux/store';
 
 import useCachedResources from './hooks/useCachedResources';
 import useColorScheme from './hooks/useColorScheme';
@@ -17,9 +19,13 @@ export default function App() {
     return (
       <SafeAreaProvider>
 
-        <StatusBar />
+        <Provider store={store}>{/* From Redux */}
 
-        <GridScreen />
+          <StatusBar />
+
+          <GridScreen />
+
+        </Provider>
 
       </SafeAreaProvider>
     );

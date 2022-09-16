@@ -24,7 +24,7 @@ export interface MidiMessageProps {
     isNoteOn: boolean
 }
 
-export function createMidiMessage(noteNumber: number, octave: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
+export function createMidiMessage_OLD(noteNumber: number, octave: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
     return {
         note: Object.keys(NOTE)[noteNumber],
         octave: octave,
@@ -32,3 +32,13 @@ export function createMidiMessage(noteNumber: number, octave: number, velocity: 
         isNoteOn: isNoteOn,
     };
 }
+
+export function createMidiMessage(noteNumber: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
+    return {
+        note: Object.keys(NOTE)[noteNumber % 12],
+        octave: Math.floor(noteNumber / 12),
+        velocity: velocity,
+        isNoteOn: isNoteOn,
+
+    };
+} //TODO : Backend shall expect notenumber instead of separate note and octave. 

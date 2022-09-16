@@ -12,14 +12,9 @@ interface GridElementEditDialogProps extends GridElementEditMidiProps, GridEleme
 
 export default function GridElementEditDialog(
     {
-        dialogVisible, setDialogVisible,
+        index,
 
-        elementName, setElementName,
-        noteNumber, setNoteNumber,
-        octave, setOctave,
-        velocityFloor, setVelocityFloor,
-        velocityCeiling, setVelocityCeiling,
-        isVelocityVertical, setIsVelocityVertical,
+        dialogVisible, setDialogVisible,
 
         colorPresetService,
         unpressedColor, setUnpressedColor,
@@ -39,14 +34,7 @@ export default function GridElementEditDialog(
 
             <View style={{ height: 500 }}>
                 {tabIndex === 0 &&
-                    <GridElementEditMidiSettingsTab
-                        elementName={elementName} setElementName={setElementName}
-                        noteNumber={noteNumber} setNoteNumber={setNoteNumber}
-                        octave={octave} setOctave={setOctave}
-                        velocityFloor={velocityFloor} setVelocityFloor={setVelocityFloor}
-                        velocityCeiling={velocityCeiling} setVelocityCeiling={setVelocityCeiling}
-                        isVelocityVertical={isVelocityVertical} setIsVelocityVertical={setIsVelocityVertical}
-                    />
+                    <GridElementEditMidiSettingsTab index={index} />
                 }
 
                 {tabIndex === 1 &&

@@ -10,7 +10,6 @@ import {
     ScrollView,
     StyleSheet,
     Text,
-    TextInput,
     View,
 } from 'react-native';
 import { NOTE } from "../../../constants/MIDI_Notes";
