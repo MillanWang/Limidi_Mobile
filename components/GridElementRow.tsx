@@ -7,31 +7,31 @@ import {
 import GridElement from '../components/GridElement';
 
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-import { ColorPresetService } from '../services/ColorPresetService';
-
-import { getNoteKeyFromNoteNumber } from '../constants/MIDI_Notes';
+import { useAppSelector } from '../redux/hooks';
 
 
 export interface GridElementRowProps {
+    rowStartingIndex: number,
     isPlayMode: boolean,
-    columnCount: number,
-    firstNoteNumber: number,
     midiHttpService: MIDI_HTTP_Service,
-    colorPresetService: ColorPresetService
 }
 
-export function GridElementRow({ isPlayMode, columnCount, firstNoteNumber, midiHttpService, colorPresetService }: GridElementRowProps) {
+export function GridElementRow({
+    rowStartingIndex,
+    isPlayMode,
+    midiHttpService,
+}: GridElementRowProps) {
+    const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer);
     let gridElements: JSX.Element[] = [];
 
-    for (let i = 0; i < columnCount; i++) {
+    for (let i = 0; i < currentGridElementMidiState.columnCount; i++) {
+        const currentIndex = i + rowStartingIndex;
         gridElements.push(
             <GridElement
+                index={currentIndex}
                 MIDI_HTTP_Service={midiHttpService}
-                colorPresetService={colorPresetService}
-                initialName={`${getNoteKeyFromNoteNumber(firstNoteNumber + i)}`}
-                initialNoteNumber={firstNoteNumber + i}
                 isPlayMode={isPlayMode}
-                key={`gridElement_column${i}_row${firstNoteNumber / columnCount}`}
+                key={`gridElement_${currentIndex}`}
             />
         );
     }

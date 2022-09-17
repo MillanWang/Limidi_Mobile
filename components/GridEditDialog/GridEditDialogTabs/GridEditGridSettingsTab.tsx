@@ -1,63 +1,124 @@
-import {
-    Button,
-    Dialog,
-    Input,
-    Slider,
-} from "@rneui/themed";
+import { Button, Icon, Slider, } from "@rneui/themed";
 import React, { useState } from 'react';
 import {
+    ScrollView,
     StyleSheet,
     Text,
-    TextInput,
     View,
 } from 'react-native';
 import { NOTE } from "../../../constants/MIDI_Notes";
-
-export interface GridEditGridSettingsTabProps {
-    initialNoteNumber: number, setInitialNoteNumber(initialNoteNumber: number): void,
-    columnCount: number, setColumnCount(columnCount: number): void,
-    rowCount: number, setRowCount(rowCount: number): void,
-}
-
-export function GridEditGridSettingsTab({
-    initialNoteNumber,
-    setInitialNoteNumber,
-    columnCount,
+import { Scale } from "../../../services/ScaleService";
+import { Piano } from "../../Piano";
+import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
+import {
+    setStartingNoteNumber,
+    setStartingNoteOctave,
+    setScale,
     setColumnCount,
-    rowCount,
     setRowCount,
-}: GridEditGridSettingsTabProps): JSX.Element {
+} from '../../../redux/slices/MidiSlice';
+
+
+export function GridEditGridSettingsTab(): JSX.Element {
+
+    const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer);
+    const dispatch = useAppDispatch();
+    const [currentScale, setCurrentScale] = useState(currentGridElementMidiState.scale);
+    function updateCurrentScale(scale: Scale) {
+        setCurrentScale(scale);
+    }
+
     return (
-        <View>
-            <Text>Number of Columns: {columnCount}</Text>
+        <View style={styles.container}>
+            <Text>Number of Columns: {currentGridElementMidiState.columnCount}</Text>
             <Slider
                 maximumValue={12} minimumValue={1} step={1}
-                value={columnCount} onValueChange={setColumnCount}
+                value={currentGridElementMidiState.columnCount} onValueChange={(value) => { dispatch(setColumnCount(value)) }}
             />
-            <Text>Number of Rows: {rowCount}</Text>
+            <Text>Number of Rows: {currentGridElementMidiState.rowCount}</Text>
             <Slider
                 maximumValue={12} minimumValue={1} step={1}
-                value={rowCount} onValueChange={setRowCount}
+                value={currentGridElementMidiState.rowCount} onValueChange={(value) => { dispatch(setRowCount(value)) }}
             />
+
 
             {/* Note Control */}
             <View>
-                <Text>Starting Note: {Object.values(NOTE)[initialNoteNumber % 12]}</Text>
-                <Slider
-                    maximumValue={11} minimumValue={0} step={1}
-                    value={initialNoteNumber % 12} onValueChange={(value) => { setInitialNoteNumber(value + Math.floor(initialNoteNumber / 12)) }}
-                />
+                <Text>Starting Note: {Object.values(NOTE)[currentGridElementMidiState.startingNoteNumber % 12]}</Text>
+                <Piano noteNumber={currentGridElementMidiState.startingNoteNumber % 12} setNoteNumber={(value) => { dispatch(setStartingNoteNumber(value)) }} />
             </View>
 
 
             {/* Octave Control */}
             <View>
-                <Text>Octave: {Math.floor(initialNoteNumber / 12)}</Text>
+                <Text>Octave: {Math.floor(currentGridElementMidiState.startingNoteNumber / 12)}</Text>
                 <Slider
                     maximumValue={10} minimumValue={0} step={1}
-                    value={Math.floor(initialNoteNumber / 12)} onValueChange={(value) => { setInitialNoteNumber(value * 12 + initialNoteNumber % 12) }}
+                    value={Math.floor(currentGridElementMidiState.startingNoteNumber / 12)} onValueChange={(value) => { dispatch(setStartingNoteOctave(value)) }}
                 />
+            </View>
+
+            {/* Scale control */}
+            <View style={styles.scaleManagementView}>
+
+                <View style={styles.scaleSelector} >
+
+                    <Text>Selected Scale : {currentScale}</Text>
+
+                    <ScrollView style={styles.scaleSelectorScrollView}>
+                        {Object.values(Scale).map(scale => {
+                            return (
+                                <View
+                                    key={scale}
+                                    style={styles.scaleItem}
+                                    onTouchEndCapture={() => updateCurrentScale(scale)}
+                                >
+                                    <Text style={styles.scaleItemText}>{scale}</Text>
+                                    {currentScale === scale &&
+                                        <Icon name="done" color='black' />
+                                    }
+                                </View>
+                            );
+                        })}
+                    </ScrollView>
+                </View>
+                <View style={styles.applyScaleView}>
+                    <Text>Current Scale : {currentGridElementMidiState.scale}</Text>
+                    <Button onPress={() => { dispatch(setScale(currentScale)) }}>
+                        Apply Selected Scale
+                    </Button>
+                </View>
             </View>
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        paddingTop: 30,
+    },
+    scaleManagementView: {
+        flexDirection: 'row',
+        paddingTop: 20
+    },
+    scaleSelector: {
+        height: 180,
+        flexDirection: 'column',
+        width: '60%'
+    },
+    scaleSelectorScrollView: {
+        width: "100 %"
+    },
+    scaleItem: {
+        borderWidth: 1,
+        height: 30,
+        flexDirection: 'row',
+        backgroundColor: '#bbbbbb'
+    },
+    scaleItemText: {
+        alignSelf: "center",
+    },
+    applyScaleView: {
+        width: "40 %"
+    },
+});

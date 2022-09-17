@@ -1,9 +1,25 @@
 import * as React from 'react';
 
-import { ColorPresetService, ColorPreset } from "../ColorPresetService";
-import { DEFAULT_COLOR_PRESET } from '../../constants/Colors';
+import { ColorPreset } from '../../constants/Colors';
+import { ColorPresetService } from "../ColorPresetService";
+import { DEFAULT } from '../../constants/Colors';
 
 describe('ColorPresetService', () => {
+
+    //Implemented as functions that return new instances because instances would be edited and changed between tests
+    const getSampleColorPresetColors = () => {
+        return {
+            unpressedColor: '#330c29',
+            pressedColor: '#0eed45'
+        }
+    }
+    const getSampleColorPreset = () => {
+        return {
+            name: "nice",
+            ...getSampleColorPresetColors()
+        }
+    };
+
 
     let cps: ColorPresetService;
 
@@ -28,7 +44,7 @@ describe('ColorPresetService', () => {
 
         testNames.forEach((name: string) => {
             //True returned when creaeted successfully
-            expect(cps.createColorPreset(name)).toBeTruthy();
+            expect(cps.createColorPreset({ name, ...getSampleColorPresetColors() })).toBeTruthy();
         })
 
         const presets = cps.getAllColorPresets();
@@ -36,7 +52,8 @@ describe('ColorPresetService', () => {
         expect(presets).toHaveLength(3);
 
         presets?.forEach((preset: ColorPreset, i: number) => {
-            expect(preset.getPresetName()).toBe(testNames[i]);
+            expect(preset.name).toBe(testNames[i]);
+            expect(cps.getColorPreset(preset.name)).toBeDefined()
         });
     });
 
@@ -46,29 +63,17 @@ describe('ColorPresetService', () => {
         expect(cps.getAllColorPresets()).toHaveLength(0);
     });
 
-    it('creates presets with default colors if not specified', () => {
-        expect(cps.createColorPreset("nice")).toBeTruthy();
-        const preset = cps.getColorPreset("nice");
-        expect(preset).toBeDefined();
-
-        expect(preset?.getColors().unpressedColor).toEqual(DEFAULT_COLOR_PRESET.unpressedColor);
-        expect(preset?.getColors().pressedColor).toEqual(DEFAULT_COLOR_PRESET.pressedColor);
-    });
-
     it('cannot create presets with duplicate names', () => {
-        expect(cps.createColorPreset("nice")).toBeTruthy();
-        expect(cps.createColorPreset("nice", {
-            unpressedColor: '#330c29',
-            pressedColor: '#0eed45'
-        })).toBeFalsy(); //duplicate names illegal even with different colors
+        expect(cps.createColorPreset(getSampleColorPreset())).toBeTruthy();
+        expect(cps.createColorPreset(getSampleColorPreset())).toBeFalsy(); //duplicate names illegal even with different colors
         expect(cps.getAllColorPresets()).toHaveLength(1); // did not create
 
         const preset = cps.getColorPreset("nice");
         expect(preset).toBeDefined();
 
         // Colors are not overwritten by the new addition attempt
-        expect(preset?.getColors().unpressedColor).toEqual(DEFAULT_COLOR_PRESET.unpressedColor);
-        expect(preset?.getColors().pressedColor).toEqual(DEFAULT_COLOR_PRESET.pressedColor);
+        expect(preset?.unpressedColor).toEqual(getSampleColorPreset().unpressedColor);
+        expect(preset?.pressedColor).toEqual(getSampleColorPreset().pressedColor);
     });
 
 
@@ -81,7 +86,7 @@ describe('ColorPresetService', () => {
     // ************************************************************************************************
 
     it('can rename presets', () => {
-        expect(cps.createColorPreset("nice")).toBeTruthy();
+        expect(cps.createColorPreset(getSampleColorPreset())).toBeTruthy();
         expect(cps.renameColorPreset("nice", "different name")).toBeTruthy();
         expect(cps.getColorPreset("nice")).toBeNull(); //Old name gone
         expect(cps.getColorPreset("different name")).toBeDefined(); //new name active
@@ -94,14 +99,14 @@ describe('ColorPresetService', () => {
     });
 
     it('cannot rename a preset to the same name', () => {
-        expect(cps.createColorPreset("nice")).toBeTruthy();
+        expect(cps.createColorPreset(getSampleColorPreset())).toBeTruthy();
         expect(cps.renameColorPreset("nice", "nice")).toBeFalsy();
         expect(cps.getColorPreset("nice")).toBeDefined();//Still around
     });
 
     it('cannot rename a preset to an existing name', () => {
-        expect(cps.createColorPreset("111")).toBeTruthy();
-        expect(cps.createColorPreset("222")).toBeTruthy();
+        expect(cps.createColorPreset({ name: "111", ...getSampleColorPresetColors() })).toBeTruthy();
+        expect(cps.createColorPreset({ name: "222", ...getSampleColorPresetColors() })).toBeTruthy();
         expect(cps.renameColorPreset("111", "222")).toBeFalsy();
         expect(cps.getAllColorPresets()).toHaveLength(2);
     });
@@ -111,7 +116,7 @@ describe('ColorPresetService', () => {
 
         testNames.forEach((name: string) => {
             //True returned when creaeted successfully
-            expect(cps.createColorPreset(name)).toBeTruthy();
+            expect(cps.createColorPreset({ name, ...getSampleColorPresetColors() })).toBeTruthy();
         })
 
         let presets = cps.getAllColorPresets();
@@ -119,7 +124,7 @@ describe('ColorPresetService', () => {
         expect(presets).toHaveLength(3);
 
         presets?.forEach((preset: ColorPreset, i: number) => {
-            expect(preset.getPresetName()).toBe(testNames[i]);
+            expect(preset.name).toBe(testNames[i]);
         });
 
         expect(cps.renameColorPreset("first", "last")).toBeTruthy();
@@ -131,7 +136,7 @@ describe('ColorPresetService', () => {
         expect(presets).toHaveLength(3);
 
         presets?.forEach((preset: ColorPreset, i: number) => {
-            expect(preset.getPresetName()).toBe(testNames[i]);
+            expect(preset.name).toBe(testNames[i]);
         });
     });
 
@@ -145,22 +150,22 @@ describe('ColorPresetService', () => {
     // ************************************************************************************************
 
     it('can edit the colors of a specified preset', () => {
-        const originalSampleColor = "#eeeeee";
-        expect(cps.createColorPreset("nice", {
-            unpressedColor: originalSampleColor,
-            pressedColor: originalSampleColor
-        })).toBeTruthy();
+        expect(cps.createColorPreset(getSampleColorPreset())).toBeTruthy();
         let preset = cps.getColorPreset("nice");
         expect(preset).toBeDefined();
-        expect(preset?.getColors().unpressedColor).toEqual(originalSampleColor);
-        expect(preset?.getColors().pressedColor).toEqual(originalSampleColor);
+        expect(preset?.unpressedColor).toEqual(getSampleColorPreset().unpressedColor);
+        expect(preset?.pressedColor).toEqual(getSampleColorPreset().pressedColor);
 
         const newSampleColor = "#123123";
-        expect(cps.updateColorPresetColors("nice", newSampleColor, newSampleColor)).toBeTruthy();
+        expect(cps.updateColorPresetColors({
+            name: "nice",
+            unpressedColor: newSampleColor,
+            pressedColor: newSampleColor
+        })).toBeTruthy();
         preset = cps.getColorPreset("nice");
         expect(preset).toBeDefined();
-        expect(preset?.getColors().unpressedColor).toEqual(newSampleColor);
-        expect(preset?.getColors().pressedColor).toEqual(newSampleColor);
+        expect(preset?.unpressedColor).toEqual(newSampleColor);
+        expect(preset?.pressedColor).toEqual(newSampleColor);
     });
 
     it('sends presets with edited colors of a specified preset to the back of the list', () => {
@@ -168,31 +173,37 @@ describe('ColorPresetService', () => {
         const originalSampleColor = "#eeeeee";
         let preset;
         testNames.forEach((name: string) => {
-            expect(cps.createColorPreset(name, {
+            expect(cps.createColorPreset({
+                name,
                 unpressedColor: originalSampleColor,
                 pressedColor: originalSampleColor
             })).toBeTruthy();
             preset = cps.getColorPreset(name);
             expect(preset).toBeDefined();
-            expect(preset?.getColors().unpressedColor).toEqual(originalSampleColor);
-            expect(preset?.getColors().pressedColor).toEqual(originalSampleColor);
+            expect(preset?.unpressedColor).toEqual(originalSampleColor);
+            expect(preset?.pressedColor).toEqual(originalSampleColor);
         });
 
         const newSampleColor = "#123123";
-        expect(cps.updateColorPresetColors("first", newSampleColor, newSampleColor)).toBeTruthy();
+        expect(cps.updateColorPresetColors({
+            name: testNames[0], // "first"
+            unpressedColor: newSampleColor,
+            pressedColor: newSampleColor
+        })).toBeTruthy();
         expect(testNames.shift()).toEqual("first");// removes 'first'
         testNames.push("first"); // now ["second", "third", "first"];
 
         const presets = cps.getAllColorPresets();
         expect(presets).toBeDefined();
         presets?.forEach((currentPreset: ColorPreset, i: number) => {
-            expect(currentPreset.getPresetName()).toEqual(testNames[i]);
+            expect(currentPreset.name).toEqual(testNames[i]);
         });
 
     });
 
     it('cannot edit the colors of a non existant preset', () => {
-        expect(cps.updateColorPresetColors("Non existing", "#123123", "#123123")).toBeFalsy();
+        //Currently no presets active
+        expect(cps.updateColorPresetColors(getSampleColorPreset())).toBeFalsy();
     });
 
 
@@ -201,9 +212,9 @@ describe('ColorPresetService', () => {
     // DELETION
     // ************************************************************************************************
     it('deletes presets properly', () => {
-        expect(cps.createColorPreset("nice")).toBeTruthy();
+        expect(cps.createColorPreset(getSampleColorPreset())).toBeTruthy();
         expect(cps.getAllColorPresets()).toHaveLength(1);
-        expect(cps.deleteColorPreset("nice")).toBeTruthy();
+        expect(cps.deleteColorPreset(getSampleColorPreset().name)).toBeTruthy();
         expect(cps.getAllColorPresets()).toHaveLength(0);
     });
 

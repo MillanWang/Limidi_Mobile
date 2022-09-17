@@ -16,9 +16,6 @@ export interface GridScreenToolbarProps extends GridEditDialogProps {
 export function GridScreenToolbar({
     isPlayMode, setIsPlayMode,
     isVisible, setIsVisible,
-    initialNoteNumber, setInitialNoteNumber,
-    columnCount, setColumnCount,
-    rowCount, setRowCount,
     midiHttpService,
 }: GridScreenToolbarProps) {
     return (
@@ -34,9 +31,6 @@ export function GridScreenToolbar({
 
             <GridEditDialog
                 isVisible={isVisible} setIsVisible={setIsVisible}
-                initialNoteNumber={initialNoteNumber} setInitialNoteNumber={setInitialNoteNumber}
-                columnCount={columnCount} setColumnCount={setColumnCount}
-                rowCount={rowCount} setRowCount={setRowCount}
                 midiHttpService={midiHttpService}
             />
         </View>

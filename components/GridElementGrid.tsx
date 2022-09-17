@@ -5,37 +5,26 @@ import {
 } from 'react-native';
 
 import { GridElementRow } from '../components/GridElementRow';
-
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-import { ColorPresetService } from '../services/ColorPresetService';
 
-
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 
 export interface GridElementGridProps {
     isPlayMode: boolean,
-    initialNoteNumber: number,
-    rowCount: number,
-    columnCount: number,
     midiHttpService: MIDI_HTTP_Service,
-    colorPresetService: ColorPresetService
 }
 
-export function GridElementGrid({ isPlayMode, initialNoteNumber, rowCount, columnCount, midiHttpService, colorPresetService }: GridElementGridProps) {
-
-    // 1x1 smallest, 12x12 biggest. Anything in between is ok
-    rowCount = Math.min(Math.max(1, rowCount), 12);
-    columnCount = Math.min(Math.max(1, columnCount), 12);
+export function GridElementGrid({ isPlayMode, midiHttpService, }: GridElementGridProps) {
+    const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer);
 
     let gridElementRows: JSX.Element[] = [];
 
-    for (let i = 0; i < rowCount; i++) {
+    for (let i = 0; i < currentGridElementMidiState.rowCount; i++) {
         gridElementRows.push(
             <GridElementRow
                 isPlayMode={isPlayMode}
-                columnCount={columnCount}
-                firstNoteNumber={initialNoteNumber + i * columnCount}
+                rowStartingIndex={i * currentGridElementMidiState.columnCount}
                 midiHttpService={midiHttpService}
-                colorPresetService={colorPresetService}
                 key={`GridElementRow_${i}`}
             />
         );

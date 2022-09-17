@@ -10,27 +10,18 @@ import {
 } from "@rneui/themed";
 
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-import {
-    createMidiMessage,
-    NOTE,
-} from '../constants/MIDI_Notes';
+import { createMidiMessage, } from '../constants/MIDI_Notes';
 
 import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
-import {
-    DEFAULT_COLOR_PRESET
-} from '../constants/Colors'
-import { ColorPresetService } from '../services/ColorPresetService';
 
 
+import { useAppSelector } from '../redux/hooks';
 
 interface GridElementProps {
+    index: number,
+
     //Services
     MIDI_HTTP_Service: MIDI_HTTP_Service,
-    colorPresetService: ColorPresetService,
-
-    //Initialization props
-    initialName: string,
-    initialNoteNumber: number,
 
     //Grid Controls
     isPlayMode: boolean,
@@ -38,35 +29,17 @@ interface GridElementProps {
 
 export default function GridElement(
     {
+        index,
         MIDI_HTTP_Service,
-        colorPresetService,
-
-        initialName,
-        initialNoteNumber,
-
         isPlayMode
     }: GridElementProps
 ) {
+    const currentGridElementInfo = useAppSelector(state => state.midiGridReducer.gridElements[index]);
+    const currentGriedElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementColors[index]);
 
     const [elementHeight, setElementHeight] = useState(1);
     const [elementWidth, setElementWidth] = useState(1);
-
-    const [elementName, setElementName] = useState(initialName);
-
-    // MIDI Settings
-    const [noteNumber, setNoteNumber] = useState(initialNoteNumber % 12); //MODULUS 12 is for chromatic scale only. Eventually need better system for scale presets
-    const [octave, setOctave] = useState(Math.floor(initialNoteNumber / 12));
-    const [velocityFloor, setVelocityFloor] = useState(80);
-    const [velocityCeiling, setVelocityCeiling] = useState(110);
-    const [isVelocityVertical, setIsVelocityVertical] = useState(true);
-
-    //Style Settings
-    const [unpressedColor, setUnpressedColor] = useState(DEFAULT_COLOR_PRESET.unpressedColor);
-    const [pressedColor, setPressedColor] = useState(DEFAULT_COLOR_PRESET.pressedColor);
-
     const [dialogVisible, setDialogVisible] = useState(false);
-
-
 
     function playModeTouchStartHandler(event: any) {
 
@@ -74,8 +47,7 @@ export default function GridElement(
             fadeOut();
             MIDI_HTTP_Service.sendMidiMessage(
                 createMidiMessage(
-                    noteNumber,
-                    octave,
+                    currentGridElementInfo.noteNumber,
                     getVelocityValue(event),
                     true //Note is on
                 )
@@ -91,8 +63,7 @@ export default function GridElement(
             fadeIn();
             MIDI_HTTP_Service.sendMidiMessage(
                 createMidiMessage(
-                    noteNumber,
-                    octave,
+                    currentGridElementInfo.noteNumber,
                     0, // No velocity on note off
                     false //Note is off
                 )
@@ -101,10 +72,10 @@ export default function GridElement(
     }
 
     function getVelocityValue(event: any): number {
-        if (isVelocityVertical) {
-            return Math.floor(velocityFloor + (velocityCeiling - velocityFloor) * (1 - event.nativeEvent.locationY / elementHeight))
+        if (currentGridElementInfo.velocity.isVertical) {
+            return Math.floor(currentGridElementInfo.velocity.floor + (currentGridElementInfo.velocity.ceiling - currentGridElementInfo.velocity.floor) * (1 - event.nativeEvent.locationY / elementHeight))
         } else {
-            return Math.floor(velocityFloor + (velocityCeiling - velocityFloor) * (event.nativeEvent.locationX / elementWidth))
+            return Math.floor(currentGridElementInfo.velocity.floor + (currentGridElementInfo.velocity.ceiling - currentGridElementInfo.velocity.floor) * (event.nativeEvent.locationX / elementWidth))
         }
     }
 
@@ -131,12 +102,12 @@ export default function GridElement(
 
 
     return (
-        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: pressedColor, }} onLayout={onLayout}>
+        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: currentGriedElementColorState.pressedColor, }} onLayout={onLayout}>
             <Animated.View
                 style={{
                     ...styles.gridElementBasePressedView,
                     opacity: fadeAnim,
-                    backgroundColor: unpressedColor,
+                    backgroundColor: currentGriedElementColorState.unpressedColor,
                 }}
                 onTouchStart={playModeTouchStartHandler}
                 onTouchEnd={playModeTouchEndHandler}
@@ -145,8 +116,8 @@ export default function GridElement(
                 {/* Play Mode */}
                 {isPlayMode &&
                     <View style={styles.gridElementUnpressedView} >
-                        <Text style={{ color: pressedColor }}>
-                            {elementName}
+                        <Text style={{ color: currentGriedElementColorState.pressedColor }}>
+                            {currentGridElementInfo.name}
                         </Text>
                     </View>
                 }
@@ -154,26 +125,16 @@ export default function GridElement(
                 {/* Edit mode */}
                 {!isPlayMode &&
                     <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
-                        <Text style={{ color: pressedColor }}>
-                            Edit {elementName}
+                        <Text style={{ color: currentGriedElementColorState.pressedColor }}>
+                            Edit {currentGridElementInfo.name}
                         </Text>
                     </View>
                 }
 
                 {/* Edit Dialog - MIDI & Style Settings */}
                 <GridElementEditDialog
+                    index={index}
                     dialogVisible={dialogVisible} setDialogVisible={setDialogVisible}
-                    elementName={elementName} setElementName={setElementName}
-
-                    noteNumber={noteNumber} setNoteNumber={setNoteNumber}
-                    octave={octave} setOctave={setOctave}
-                    velocityFloor={velocityFloor} setVelocityFloor={setVelocityFloor}
-                    velocityCeiling={velocityCeiling} setVelocityCeiling={setVelocityCeiling}
-                    isVelocityVertical={isVelocityVertical} setIsVelocityVertical={setIsVelocityVertical}
-
-                    colorPresetService={colorPresetService}
-                    unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
-                    pressedColor={pressedColor} setPressedColor={setPressedColor}
                 />
 
             </Animated.View>

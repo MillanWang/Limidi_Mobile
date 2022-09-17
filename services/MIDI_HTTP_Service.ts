@@ -3,6 +3,7 @@ import { MidiMessageProps } from '../constants/MIDI_Notes';
 export class MIDI_HTTP_Service {
     private ip: string;
     private port: string;
+    private midiDeviceID: string = '2';
 
 
     constructor(ip?: string, port?: string) {
@@ -39,5 +40,8 @@ export class MIDI_HTTP_Service {
 
     // FUNCTION SKELETONS - TODO WHEN DESKTOP UPDATE IS IN
     async getMidiOutputDevices(): Promise<string[]> { return ['TODO', 'Index in returned array is the device ID']; }
-    async setMidiOutputDevice(id: number): Promise<void> { }
+    async setMidiDeviceID(id: string): Promise<void> {
+        this.midiDeviceID = id;
+        console.log(this.midiDeviceID);
+    }
 };

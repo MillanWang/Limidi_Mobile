@@ -5,79 +5,65 @@ import { Input, Slider, Text, Switch, } from "@rneui/themed";
 
 import { NOTE, } from '../../../constants/MIDI_Notes';
 
-import { Piano, PianoProps } from '../../Piano';
+import { Piano } from '../../Piano';
+import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
+import {
+    setGridElementNoteNumber,
+    setGridElementVelocityCeiling,
+    setGridElementVelocityFloor,
+    setGridElementNoteOctave,
+    setGridElementName,
+} from '../../../redux/slices/MidiSlice';
 
-export interface GridElementEditMidiProps extends PianoProps {
-    // MIDI Options
-    elementName: string, setElementName(elementName: string): void,
-    octave: number, setOctave(octave: number): void,
-
-    isVelocityVertical: boolean, setIsVelocityVertical(isVelocityVertical: boolean): void,
-    velocityFloor: number, setVelocityFloor(velocityFloor: number): void,
-    velocityCeiling: number, setVelocityCeiling(velocityCeiling: number): void,
+export interface GridElementEditMidiProps {
+    index: number,
 }
 
-export function GridElementEditMidiSettingsTab(
-    {
-        elementName, setElementName,
-        noteNumber, setNoteNumber,
-        octave, setOctave,
-        velocityFloor, setVelocityFloor,
-        velocityCeiling, setVelocityCeiling,
-        isVelocityVertical, setIsVelocityVertical,
-    }: GridElementEditMidiProps) {
+export function GridElementEditMidiSettingsTab({ index, }: GridElementEditMidiProps) {
 
-    function changeVelocityFloor(value: number): void {
-        setVelocityFloor(value);
-        if (velocityFloor > velocityCeiling) {
-            setVelocityCeiling(value);
-        }
-    }
-    function changeVelocityCeiling(value: number): void {
-        setVelocityCeiling(value);
-        if (velocityCeiling < velocityFloor) {
-            setVelocityFloor(value);
-        }
-    }
+    const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer.gridElements[index]);
+    const dispatch = useAppDispatch();
+
+
     return (
         <View>
             {/* Name control */}
             <View>
                 <Text>Name:</Text>
-                <Input value={elementName} onChangeText={value => setElementName(value)} />
+                <Input value={currentGridElementMidiState.name} onChangeText={value => dispatch(setGridElementName({ index: index, name: value }))} />
             </View>
 
 
             {/* Note Control */}
             <View>
-                <Text>Note: {Object.values(NOTE)[noteNumber]}</Text>
-                <Piano noteNumber={noteNumber} setNoteNumber={setNoteNumber} />
+                <Text>Note: {Object.values(NOTE)[currentGridElementMidiState.noteNumber % 12]}</Text>
+                <Piano noteNumber={currentGridElementMidiState.noteNumber % 12} setNoteNumber={(noteNumber) => dispatch(setGridElementNoteNumber({ index: index, newNoteNumber: noteNumber }))} />
             </View>
 
 
-            {/* Octave Control */}
+            {/* Octave Control*/}
             <View>
-                <Text>Octave: {octave}</Text>
+                <Text>Octave: {Math.floor(currentGridElementMidiState.noteNumber / 12)}</Text>
                 <Slider
                     maximumValue={10} minimumValue={0} step={1}
-                    value={octave} onValueChange={setOctave}
+                    value={Math.floor(currentGridElementMidiState.noteNumber / 12)} onValueChange={value => dispatch(setGridElementNoteOctave({ index: index, newNoteOctave: value }))}
                 />
             </View>
 
             {/* Velocity Control */}
             <View>
-                <Text>Velocity Direction: {isVelocityVertical ? "Vertical" : "Horizontal"}</Text>
-                <Switch value={isVelocityVertical} onChange={() => setIsVelocityVertical(!isVelocityVertical)}></Switch>
-                <Text>Velocity Floor: {velocityFloor}</Text>
+                <Text>Velocity Direction: {currentGridElementMidiState.velocity.isVertical ? "Vertical" : "Horizontal"}</Text>
+                <Switch value={currentGridElementMidiState.velocity.isVertical} ></Switch>
+                <Text>Velocity Floor: {currentGridElementMidiState.velocity.floor}</Text>
                 <Slider
                     maximumValue={127} minimumValue={0} step={1}
-                    value={velocityFloor} onValueChange={changeVelocityFloor}
+                    value={currentGridElementMidiState.velocity.floor} onValueChange={value => dispatch(setGridElementVelocityFloor({ index: index, floor: value }))}
                 />
 
-                <Text>Velocity Ceiling: {velocityCeiling}</Text>
+                <Text>Velocity Ceiling: {currentGridElementMidiState.velocity.ceiling}</Text>
                 <Slider
                     maximumValue={127} minimumValue={0} step={1}
-                    value={velocityCeiling} onValueChange={changeVelocityCeiling}
+                    value={currentGridElementMidiState.velocity.ceiling} onValueChange={value => dispatch(setGridElementVelocityCeiling({ index: index, ceiling: value }))}
                 />
             </View>
         </View>

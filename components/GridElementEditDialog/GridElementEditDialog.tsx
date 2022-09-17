@@ -12,18 +12,8 @@ interface GridElementEditDialogProps extends GridElementEditMidiProps, GridEleme
 
 export default function GridElementEditDialog(
     {
+        index,
         dialogVisible, setDialogVisible,
-
-        elementName, setElementName,
-        noteNumber, setNoteNumber,
-        octave, setOctave,
-        velocityFloor, setVelocityFloor,
-        velocityCeiling, setVelocityCeiling,
-        isVelocityVertical, setIsVelocityVertical,
-
-        colorPresetService,
-        unpressedColor, setUnpressedColor,
-        pressedColor, setPressedColor,
     }: GridElementEditDialogProps) {
 
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -39,22 +29,11 @@ export default function GridElementEditDialog(
 
             <View style={{ height: 500 }}>
                 {tabIndex === 0 &&
-                    <GridElementEditMidiSettingsTab
-                        elementName={elementName} setElementName={setElementName}
-                        noteNumber={noteNumber} setNoteNumber={setNoteNumber}
-                        octave={octave} setOctave={setOctave}
-                        velocityFloor={velocityFloor} setVelocityFloor={setVelocityFloor}
-                        velocityCeiling={velocityCeiling} setVelocityCeiling={setVelocityCeiling}
-                        isVelocityVertical={isVelocityVertical} setIsVelocityVertical={setIsVelocityVertical}
-                    />
+                    <GridElementEditMidiSettingsTab index={index} />
                 }
 
                 {tabIndex === 1 &&
-                    <GridElementEditStyleSettingsTab
-                        colorPresetService={colorPresetService}
-                        unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
-                        pressedColor={pressedColor} setPressedColor={setPressedColor}
-                    />
+                    <GridElementEditStyleSettingsTab index={index} />
                 }
             </View>
 
