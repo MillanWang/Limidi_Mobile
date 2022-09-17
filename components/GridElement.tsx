@@ -10,27 +10,18 @@ import {
 } from "@rneui/themed";
 
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-import {
-    createMidiMessage,
-    createMidiMessage_OLD,
-    NOTE,
-} from '../constants/MIDI_Notes';
+import { createMidiMessage, } from '../constants/MIDI_Notes';
 
 import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
-import {
-    DEFAULT_COLOR_PRESET
-} from '../constants/Colors'
-import { ColorPresetService } from '../services/ColorPresetService';
 
-import { useAppSelector, useAppDispatch } from '../redux/hooks';
+
+import { useAppSelector } from '../redux/hooks';
 
 interface GridElementProps {
-
     index: number,
 
     //Services
     MIDI_HTTP_Service: MIDI_HTTP_Service,
-    colorPresetService: ColorPresetService,
 
     //Grid Controls
     isPlayMode: boolean,
@@ -39,28 +30,16 @@ interface GridElementProps {
 export default function GridElement(
     {
         index,
-
         MIDI_HTTP_Service,
-        colorPresetService,
-
         isPlayMode
     }: GridElementProps
 ) {
     const currentGridElementInfo = useAppSelector(state => state.midiGridReducer.gridElements[index]);
-
+    const currentGriedElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementColors[index]);
 
     const [elementHeight, setElementHeight] = useState(1);
     const [elementWidth, setElementWidth] = useState(1);
-
-
-
-    //Style Settings
-    const [unpressedColor, setUnpressedColor] = useState(DEFAULT_COLOR_PRESET.unpressedColor);
-    const [pressedColor, setPressedColor] = useState(DEFAULT_COLOR_PRESET.pressedColor);
-
     const [dialogVisible, setDialogVisible] = useState(false);
-
-
 
     function playModeTouchStartHandler(event: any) {
 
@@ -123,12 +102,12 @@ export default function GridElement(
 
 
     return (
-        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: pressedColor, }} onLayout={onLayout}>
+        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: currentGriedElementColorState.pressedColor, }} onLayout={onLayout}>
             <Animated.View
                 style={{
                     ...styles.gridElementBasePressedView,
                     opacity: fadeAnim,
-                    backgroundColor: unpressedColor,
+                    backgroundColor: currentGriedElementColorState.unpressedColor,
                 }}
                 onTouchStart={playModeTouchStartHandler}
                 onTouchEnd={playModeTouchEndHandler}
@@ -137,7 +116,7 @@ export default function GridElement(
                 {/* Play Mode */}
                 {isPlayMode &&
                     <View style={styles.gridElementUnpressedView} >
-                        <Text style={{ color: pressedColor }}>
+                        <Text style={{ color: currentGriedElementColorState.pressedColor }}>
                             {currentGridElementInfo.name}
                         </Text>
                     </View>
@@ -146,7 +125,7 @@ export default function GridElement(
                 {/* Edit mode */}
                 {!isPlayMode &&
                     <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
-                        <Text style={{ color: pressedColor }}>
+                        <Text style={{ color: currentGriedElementColorState.pressedColor }}>
                             Edit {currentGridElementInfo.name}
                         </Text>
                     </View>
@@ -156,9 +135,6 @@ export default function GridElement(
                 <GridElementEditDialog
                     index={index}
                     dialogVisible={dialogVisible} setDialogVisible={setDialogVisible}
-                    colorPresetService={colorPresetService}
-                    unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
-                    pressedColor={pressedColor} setPressedColor={setPressedColor}
                 />
 
             </Animated.View>

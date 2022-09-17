@@ -13,12 +13,7 @@ interface GridElementEditDialogProps extends GridElementEditMidiProps, GridEleme
 export default function GridElementEditDialog(
     {
         index,
-
         dialogVisible, setDialogVisible,
-
-        colorPresetService,
-        unpressedColor, setUnpressedColor,
-        pressedColor, setPressedColor,
     }: GridElementEditDialogProps) {
 
     const [tabIndex, setTabIndex] = React.useState(0);
@@ -38,11 +33,7 @@ export default function GridElementEditDialog(
                 }
 
                 {tabIndex === 1 &&
-                    <GridElementEditStyleSettingsTab
-                        colorPresetService={colorPresetService}
-                        unpressedColor={unpressedColor} setUnpressedColor={setUnpressedColor}
-                        pressedColor={pressedColor} setPressedColor={setPressedColor}
-                    />
+                    <GridElementEditStyleSettingsTab index={index} />
                 }
             </View>
 

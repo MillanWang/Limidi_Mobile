@@ -12,19 +12,15 @@ import {
 
 import { GridEditNetworkSettingsTab, GridEditNetworkSettingsTabProps } from './GridEditDialogTabs/GridEditNetworkSettingsTab';
 
-import { GridEditGridSettingsTab, GridEditGridSettingsTabProps } from './GridEditDialogTabs/GridEditGridSettingsTab';
+import { GridEditGridSettingsTab } from './GridEditDialogTabs/GridEditGridSettingsTab';
 
-export interface GridEditDialogProps extends GridEditNetworkSettingsTabProps, GridEditGridSettingsTabProps {
+export interface GridEditDialogProps extends GridEditNetworkSettingsTabProps {
     isVisible: boolean, setIsVisible(isVisible: boolean): void,
 };
 
 export default function GridEditDialog({
     isVisible, setIsVisible,
-    initialNoteNumber, setInitialNoteNumber,
-    columnCount, setColumnCount,
-    rowCount, setRowCount,
     midiHttpService,
-    scaleService
 }: GridEditDialogProps) {
     const [tabIndex, setTabIndex] = React.useState(0);
     return (
@@ -40,12 +36,7 @@ export default function GridEditDialog({
                 {/* Grid settings */}
                 {tabIndex === 0 &&
                     <Text>
-                        <GridEditGridSettingsTab
-                            initialNoteNumber={initialNoteNumber} setInitialNoteNumber={setInitialNoteNumber}
-                            columnCount={columnCount} setColumnCount={setColumnCount}
-                            rowCount={rowCount} setRowCount={setRowCount}
-                            scaleService={scaleService}
-                        />
+                        <GridEditGridSettingsTab />
                     </Text>
                 }
 

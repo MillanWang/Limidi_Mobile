@@ -1,53 +1,19 @@
 import React, { useState } from 'react';
-import {
-    StyleSheet,
-    View,
-} from 'react-native';
-
-
+import { StyleSheet, View, } from 'react-native';
 import { GridElementGrid } from '../components/GridElementGrid';
 import { GridScreenToolbar } from '../components/GridScreenToolbar';
 
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-import { ColorPresetService } from '../services/ColorPresetService';
-import { DEFAULT_COLOR_PRESET } from '../constants/Colors';
 import { Scale, ScaleService } from '../services/ScaleService';
-
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
 
 const midiHttpService = new MIDI_HTTP_Service("192.168.0.12", "4848");
-const colorPresetService = new ColorPresetService();
+
 const scaleService = new ScaleService();
-// scaleService.setScale(Scale.Aeolian);
-
-
-colorPresetService.createColorPreset("Default", DEFAULT_COLOR_PRESET);
-colorPresetService.createColorPreset("Frost", {
-    unpressedColor: '#012975',
-    pressedColor: '#2ad9ed'
-});
-colorPresetService.createColorPreset("Grape", {
-    unpressedColor: '#540075',
-    pressedColor: '#c047ed'
-});
-colorPresetService.createColorPreset("Slime", {
-    unpressedColor: '#0e4c00',
-    pressedColor: '#44ed1e'
-});
-colorPresetService.createColorPreset("Lava", {
-    unpressedColor: '#4c0001',
-    pressedColor: '#ed003f'
-});
-colorPresetService.createColorPreset("Banana", {
-    unpressedColor: '#586600',
-    pressedColor: '#e1ef00'
-});
-colorPresetService.createColorPreset("Hulk", {
-    unpressedColor: '#330c29',
-    pressedColor: '#0eed45'
-});
 
 export default function GridScreen() {
 
+    const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer);
 
     const [isPlayMode, setIsPlayMode] = useState(true);
     const [showGridEditDialog, setShowGridEditDialog] = useState(false);
@@ -63,21 +29,12 @@ export default function GridScreen() {
             <GridScreenToolbar
                 isPlayMode={isPlayMode} setIsPlayMode={setIsPlayMode}
                 isVisible={showGridEditDialog} setIsVisible={setShowGridEditDialog}
-                initialNoteNumber={initialNoteNumber} setInitialNoteNumber={setInitialNoteNumber}
-                columnCount={columnCount} setColumnCount={setColumnCount}
-                rowCount={rowCount} setRowCount={setRowCount}
                 midiHttpService={midiHttpService}
-                scaleService={scaleService}
             />
 
             <GridElementGrid
                 isPlayMode={isPlayMode}
-                initialNoteNumber={initialNoteNumber}
-                columnCount={columnCount}
-                rowCount={rowCount}
-                midiHttpService={midiHttpService}
-                colorPresetService={colorPresetService}
-                scaleService={scaleService}
+                midiHttpService={midiHttpService}//TODO: Should be via REDUX
             />
 
         </View>

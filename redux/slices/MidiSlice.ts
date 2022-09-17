@@ -5,6 +5,7 @@ import { getNoteKeyFromNoteNumber } from '../../constants/MIDI_Notes';
 
 
 export interface MidiGridElementState {
+    //TODO : Keep a variable for isLocked which prevents global rescaling from affecting this
     name: string,
     noteNumber: number,
     velocity: {
@@ -23,7 +24,7 @@ export interface MidiGridState {
 };
 
 const initialState: MidiGridState = {
-    startingNoteNumber: 0,
+    startingNoteNumber: 60, // Default to C5
     scale: Scale.Chromatic,
     columnCount: 4,
     rowCount: 4,
@@ -69,16 +70,8 @@ export const MidiGridSlice = createSlice({
     name: 'Midi',
     initialState,
     reducers: {
-        increment: state => {
-            // Redux Toolkit allows us to write "mutating" logic in reducers. It
-            // doesn't actually mutate the state because it uses the Immer library,
-            // which detects changes to a "draft state" and produces a brand new
-            // immutable state based off those changes
-            state.startingNoteNumber += 1
-        },
 
-
-
+        //Grid reducers
         setStartingNoteNumber: (state, action) => {
             // Floor divide then multiply To maintain original octave. Add the updated note number   
             state.startingNoteNumber = Math.floor(state.startingNoteNumber / 12) * 12 + (action.payload % 12);
@@ -94,12 +87,13 @@ export const MidiGridSlice = createSlice({
             rescaleGridElements(state.scale, state.startingNoteNumber, state.gridElements);
         },
         setColumnCount: (state, action) => {
-            state.columnCount = action.payload;
+            state.columnCount = Math.min(Math.max(1, action.payload), 12);
         },
         setRowCount: (state, action) => {
-            state.rowCount = action.payload;
+            state.rowCount = Math.min(Math.max(1, action.payload), 12);
         },
 
+        // Individual grid element reducers
         setGridElementName: (state, action) => {
             const index = action.payload.index;
             state.gridElements[index].name = action.payload.name;

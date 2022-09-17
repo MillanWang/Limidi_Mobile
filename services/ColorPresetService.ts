@@ -1,7 +1,4 @@
-import {
-    PresetColors,
-    DEFAULT_COLOR_PRESET
-} from '../constants/Colors'
+import { ColorPreset, } from '../constants/Colors'
 
 /**
  * Singleton service to create, retrieve, update, and delete color presets
@@ -10,10 +7,10 @@ import {
  */
 export class ColorPresetService {
 
-    private colorPresets: Array<ColorPreset>; //Array to easily save the order of used/edited
+    private colorPresets: ColorPreset[]; //Array to easily save the order of used/edited
 
-    constructor() {
-        this.colorPresets = new Array<ColorPreset>();
+    constructor(colorPresets?: ColorPreset[]) { //TODO : Add tests for recreating this with input param
+        this.colorPresets = colorPresets ?? [];
     };
 
     getAllColorPresets() {
@@ -22,16 +19,16 @@ export class ColorPresetService {
 
     getColorPreset(presetNameToGet: string): ColorPreset | null {
         for (let currentColorPreset of this.colorPresets) {
-            if (currentColorPreset.getPresetName() === presetNameToGet) {
+            if (currentColorPreset.name === presetNameToGet) {
                 return currentColorPreset;
             }
         }
         return null; //Not found
     };
 
-    createColorPreset(presetName: string, colorPreset?: PresetColors): boolean {
-        if (this.doesPresetNameExist(presetName)) return false; // Names must be unique
-        this.colorPresets.push(new ColorPreset(presetName, colorPreset?.unpressedColor, colorPreset?.pressedColor))
+    createColorPreset(colorPreset: ColorPreset): boolean {
+        if (this.doesPresetNameExist(colorPreset.name)) return false; // Names must be unique
+        this.colorPresets.push(colorPreset)
 
         return true;
     };
@@ -42,19 +39,19 @@ export class ColorPresetService {
         const colorPresetToUpdate = this.getColorPreset(oldPresetName);
         if (!!!colorPresetToUpdate) return false; //Cannot rename non existing ones
 
-        colorPresetToUpdate.setPresetName(newPresetName);
+        colorPresetToUpdate.name = newPresetName;
         this.colorPresets.push(this.colorPresets.splice(this.colorPresets.indexOf(colorPresetToUpdate), 1)[0]); //Move to the back of the array so that most recently edited is easily accessed
 
         return true;
     };
 
-    updateColorPresetColors(presetName: string, unpressedColor: string, pressedColor: string,): boolean {
-
-        const colorPresetToUpdate = this.getColorPreset(presetName);
+    updateColorPresetColors(colorPreset: ColorPreset): boolean {
+        const colorPresetToUpdate = this.getColorPreset(colorPreset.name);
 
         if (!!!colorPresetToUpdate) return false; // If ever trying to update a color preset that does not exist
 
-        colorPresetToUpdate?.setColors(unpressedColor, pressedColor);
+        colorPresetToUpdate.unpressedColor = colorPreset.unpressedColor;
+        colorPresetToUpdate.pressedColor = colorPreset.pressedColor;
         this.colorPresets.push(this.colorPresets.splice(this.colorPresets.indexOf(colorPresetToUpdate), 1)[0]); //Move to the back of the array so that most recently edited is easily accessed
         return true;
     };
@@ -71,35 +68,6 @@ export class ColorPresetService {
 
     private doesPresetNameExist(presetName: string): boolean {
         return this.getColorPreset(presetName) !== null; //Only returns null when not found
-    }
-}
-
-export class ColorPreset {
-    private presetName: string;
-    private unpressedColor: string;
-    private pressedColor: string;
-
-
-    constructor(presetName: string, unpressedColor?: string, pressedColor?: string,) {
-        this.presetName = presetName;
-        this.unpressedColor = unpressedColor ?? DEFAULT_COLOR_PRESET.unpressedColor;
-        this.pressedColor = pressedColor ?? DEFAULT_COLOR_PRESET.pressedColor;
-    }
-
-    getPresetName(): string { return this.presetName; }
-    setPresetName(presetName: string): void { this.presetName = presetName; }
-    isNameMatching(presetName: string): boolean { return this.presetName === presetName }
-
-    getColors(): PresetColors {
-        return {
-            unpressedColor: this.unpressedColor,
-            pressedColor: this.pressedColor,
-        };
-    }
-
-    setColors(unpressedColor: string, pressedColor: string,) {
-        this.unpressedColor = unpressedColor;
-        this.pressedColor = pressedColor;
     }
 }
 

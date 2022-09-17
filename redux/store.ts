@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 import MidiGridReducer from './slices/MidiSlice';
+import ColorServiceReducer from './slices/ColorServiceSlice';
 
 export const store = configureStore({
     reducer: {
-        midiGridReducer: MidiGridReducer
+        midiGridReducer: MidiGridReducer,
+        colorServiceReducer: ColorServiceReducer,
     }
 })
 
