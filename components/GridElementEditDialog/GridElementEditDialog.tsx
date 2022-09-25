@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Button, Dialog, Text, } from "@rneui/themed";
 
 import { GridElementEditMidiProps, GridElementEditMidiSettingsTab, } from './GridElementEditDialogTabs/GridElementEditMidiSettingsTab';
@@ -22,12 +22,13 @@ export default function GridElementEditDialog(
         <Dialog isVisible={dialogVisible} >
 
             {/* MIDI/Style Tab Selection */}
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles.dialogTabSelectorContainer}>
                 <Button onPress={() => { setTabIndex(0) }}>MIDI Settings</Button>
                 <Button onPress={() => { setTabIndex(1) }}>Style Settings</Button>
             </View>
+            <Text>Grid Element: {index}</Text>
 
-            <View style={{ height: 500 }}>
+            <View style={styles.dialogContentContainer}>
                 {tabIndex === 0 &&
                     <GridElementEditMidiSettingsTab index={index} />
                 }
@@ -37,7 +38,7 @@ export default function GridElementEditDialog(
                 }
             </View>
 
-            <View style={{ flexDirection: 'row', }}>
+            <View style={styles.saveButtonContainer}>
                 <Button onPress={() => { setDialogVisible(false) }}>SAVE</Button>
             </View>
         </Dialog>
@@ -46,3 +47,15 @@ export default function GridElementEditDialog(
 
 
 // TODO : There should be some degree of shared styling between this individual and grid level dialog option windows
+
+const styles = StyleSheet.create({
+    dialogTabSelectorContainer: {
+        flexDirection: 'row',
+    },
+    dialogContentContainer: {
+        height: 500,
+    },
+    saveButtonContainer: {
+        flexDirection: 'row',
+    },
+});

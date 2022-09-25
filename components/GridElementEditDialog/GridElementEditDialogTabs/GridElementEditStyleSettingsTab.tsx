@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import { Button, Icon, Text, } from "@rneui/themed";
+import { View, ScrollView, StyleSheet } from 'react-native';
+import { Icon, Text, } from "@rneui/themed";
 
 import { ColorSelector } from '../../ColorSelector';
-import { ColorPresetService } from '../../../services/ColorPresetService';
 
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import {
@@ -34,37 +33,38 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
 
 
     return (
-        <View style={{ flex: 1, flexDirection: "column", }}>
-            <View style={{ flex: 1, flexDirection: "row", justifyContent: 'space-evenly', }}>
+        <View style={styles.styleSettingsContainer}>
+            <View style={styles.colorSelectorContainers}>
                 <ColorSelector colorTitle="Unpressed Color : " color={currentGridElementColorState.unpressedColor} setColor={(unpressedColor) => { dispatch(setGridElementUnpressedColor({ index, unpressedColor })) }} />
                 <ColorSelector colorTitle="Pressed Color : " color={currentGridElementColorState.pressedColor} setColor={(pressedColor) => { dispatch(setGridElementPressedColor({ index, pressedColor })) }} />
 
             </View>
             {/* Color Presets */}
-            <View style={{ height: 150, flexDirection: 'row' }} >
+            <View style={styles.colorPresetContainer} >
                 {/* Save current as preset */}
 
                 {/* Load preset */}
-                <ScrollView style={{ width: "60 %" }}>
+                <ScrollView style={styles.colorPresetSelector}>
                     {colorPresetsState.map(preset => {
                         return (
                             <View
-                                style={{ borderWidth: 1, height: 30, flexDirection: 'row', backgroundColor: preset.unpressedColor }}
+                                style={{ backgroundColor: preset.unpressedColor, ...styles.colorPreset }}
                                 key={`ColorPreset_${preset.name}`}
                                 onTouchEndCapture={() => { setColors(preset.unpressedColor, preset.pressedColor); setCurrentPreset(preset.name); }}
                             >
-                                <Text style={{ alignSelf: "center", color: preset.pressedColor }}>
+                                <Text style={{ color: preset.pressedColor, ...styles.colorPresetText }}>
                                     {preset.name}
                                 </Text>
                                 {currentPreset === preset.name &&
-
                                     <Icon name="done" color={preset.pressedColor} />
                                 }
                             </View>
                         );
                     })}
                 </ScrollView>
-                {/* <View style={{ width: "40 %" }}>
+                {/* TODO: COLOR PRESET CRUD
+                
+                <View style={{ width: "40 %" }}>
                     <Text>Current Preset : {currentPreset}</Text>
                     <Button onPress={updatePresetColors}>Update Preset Colors</Button>
                 </View> */}
@@ -73,3 +73,30 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    styleSettingsContainer: {
+        flex: 1,
+        flexDirection: "column",
+    },
+    colorSelectorContainers: {
+        flex: 1,
+        flexDirection: "row",
+        justifyContent: 'space-evenly',
+    },
+    colorPresetContainer: {
+        height: 150,
+        flexDirection: 'row'
+    },
+    colorPresetSelector: {
+        width: "60 %"
+    },
+    colorPreset: {
+        borderWidth: 1,
+        height: 30,
+        flexDirection: 'row',
+    },
+    colorPresetText: {
+        alignSelf: "center",
+    }
+});

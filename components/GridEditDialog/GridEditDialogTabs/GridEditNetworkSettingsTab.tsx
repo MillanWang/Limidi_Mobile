@@ -5,7 +5,7 @@ import {
     TextInput,
     View,
 } from 'react-native';
-import { Input, Slider, } from "@rneui/themed";
+import { Input } from "@rneui/themed";
 import { MIDI_HTTP_Service } from '../../../services/MIDI_HTTP_Service';
 
 export interface GridEditNetworkSettingsTabProps {
