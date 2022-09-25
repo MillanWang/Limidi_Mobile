@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Input, Slider, Text, Switch, } from "@rneui/themed";
 
 const naturalNoteColor = '#bbbbbb';
 const accidentalNoteColor = '#333333'

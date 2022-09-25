@@ -10,9 +10,11 @@ import {
     Dialog,
 } from '@rneui/themed';
 
+import { GridEditGridSettingsTab } from './GridEditDialogTabs/GridEditGridSettingsTab';
+import { GridEditStyleSettingsTab } from './GridEditDialogTabs/GridEditColorSettingsTab';
 import { GridEditNetworkSettingsTab, GridEditNetworkSettingsTabProps } from './GridEditDialogTabs/GridEditNetworkSettingsTab';
 
-import { GridEditGridSettingsTab } from './GridEditDialogTabs/GridEditGridSettingsTab';
+
 
 export interface GridEditDialogProps extends GridEditNetworkSettingsTabProps {
     isVisible: boolean, setIsVisible(isVisible: boolean): void,
@@ -25,26 +27,22 @@ export default function GridEditDialog({
     const [tabIndex, setTabIndex] = React.useState(0);
     return (
         <Dialog isVisible={isVisible}>
-            <View style={{ flexDirection: 'row' }}>
+            <View style={styles.dialogTabSelectorContainer}>
                 <Button onPress={() => { setTabIndex(0) }}>Grid Settings</Button>
                 <Button onPress={() => { setTabIndex(1) }}>Color Preset Settings</Button>
                 <Button onPress={() => { setTabIndex(2) }}>Network Settings</Button>
 
             </View>
 
-            <View style={{ height: 500 }}>
+            <View style={styles.dialogContentContainer}>
                 {/* Grid settings */}
                 {tabIndex === 0 &&
-                    <Text>
-                        <GridEditGridSettingsTab />
-                    </Text>
+                    <GridEditGridSettingsTab />
                 }
 
                 {/* Color Preset Settings */}
                 {tabIndex === 1 &&
-                    <Text>
-                        CRUD all color presets. Default is reserved
-                    </Text>
+                    <GridEditStyleSettingsTab />
                 }
 
                 {/* Network Settings */}
@@ -52,10 +50,22 @@ export default function GridEditDialog({
                     <GridEditNetworkSettingsTab midiHttpService={midiHttpService} />
                 }
             </View>
-            <View style={{ flexDirection: 'row', }}>
+            <View style={styles.saveButtonContainer}>
                 <Button onPress={() => { setIsVisible(false) }}>SAVE</Button>
             </View>
 
         </Dialog>
     );
 }
+
+const styles = StyleSheet.create({
+    dialogTabSelectorContainer: {
+        flexDirection: 'row',
+    },
+    dialogContentContainer: {
+        height: 500,
+    },
+    saveButtonContainer: {
+        flexDirection: 'row',
+    },
+});

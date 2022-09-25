@@ -24,7 +24,7 @@ export function GridScreenToolbar({
             <Text style={styles.playOrEditText}>{isPlayMode ? "PLAY" : "EDIT"}</Text>
 
             {!!!isPlayMode &&
-                <View style={{}}>
+                <View>
                     <Icon name='settings' color='#ffffff' onPress={() => { setIsVisible(true) }} />
                 </View>
             }
