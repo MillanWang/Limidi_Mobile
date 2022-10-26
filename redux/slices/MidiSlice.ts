@@ -5,14 +5,14 @@ import { getNoteKeyFromNoteNumber } from '../../constants/MIDI_Notes';
 
 
 export interface MidiGridElementState {
-    //TODO : Keep a variable for isLocked which prevents global rescaling from affecting this
     name: string,
     noteNumber: number,
     velocity: {
         floor: number,
         ceiling: number,
         isVertical: boolean,
-    }
+    },
+    isLocked: boolean,
 }
 
 export interface MidiGridState {
@@ -42,7 +42,8 @@ function initializeGridElements(): MidiGridElementState[] {
             {
                 name: `${getNoteKeyFromNoteNumber(currentNoteNumber)}`,
                 noteNumber: currentNoteNumber,
-                velocity: { floor: 80, ceiling: 110, isVertical: true, }
+                velocity: { floor: 80, ceiling: 127, isVertical: true, },
+                isLocked: false,
             });
     }
     return allGridElements;
@@ -54,9 +55,11 @@ function rescaleGridElements(scale: Scale, startingNoteNumber: number, gridEleme
     scaleService.setCurrentNoteNumber(startingNoteNumber);
 
     for (let currentGridElement of gridElements) {
-        const currentNoteNumber = scaleService.getNextNoteNumber()
-        currentGridElement.name = `${getNoteKeyFromNoteNumber(currentNoteNumber)}`;
-        currentGridElement.noteNumber = currentNoteNumber;
+        const currentNoteNumber = scaleService.getNextNoteNumber();
+        if (!currentGridElement.isLocked) {
+            currentGridElement.name = `${getNoteKeyFromNoteNumber(currentNoteNumber)}`;
+            currentGridElement.noteNumber = currentNoteNumber;
+        }
     }
 }
 
@@ -92,6 +95,8 @@ export const MidiGridSlice = createSlice({
         setRowCount: (state, action) => {
             state.rowCount = Math.min(Math.max(1, action.payload), 12);
         },
+
+
 
         // Individual grid element reducers
         setGridElementName: (state, action) => {
@@ -129,6 +134,10 @@ export const MidiGridSlice = createSlice({
             const index = action.payload.index;
             state.gridElements[index].velocity.isVertical = action.payload.isVertical;
         },
+        setGridElementMidiLocked: (state, action) => {
+            const index = action.payload.index;
+            state.gridElements[index].isLocked = action.payload.isLocked;
+        },
     }
 })
 
@@ -149,6 +158,7 @@ export const {
     setGridElementVelocityFloor,
     setGridElementVelocityCeiling,
     setGridElementVelocityIsVertical,
+    setGridElementMidiLocked,
 } = MidiGridSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type

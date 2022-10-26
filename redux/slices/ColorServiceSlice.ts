@@ -1,22 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState } from '../store';
 import { ColorPreset, DEFAULT, PRESET_COLOR_LIST, } from '../../constants/Colors';
 import { ColorPresetService } from '../../services/ColorPresetService';
 
 export interface GridElementColorState {
-    // isLocked: boolean, //TODO: Add individual color locking to resist globally applying color presets
+    isLocked: boolean,
     unpressedColor: string,
     pressedColor: string,
 }
 
 export interface ColorServiceState {
-    // colorPresetService: ColorPresetService,
+    // colorPresetService: ColorPresetService, // TODO: Figure out custom colors
     colorPresets: ColorPreset[],
-    gridElementColors: GridElementColorState[]
+    gridElementStyles: GridElementColorState[]
 };
 const initialState: ColorServiceState = {
     colorPresets: initializeColorPresets(),
-    gridElementColors: initializeGridElementColors()
+    gridElementStyles: initializeGridElementColors()
 };
 
 function initializeColorPresets(): ColorPreset[] {
@@ -35,6 +34,7 @@ function initializeGridElementColors(): GridElementColorState[] {
         allGridElementColorStates.push({
             unpressedColor: DEFAULT.unpressedColor,
             pressedColor: DEFAULT.pressedColor,
+            isLocked: false,
         });
     };
     return allGridElementColorStates;
@@ -47,20 +47,26 @@ export const ColorServiceSlice = createSlice({
         //GridElement color operations
         setGridElementUnpressedColor: (state, action) => {
             const index = action.payload.index;
-            state.gridElementColors[index].unpressedColor = action.payload.unpressedColor;
+            state.gridElementStyles[index].unpressedColor = action.payload.unpressedColor;
         },
         setGridElementPressedColor: (state, action) => {
             const index = action.payload.index;
-            state.gridElementColors[index].pressedColor = action.payload.pressedColor;
+            state.gridElementStyles[index].pressedColor = action.payload.pressedColor;
+        },
+        setGridElementStyleLocked: (state, action) => {
+            const index = action.payload.index;
+            state.gridElementStyles[index].isLocked = action.payload.locked;
         },
 
         //Global color controls
         applyColorPresetToAllGridElements: (state, action) => {
             let cps = new ColorPresetService(state.colorPresets);
             const { unpressedColor, pressedColor } = cps.getColorPreset(action.payload) ?? { unpressedColor: DEFAULT.unpressedColor, pressedColor: DEFAULT.pressedColor };
-            for (let gridElementColor of state.gridElementColors) {
-                gridElementColor.unpressedColor = unpressedColor;
-                gridElementColor.pressedColor = pressedColor;
+            for (let gridElementStyle of state.gridElementStyles) {
+                if (!gridElementStyle.isLocked) {
+                    gridElementStyle.unpressedColor = unpressedColor;
+                    gridElementStyle.pressedColor = pressedColor;
+                }
             }
         },
 
@@ -76,6 +82,7 @@ export const {
     //GridElement color operations
     setGridElementUnpressedColor,
     setGridElementPressedColor,
+    setGridElementStyleLocked,
 
     //Global color controls
     applyColorPresetToAllGridElements,

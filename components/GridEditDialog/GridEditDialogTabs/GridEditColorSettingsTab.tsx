@@ -1,4 +1,4 @@
-import { Button, Icon, Slider, } from "@rneui/themed";
+import { Button, Icon, } from "@rneui/themed";
 import React, { useState } from 'react';
 import {
     ScrollView,
@@ -10,12 +10,12 @@ import {
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import { applyColorPresetToAllGridElements } from '../../../redux/slices/ColorServiceSlice';
 
-
-
 export function GridEditStyleSettingsTab(): JSX.Element {
+
     const colorPresetsState = useAppSelector(state => state.colorServiceReducer.colorPresets);
     const [currentPreset, setCurrentPreset] = useState('Default');
     const dispatch = useAppDispatch();
+
     return (
         <View style={styles.colorPresetContainer}>
 

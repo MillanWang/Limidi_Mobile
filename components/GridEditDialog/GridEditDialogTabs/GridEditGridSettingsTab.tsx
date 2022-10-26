@@ -33,19 +33,24 @@ export function GridEditGridSettingsTab(): JSX.Element {
             <Text>Number of Columns: {currentGridElementMidiState.columnCount}</Text>
             <Slider
                 maximumValue={12} minimumValue={1} step={1}
-                value={currentGridElementMidiState.columnCount} onValueChange={(value) => { dispatch(setColumnCount(value)) }}
+                value={currentGridElementMidiState.columnCount}
+                onValueChange={(value) => { dispatch(setColumnCount(value)) }}
             />
             <Text>Number of Rows: {currentGridElementMidiState.rowCount}</Text>
             <Slider
                 maximumValue={12} minimumValue={1} step={1}
-                value={currentGridElementMidiState.rowCount} onValueChange={(value) => { dispatch(setRowCount(value)) }}
+                value={currentGridElementMidiState.rowCount}
+                onValueChange={(value) => { dispatch(setRowCount(value)) }}
             />
 
 
             {/* Note Control */}
             <View>
                 <Text>Starting Note: {Object.values(NOTE)[currentGridElementMidiState.startingNoteNumber % 12]}</Text>
-                <Piano noteNumber={currentGridElementMidiState.startingNoteNumber % 12} setNoteNumber={(value) => { dispatch(setStartingNoteNumber(value)) }} />
+                <Piano
+                    noteNumber={currentGridElementMidiState.startingNoteNumber % 12}
+                    setNoteNumber={(value) => { dispatch(setStartingNoteNumber(value)) }}
+                />
             </View>
 
 
@@ -54,7 +59,8 @@ export function GridEditGridSettingsTab(): JSX.Element {
                 <Text>Octave: {Math.floor(currentGridElementMidiState.startingNoteNumber / 12)}</Text>
                 <Slider
                     maximumValue={10} minimumValue={0} step={1}
-                    value={Math.floor(currentGridElementMidiState.startingNoteNumber / 12)} onValueChange={(value) => { dispatch(setStartingNoteOctave(value)) }}
+                    value={Math.floor(currentGridElementMidiState.startingNoteNumber / 12)}
+                    onValueChange={(value) => { dispatch(setStartingNoteOctave(value)) }}
                 />
             </View>
 

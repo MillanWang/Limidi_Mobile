@@ -1,30 +1,17 @@
 import { MidiMessageProps } from '../constants/MIDI_Notes';
 
+export interface HttpCommunicationInfo {
+    ip: string;
+    port: string;
+    midiDeviceID: string;
+}
+
 export class MIDI_HTTP_Service {
-    private ip: string;
-    private port: string;
-    private midiDeviceID: string = '2';
 
+    static async sendMidiMessage(httpCommunicationInfo: HttpCommunicationInfo, midiMessageProps: MidiMessageProps): Promise<void> {
+        const { note, octave, velocity, isNoteOn } = midiMessageProps;
 
-    constructor(ip?: string, port?: string) {
-        this.ip = ip ?? '';
-        this.port = port ?? '';
-    };
-
-    getIP(): string { return this.ip; };
-    setIP(ip: string): void { this.ip = ip; }
-
-    getPort(): string { return this.port; };
-    setPort(port: string): void { this.port = port; }
-
-    async sendMidiMessage(midiMessageProps: MidiMessageProps): Promise<void> {
-        const {
-            note,
-            octave,
-            velocity,
-            isNoteOn
-        } = midiMessageProps;
-        fetch(`http://${this.ip}:${this.port}/MIDI_Input/?note=${note}&octave=${octave}&velocity=${velocity}&isNoteOn=${isNoteOn}`,
+        fetch(`http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MIDI_Input/?note=${note}&octave=${octave}&velocity=${velocity}&isNoteOn=${isNoteOn}`,
             {
                 method: 'GET',
             }
@@ -37,11 +24,6 @@ export class MIDI_HTTP_Service {
         });
     }
 
-
     // FUNCTION SKELETONS - TODO WHEN DESKTOP UPDATE IS IN
     async getMidiOutputDevices(): Promise<string[]> { return ['TODO', 'Index in returned array is the device ID']; }
-    async setMidiDeviceID(id: string): Promise<void> {
-        this.midiDeviceID = id;
-        console.log(this.midiDeviceID);
-    }
 };

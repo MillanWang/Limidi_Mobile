@@ -2,11 +2,13 @@ import { configureStore } from '@reduxjs/toolkit'
 
 import MidiGridReducer from './slices/MidiSlice';
 import ColorServiceReducer from './slices/ColorServiceSlice';
+import HttpCommunicationsReducer from './slices/HttpCommunicationsSlice';
 
 export const store = configureStore({
     reducer: {
         midiGridReducer: MidiGridReducer,
         colorServiceReducer: ColorServiceReducer,
+        httpCommunicationsReducer: HttpCommunicationsReducer,
     }
 })
 
