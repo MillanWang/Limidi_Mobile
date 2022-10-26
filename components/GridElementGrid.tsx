@@ -3,28 +3,23 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
-
 import { GridElementRow } from '../components/GridElementRow';
-import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
-
-import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { useAppSelector } from '../redux/hooks';
 
 export interface GridElementGridProps {
     isPlayMode: boolean,
-    midiHttpService: MIDI_HTTP_Service,
 }
 
-export function GridElementGrid({ isPlayMode, midiHttpService, }: GridElementGridProps) {
+export function GridElementGrid({ isPlayMode, }: GridElementGridProps) {
     const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer);
 
+    // Creating the rows
     let gridElementRows: JSX.Element[] = [];
-
     for (let i = 0; i < currentGridElementMidiState.rowCount; i++) {
         gridElementRows.push(
             <GridElementRow
                 isPlayMode={isPlayMode}
                 rowStartingIndex={i * currentGridElementMidiState.columnCount}
-                midiHttpService={midiHttpService}
                 key={`GridElementRow_${i}`}
             />
         );

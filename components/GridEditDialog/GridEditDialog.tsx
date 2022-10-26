@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     StyleSheet,
-    Text,
     View,
 } from 'react-native';
 
@@ -12,17 +11,14 @@ import {
 
 import { GridEditGridSettingsTab } from './GridEditDialogTabs/GridEditGridSettingsTab';
 import { GridEditStyleSettingsTab } from './GridEditDialogTabs/GridEditColorSettingsTab';
-import { GridEditNetworkSettingsTab, GridEditNetworkSettingsTabProps } from './GridEditDialogTabs/GridEditNetworkSettingsTab';
+import { GridEditNetworkSettingsTab } from './GridEditDialogTabs/GridEditNetworkSettingsTab';
 
-
-
-export interface GridEditDialogProps extends GridEditNetworkSettingsTabProps {
+export interface GridEditDialogProps {
     isVisible: boolean, setIsVisible(isVisible: boolean): void,
 };
 
 export default function GridEditDialog({
     isVisible, setIsVisible,
-    midiHttpService,
 }: GridEditDialogProps) {
     const [tabIndex, setTabIndex] = React.useState(0);
     return (
@@ -36,20 +32,15 @@ export default function GridEditDialog({
 
             <View style={styles.dialogContentContainer}>
                 {/* Grid settings */}
-                {tabIndex === 0 &&
-                    <GridEditGridSettingsTab />
-                }
+                {tabIndex === 0 && <GridEditGridSettingsTab />}
 
                 {/* Color Preset Settings */}
-                {tabIndex === 1 &&
-                    <GridEditStyleSettingsTab />
-                }
+                {tabIndex === 1 && <GridEditStyleSettingsTab />}
 
                 {/* Network Settings */}
-                {tabIndex === 2 &&
-                    <GridEditNetworkSettingsTab midiHttpService={midiHttpService} />
-                }
+                {tabIndex === 2 && <GridEditNetworkSettingsTab />}
             </View>
+
             <View style={styles.saveButtonContainer}>
                 <Button onPress={() => { setIsVisible(false) }}>SAVE</Button>
             </View>

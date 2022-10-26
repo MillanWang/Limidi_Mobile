@@ -1,12 +1,14 @@
 import React from 'react';
 import {
     StyleSheet,
-    Switch,
     Text,
     View,
 } from 'react-native';
 
-import { Icon } from '@rneui/themed';
+import {
+    Icon,
+    Switch,
+} from '@rneui/themed';
 import GridEditDialog, { GridEditDialogProps } from '../components/GridEditDialog/GridEditDialog';
 
 
@@ -16,7 +18,6 @@ export interface GridScreenToolbarProps extends GridEditDialogProps {
 export function GridScreenToolbar({
     isPlayMode, setIsPlayMode,
     isVisible, setIsVisible,
-    midiHttpService,
 }: GridScreenToolbarProps) {
     return (
         <View style={styles.headerOptions}>
@@ -29,10 +30,7 @@ export function GridScreenToolbar({
                 </View>
             }
 
-            <GridEditDialog
-                isVisible={isVisible} setIsVisible={setIsVisible}
-                midiHttpService={midiHttpService}
-            />
+            <GridEditDialog isVisible={isVisible} setIsVisible={setIsVisible} />
         </View>
     );
 }

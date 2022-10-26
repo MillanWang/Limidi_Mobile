@@ -4,38 +4,31 @@ import {
     StyleSheet,
     View
 } from 'react-native';
-
-import {
-    Text,
-} from "@rneui/themed";
-
+import { Text, } from "@rneui/themed";
 import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
 import { createMidiMessage, } from '../constants/MIDI_Notes';
-
 import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
-
-
 import { useAppSelector } from '../redux/hooks';
+
+const NOTE_ON = true;
 
 interface GridElementProps {
     index: number,
-
-    //Services
-    MIDI_HTTP_Service: MIDI_HTTP_Service,
 
     //Grid Controls
     isPlayMode: boolean,
 };
 
+
 export default function GridElement(
     {
         index,
-        MIDI_HTTP_Service,
         isPlayMode
     }: GridElementProps
 ) {
     const currentGridElementInfo = useAppSelector(state => state.midiGridReducer.gridElements[index]);
-    const currentGriedElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementColors[index]);
+    const currentGriedElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementStyles[index]);
+    const httpCommunicationInfo = useAppSelector(state => state.httpCommunicationsReducer.httpCommunicationInfo);
 
     const [elementHeight, setElementHeight] = useState(1);
     const [elementWidth, setElementWidth] = useState(1);
@@ -44,13 +37,11 @@ export default function GridElement(
     function playModeTouchStartHandler(event: any) {
 
         if (isPlayMode) {
-            fadeOut();
+            const velocity = getVelocityValue(event);
+            fadeOut(Math.max(velocity / 127, 0.25)); // 25% as minimum opacity drop for really low velocities
             MIDI_HTTP_Service.sendMidiMessage(
-                createMidiMessage(
-                    currentGridElementInfo.noteNumber,
-                    getVelocityValue(event),
-                    true //Note is on
-                )
+                httpCommunicationInfo,
+                createMidiMessage(currentGridElementInfo.noteNumber, velocity, NOTE_ON)
             );
         } else {
             //Tap in  edit mode shows dialog
@@ -62,11 +53,9 @@ export default function GridElement(
         if (isPlayMode) {
             fadeIn();
             MIDI_HTTP_Service.sendMidiMessage(
-                createMidiMessage(
-                    currentGridElementInfo.noteNumber,
-                    0, // No velocity on note off
-                    false //Note is off
-                )
+                httpCommunicationInfo,
+                /* No velocity on note off*/
+                createMidiMessage(currentGridElementInfo.noteNumber, 0, !NOTE_ON)
             );
         }
     }
@@ -85,16 +74,16 @@ export default function GridElement(
     }
 
     const fadeAnim = useRef(new Animated.Value(1)).current;
-    const fadeIn = () => {
+    function fadeIn() {
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 300,
             useNativeDriver: true
         }).start();
     };
-    const fadeOut = () => {
+    function fadeOut(velocityPercent: number) {
         Animated.timing(fadeAnim, {
-            toValue: 0,
+            toValue: 1 - velocityPercent,
             duration: 5,
             useNativeDriver: true
         }).start();
