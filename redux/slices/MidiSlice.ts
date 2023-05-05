@@ -42,7 +42,7 @@ function initializeGridElements(): MidiGridElementState[] {
             {
                 name: `${getNoteKeyFromNoteNumber(currentNoteNumber)}`,
                 noteNumber: currentNoteNumber,
-                velocity: { floor: 80, ceiling: 127, isVertical: true, },
+                velocity: { floor: 64, ceiling: 127, isVertical: true, },
                 isLocked: false,
             });
     }
