@@ -18,27 +18,15 @@ export function getNoteKeyFromNoteNumber(noteNumber: number): string {
 }
 
 export interface MidiMessageProps {
-    note: string,
-    octave: number, // 0-10
+    noteNumber: number, // 0-120
     velocity: number, // 0-127
     isNoteOn: boolean
 }
 
-export function createMidiMessage_OLD(noteNumber: number, octave: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
-    return {
-        note: Object.keys(NOTE)[noteNumber],
-        octave: octave,
-        velocity: velocity,
-        isNoteOn: isNoteOn,
-    };
-}
-
 export function createMidiMessage(noteNumber: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
     return {
-        note: Object.keys(NOTE)[noteNumber % 12],
-        octave: Math.floor(noteNumber / 12),
+        noteNumber: noteNumber,
         velocity: velocity,
         isNoteOn: isNoteOn,
-
     };
 } //TODO : Backend shall expect notenumber instead of separate note and octave. 
