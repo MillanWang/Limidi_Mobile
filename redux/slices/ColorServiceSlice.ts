@@ -58,7 +58,13 @@ export const ColorServiceSlice = createSlice({
             state.gridElementStyles[index].isLocked = action.payload.locked;
         },
 
+
         //Global color controls
+        // Overwriting all grid element styles for presets
+        setAllGridElementStyles: (state, action) => {
+            state.gridElementStyles = action.payload;
+        },
+        
         applyColorPresetToAllGridElements: (state, action) => {
             let cps = new ColorPresetService(state.colorPresets);
             const { unpressedColor, pressedColor } = cps.getColorPreset(action.payload) ?? { unpressedColor: DEFAULT.unpressedColor, pressedColor: DEFAULT.pressedColor };
@@ -79,6 +85,7 @@ export const ColorServiceSlice = createSlice({
 });
 
 export const {
+
     //GridElement color operations
     setGridElementUnpressedColor,
     setGridElementPressedColor,
@@ -86,6 +93,7 @@ export const {
 
     //Global color controls
     applyColorPresetToAllGridElements,
+    setAllGridElementStyles,
 
     //ColorPresetService operations
     createColorPreset,

@@ -74,6 +74,17 @@ export const MidiGridSlice = createSlice({
     initialState,
     reducers: {
 
+        // The whole state
+        setGridMidiState: (state, action) => {
+
+            // Can't override state directly. gotta do all of the fields individually.
+            state.columnCount = action.payload.columnCount;
+            state.rowCount = action.payload.rowCount;
+            state.scale = action.payload.scale;
+            state.startingNoteNumber = action.payload.startingNoteNumber;
+            state.gridElements = action.payload.gridElements;
+        },
+
         //Grid reducers
         setStartingNoteNumber: (state, action) => {
             // Floor divide then multiply To maintain original octave. Add the updated note number   
@@ -143,6 +154,8 @@ export const MidiGridSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
+    // The whole grid's MIDI state
+    setGridMidiState,
 
     // Grid 
     setStartingNoteNumber,
