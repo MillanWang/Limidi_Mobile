@@ -21,9 +21,21 @@ export interface GridElementEditStyleProps {
     index: number,
 }
 
+
+
+// This whole tab is gonna need a lot of review
+/* 
+-Lock should be moved up to the tab selection area
+-Should only have selection for pressed and unpressed color here
+-Option to apply a color 
+ */
+
 export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyleProps) {
 
-    const currentGridElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementStyles[index]);
+    const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
+    const colorState = currentGridElementState.colorState;
+    const lockedState = currentGridElementState.isLocked;
+
     const colorPresetsState = useAppSelector(state => state.colorServiceReducer.colorPresets);
     const dispatch = useAppDispatch();
 
@@ -36,7 +48,7 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
     }
 
     function toggleStyleLock() {
-        dispatch(setGridElementStyleLocked({ index, locked: !currentGridElementColorState.isLocked }));
+        dispatch(setGridElementStyleLocked({ index, locked: !lockedState}));
     }
 
 
@@ -45,13 +57,13 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
         <View style={styles.styleSettingsContainer}>
             <View style={styles.lockSwitchView}>
                 <Text>Lock Element Style: </Text>
-                <Switch onChange={toggleStyleLock} value={currentGridElementColorState.isLocked}></Switch>
+                <Switch onChange={toggleStyleLock} value={lockedState}></Switch>
             </View>
 
 
             <View style={styles.colorSelectorContainers}>
-                <ColorSelector colorTitle="Unpressed Color : " color={currentGridElementColorState.unpressedColor} setColor={(unpressedColor) => { dispatch(setGridElementUnpressedColor({ index, unpressedColor })) }} />
-                <ColorSelector colorTitle="Pressed Color : " color={currentGridElementColorState.pressedColor} setColor={(pressedColor) => { dispatch(setGridElementPressedColor({ index, pressedColor })) }} />
+                <ColorSelector colorTitle="Unpressed Color : " color={colorState.unpressedColor} setColor={(unpressedColor) => { dispatch(setGridElementUnpressedColor({ index, unpressedColor })) }} />
+                <ColorSelector colorTitle="Pressed Color : " color={colorState.pressedColor} setColor={(pressedColor) => { dispatch(setGridElementPressedColor({ index, pressedColor })) }} />
 
             </View>
             {/* Color Presets */}

@@ -2,6 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 import { ColorPreset, DEFAULT, PRESET_COLOR_LIST, } from '../../constants/Colors';
 import { ColorPresetService } from '../../services/ColorPresetService';
 
+
+
+/**
+ * This slice should be combined into MidiSlice to be GridSlice
+ * Better to cut out the custom coloring and instead just make a collection of color presets and themes to choose from
+ */
+
+
 export interface GridElementColorState {
     isLocked: boolean,
     unpressedColor: string,

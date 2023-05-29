@@ -33,7 +33,7 @@ export class ScaleService {
         this.currentNoteNumber = DEFAULT_NOTE_NUMBER;
     };
 
-    public getNextNoteNumber(): number {
+    public getNextNoteNumber(): number { // TODO: Figure out how to modulus this so that note numbers don't go past the ceiling
         const currentStep = this.currentNoteCycle.shift() ?? 1;
         this.currentNoteCycle.push(currentStep);
 

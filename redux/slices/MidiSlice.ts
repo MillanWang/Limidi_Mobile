@@ -15,7 +15,7 @@ export interface MidiGridElementState {
     isLocked: boolean,
 }
 
-export interface MidiGridState {
+export interface MidiGridState { // This should be a list with another value that stores the current preset number. Should probably also be combined with the colors
     startingNoteNumber: number,
     scale: Scale,
     columnCount: number,
