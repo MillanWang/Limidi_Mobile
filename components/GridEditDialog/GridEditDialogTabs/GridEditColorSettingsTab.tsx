@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
-import { applyColorPresetToAllGridElements } from '../../../redux/slices/ColorServiceSlice';
+import { setGridColorPresetGlobally } from '../../../redux/slices/GridPresetsSlice';
 
 export function GridEditStyleSettingsTab(): JSX.Element {
 
@@ -39,7 +39,7 @@ export function GridEditStyleSettingsTab(): JSX.Element {
             </ScrollView>
             <View style={styles.colorPresetOptions}>
                 <Text>Current Preset : {currentPreset}</Text>
-                <Button onPress={() => { dispatch(applyColorPresetToAllGridElements(currentPreset)) }}>Apply Color Preset Globally</Button>
+                <Button onPress={() => { dispatch(setGridColorPresetGlobally(currentPreset)) }}>Apply Color Preset Globally</Button>
             </View>
         </View>
     );

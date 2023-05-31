@@ -1,9 +1,11 @@
 import { getNoteKeyFromNoteNumber } from "../../constants/MIDI_Notes";
 import { Scale, ScaleService } from "../../services/ScaleService";
 import { GridElementState } from "../interfaces/GridElement/GridElementState";
+import { GridState } from "../interfaces/GridState";
 
-export function rescaleGridElements(scale: Scale, startingNoteNumber: number, gridElements: GridElementState[]): void {
-    const scaleService = new ScaleService();
+export function rescaleGridElements(grid: GridState) {
+    const { scale, startingNoteNumber, gridElements } = grid;
+    const scaleService = new ScaleService(); // TODO - Consider the possibility of replacing scaleService with a hook
     scaleService.setScale(scale);
     scaleService.setCurrentNoteNumber(startingNoteNumber);
 
@@ -14,4 +16,6 @@ export function rescaleGridElements(scale: Scale, startingNoteNumber: number, gr
             currentGridElement.midiState.noteNumber = currentNoteNumber;
         }
     }
+
+    return grid;
 }

@@ -1,6 +1,4 @@
 import { configureStore } from '@reduxjs/toolkit'
-
-import MidiGridReducer from './slices/MidiSlice';
 import ColorServiceReducer from './slices/ColorServiceSlice';
 import HttpCommunicationsReducer from './slices/HttpCommunicationsSlice';
 import GridPresetsReducer from './slices/GridPresetsSlice';
@@ -8,7 +6,6 @@ import GridPresetsReducer from './slices/GridPresetsSlice';
 export const store = configureStore({
     reducer: {
         gridPresetsReducer: GridPresetsReducer,
-        midiGridReducer: MidiGridReducer,
         colorServiceReducer: ColorServiceReducer,
         httpCommunicationsReducer: HttpCommunicationsReducer,
     },

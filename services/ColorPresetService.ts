@@ -1,5 +1,9 @@
 import { ColorPreset, } from '../constants/Colors'
 
+
+// TODO - Completely rework this system. This probably doesn't need to exist and can be done all in redux
+//Transfer all of this to the color service slice
+
 /**
  * Singleton service to create, retrieve, update, and delete color presets
  * Preset names must be unique
