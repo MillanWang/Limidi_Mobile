@@ -2,10 +2,17 @@ import { configureStore } from '@reduxjs/toolkit'
 import ColorServiceReducer from './slices/ColorServiceSlice';
 import HttpCommunicationsReducer from './slices/HttpCommunicationsSlice';
 import GridPresetsReducer from './slices/GridPresetsSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { persistReducer, persistStore } from 'redux-persist';
+
+
+
+
+
 
 export const store = configureStore({
     reducer: {
-        gridPresetsReducer: GridPresetsReducer,
+        gridPresetsReducer:GridPresetsReducer,// persistedReducer,
         colorServiceReducer: ColorServiceReducer,
         httpCommunicationsReducer: HttpCommunicationsReducer,
     },
@@ -16,6 +23,8 @@ export const store = configureStore({
     //         serializableCheck: false,
     //     }),
 })
+
+
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>

@@ -36,7 +36,7 @@ export function GridElementEditMidiSettingsTab({ index, }: GridElementEditMidiPr
         <View>
             {/* MIDI settings Lock */}
             <View style={styles.lockSwitchView}>
-                <Text>Lock Element MIDI Settings: </Text>
+                <Text>Lock Grid Element: </Text>
                 <Switch value={lockedState} onChange={toggleElementMidiLock}></Switch>
             </View>
 

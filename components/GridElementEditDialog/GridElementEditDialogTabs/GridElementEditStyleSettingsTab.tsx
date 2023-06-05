@@ -15,10 +15,12 @@ import {
     setGridElementUnpressedColor,
     setGridElementPressedColor,
 } from '../../../redux/slices/GridPresetsSlice';
+import { PRESET_COLOR_LIST } from '../../../constants/Colors';
 
 export interface GridElementEditStyleProps {
     index: number,
 }
+
 
 
 
@@ -34,17 +36,14 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const colorState = currentGridElementState.colorState;
 
-    const colorPresetsState = useAppSelector(state => state.colorServiceReducer.colorPresets);
     const dispatch = useAppDispatch();
 
     const [currentPreset, setCurrentPreset] = useState('Default'); //Possibly not needed?????
-
 
     function setColors(unpressedColor: string, pressedColor: string): void {
         dispatch(setGridElementUnpressedColor({ index, unpressedColor }));
         dispatch(setGridElementPressedColor({ index, pressedColor }));
     }
-
 
     return (
         <View style={styles.styleSettingsContainer}>
@@ -52,13 +51,13 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
             <View style={styles.colorSelectorContainers}>
                 <ColorSelector colorTitle="Unpressed Color : " color={colorState.unpressedColor} setColor={(unpressedColor) => { dispatch(setGridElementUnpressedColor({ index, unpressedColor })) }} />
                 <ColorSelector colorTitle="Pressed Color : " color={colorState.pressedColor} setColor={(pressedColor) => { dispatch(setGridElementPressedColor({ index, pressedColor })) }} />
-
             </View>
+
             {/* Color Presets */}
             <View style={styles.colorPresetContainer} >
                 {/* Load preset */}
                 <ScrollView style={styles.colorPresetSelector}>
-                    {colorPresetsState.map(preset => {
+                    {PRESET_COLOR_LIST.map(preset => {
                         return (
                             <View
                                 style={{ backgroundColor: preset.unpressedColor, ...styles.colorPreset }}

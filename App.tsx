@@ -7,6 +7,7 @@ import { store } from './redux/store';
 
 import useCachedResources from './hooks/useCachedResources';
 import GridScreen from './screens/GridScreen';
+import { PersistGate } from 'redux-persist/integration/react';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -19,9 +20,9 @@ export default function App() {
 
         <Provider store={store}>{/* From Redux */}
 
-          <StatusBar />
+            <StatusBar />
 
-          <GridScreen />
+            <GridScreen />
 
         </Provider>
 
