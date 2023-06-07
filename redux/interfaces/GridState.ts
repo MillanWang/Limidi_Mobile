@@ -1,4 +1,5 @@
-import { Scale } from "../../services/ScaleService";
+
+import { Scale } from "../../constants/Scales";
 import { GridElementState } from "./GridElement/GridElementState";
 
 export interface GridState {

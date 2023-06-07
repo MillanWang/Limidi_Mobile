@@ -9,28 +9,28 @@ import {
 
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import { setGridColorPresetGlobally } from '../../../redux/slices/GridPresetsSlice';
+import { DEFAULT, PRESET_COLOR_LIST } from "../../../constants/Colors";
 
 export function GridEditStyleSettingsTab(): JSX.Element {
 
-    const colorPresetsState = useAppSelector(state => state.colorServiceReducer.colorPresets);
-    const [currentPreset, setCurrentPreset] = useState('Default');
+    const [currentPreset, setCurrentPreset] = useState(DEFAULT);
     const dispatch = useAppDispatch();
 
     return (
         <View style={styles.colorPresetContainer}>
 
             <ScrollView style={styles.colorPresetSelector}>
-                {colorPresetsState.map(preset => {
+                {PRESET_COLOR_LIST.map(preset => {
                     return (
                         <View
                             style={{ backgroundColor: preset.unpressedColor, ...styles.colorPreset }}
                             key={`ColorPreset_${preset.name}`}
-                            onTouchEndCapture={() => { setCurrentPreset(preset.name); }}
+                            onTouchEndCapture={() => { setCurrentPreset(preset); }}
                         >
                             <Text style={{ color: preset.pressedColor, ...styles.colorPresetText }}>
                                 {preset.name}
                             </Text>
-                            {currentPreset === preset.name &&
+                            {currentPreset === preset &&
                                 <Icon name="done" color={preset.pressedColor} />
                             }
                         </View>
@@ -38,7 +38,7 @@ export function GridEditStyleSettingsTab(): JSX.Element {
                 })}
             </ScrollView>
             <View style={styles.colorPresetOptions}>
-                <Text>Current Preset : {currentPreset}</Text>
+                <Text>Current Preset : {currentPreset.name}</Text>
                 <Button onPress={() => { dispatch(setGridColorPresetGlobally(currentPreset)) }}>Apply Color Preset Globally</Button>
             </View>
         </View>

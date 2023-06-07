@@ -1,25 +1,22 @@
 import { ColorPreset, DEFAULT, FROST, GRAPE, HULK, LAVA, SLIME } from "../../constants/Colors";
-import { getNoteKeyFromNoteNumber } from "../../constants/MIDI_Notes";
-import { Scale } from "../../services/ScaleService";
-import { ScaleService } from "../../services/ScaleService";
+import { Scale } from "../../constants/Scales";
 import { GridElementState } from "../interfaces/GridElement/GridElementState";
-import { GridPresetsState } from "../interfaces/GridPresetsState";
 import { GridState } from "../interfaces/GridState";
 import { rescaleGridElements } from "./rescaleGridElements";
 
-function createGridElements(scale: Scale, colorPreset: ColorPreset): GridElementState[] {
-    const scaleService = new ScaleService();
-    scaleService.setScale(scale);
+function createGridElements( colorPreset: ColorPreset): GridElementState[] {
+
     const allGridElements: GridElementState[] = [];
 
     //Make a state for all possible GridElements. 12rows*12Columns is the biggest possible grid
     for (let i = 0; i < 12 * 12; i++) {
-        const currentNoteNumber = scaleService.getNextNoteNumber()
+    
         allGridElements.push(
             {
-                name: `${getNoteKeyFromNoteNumber(currentNoteNumber)}`,
+                // Name and note number don't matter because they get set during rescaling
+                name: '',
                 midiState: {
-                    noteNumber: currentNoteNumber,
+                    noteNumber: 1,
                     velocity: { floor: 64, ceiling: 127, isVertical: true, },
                 },
                 colorState: {
@@ -38,7 +35,7 @@ export const defaultPreset1: GridState = rescaleGridElements({
     rowCount: 4,
     startingNoteNumber: 60, //C5
     scale: Scale.Chromatic,
-    gridElements: createGridElements(Scale.Chromatic, DEFAULT),
+    gridElements: createGridElements(DEFAULT),
 });
 
 export const defaultPreset2: GridState = rescaleGridElements({
@@ -46,7 +43,7 @@ export const defaultPreset2: GridState = rescaleGridElements({
     rowCount: 5,
     startingNoteNumber: 48, //C4
     scale: Scale.Ionian,
-    gridElements: createGridElements(Scale.Ionian, FROST),
+    gridElements: createGridElements(FROST),
 });
 
 export const defaultPreset3: GridState = rescaleGridElements({
@@ -54,7 +51,7 @@ export const defaultPreset3: GridState = rescaleGridElements({
     rowCount: 6,
     startingNoteNumber: 36, //C3
     scale: Scale.Dorian,
-    gridElements: createGridElements(Scale.Dorian, GRAPE),
+    gridElements: createGridElements(GRAPE),
 });
 
 export const defaultPreset4: GridState = rescaleGridElements({
@@ -62,7 +59,7 @@ export const defaultPreset4: GridState = rescaleGridElements({
     rowCount: 7,
     startingNoteNumber: 24, //C2
     scale: Scale.Phrygian,
-    gridElements: createGridElements(Scale.Phrygian, SLIME),
+    gridElements: createGridElements(SLIME),
 });
 
 export const defaultPreset5: GridState = rescaleGridElements({
@@ -70,7 +67,7 @@ export const defaultPreset5: GridState = rescaleGridElements({
     rowCount: 2,
     startingNoteNumber: 36, //C3
     scale: Scale.Mixolydian,
-    gridElements: createGridElements(Scale.Mixolydian, LAVA),
+    gridElements: createGridElements(LAVA),
 });
 
 export const defaultPreset6: GridState = rescaleGridElements({
@@ -78,7 +75,7 @@ export const defaultPreset6: GridState = rescaleGridElements({
     rowCount: 3,
     startingNoteNumber: 60, //C5
     scale: Scale.Aeolian,
-    gridElements: createGridElements(Scale.Aeolian, HULK),
+    gridElements: createGridElements(HULK),
 });
 
 

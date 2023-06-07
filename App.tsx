@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux'
-import { store } from './redux/store';
+import { persistor, store } from './redux/store';
 
 import useCachedResources from './hooks/useCachedResources';
 import GridScreen from './screens/GridScreen';
@@ -17,15 +17,12 @@ export default function App() {
   } else {
     return (
       <SafeAreaProvider>
-
         <Provider store={store}>{/* From Redux */}
-
+          <PersistGate persistor={persistor} >
             <StatusBar />
-
             <GridScreen />
-
+          </PersistGate>
         </Provider>
-
       </SafeAreaProvider>
     );
   }

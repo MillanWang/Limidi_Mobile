@@ -1,6 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { RootState, store } from '../store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
     defaultPreset1,
     defaultPreset2,
@@ -12,11 +10,7 @@ import {
 import { GridPresetsState } from '../interfaces/GridPresetsState';
 import { GridState } from '../interfaces/GridState';
 import { rescaleGridElements, } from '../functions/rescaleGridElements';
-import { DEFAULT } from '../../constants/Colors';
-import { ColorPresetService } from '../../services/ColorPresetService';
-import { useAppDispatch } from '../hooks';
 
-const GRID_PERSISTENCE_KEY = "@grid";
 
 const defaultPresets: GridState[] = [
     defaultPreset1,
@@ -33,40 +27,13 @@ const defaultState: GridPresetsState = {
     gridPresets: defaultPresets,
 }
 
-const getInitialState = () => {
-    AsyncStorage.getItem(GRID_PERSISTENCE_KEY).then((serializedGrid) => {
-
-// FIGURE OUT WHY IS THERE A CYCLE FOR STORE?? This probably ain't the best approach
-
-        if (serializedGrid == null) {
-            console.log("nullGrid");
-            AsyncStorage.setItem(GRID_PERSISTENCE_KEY, JSON.stringify(defaultState));
-        }
-        else {
-            console.log("grid retrieved");
-
-            const gridState: GridPresetsState = JSON.parse(serializedGrid);
-            console.log(gridState.currentPresetIndex);
-            store.dispatch(setGridState(gridState));
-        }
-    });
-
-    return defaultState;
-};
-
-const persistGridState = (state: any) => {
-    AsyncStorage.setItem(GRID_PERSISTENCE_KEY, JSON.stringify(state))
-    .then(()=>{console.log("Persisted")})
-    .catch(x=>{console.error(x)});
-}
 
 export const GridPresetsSlice = createSlice({
     name: "GridPresets",
-    initialState: getInitialState(),
+    initialState: defaultState,
     reducers: {
         // Persistence operations
         setGridState: (state, action) => {
-            // state = action.payload;
             state.currentPresetIndex = action.payload.currentPresetIndex;
             state.currentGridPreset = action.payload.currentGridPreset;
             state.gridPresets = action.payload.gridPresets;
@@ -77,14 +44,21 @@ export const GridPresetsSlice = createSlice({
             const index = action.payload.index;
             state.currentPresetIndex = index;
             state.currentGridPreset = state.gridPresets[index];
-            persistGridState(state);
         },
         restoreCurrentPresetToDefault: (state, action) => {
             state.gridPresets[state.currentPresetIndex] = defaultPresets[state.currentPresetIndex];
+            state.currentGridPreset = defaultPresets[state.currentPresetIndex];
         },
 
         // Grid operations
-        unlockAllGridElements: (state, action) => { }, //TODO - Add this to the total grid options
+        unlockAllGridElements: (state, action) => {
+            const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
+            for (let grid of grids) {
+                for (let elem of grid.gridElements) {
+                    elem.isLocked = false;
+                }
+            }
+        },
         setColumnCount: (state, action) => {
             const newColumnCount = action.payload;
             state.currentGridPreset.columnCount = newColumnCount;
@@ -126,13 +100,10 @@ export const GridPresetsSlice = createSlice({
         },
         // Grid color operations
         setGridColorPresetGlobally: (state, action) => {
-            let cps = new ColorPresetService(); // TODO - Deprecate the service in favour of the slice
-            //This is not gonna work properly until the slice replaces the service :(
-            const { unpressedColor, pressedColor } =
-                cps.getColorPreset(action.payload) ??
-                { unpressedColor: DEFAULT.unpressedColor, pressedColor: DEFAULT.pressedColor };
 
+            const { unpressedColor, pressedColor } = action.payload
             const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
+
             for (let grid of grids) {
                 for (let gridElementStyle of grid.gridElements) {
                     if (!gridElementStyle.isLocked) {
