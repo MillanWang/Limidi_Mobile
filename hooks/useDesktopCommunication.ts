@@ -1,16 +1,12 @@
 import { MidiMessageProps } from '../constants/MIDI_Notes';
+import { useAppSelector } from '../redux/hooks';
 
-export interface HttpCommunicationInfo {
-    ip: string;
-    port: string;
-    midiDeviceID: string;
-}
+export function useDesktopCommunication() {
 
-export class MIDI_HTTP_Service {
+    const httpCommunicationInfo = useAppSelector(state => state.httpCommunicationsReducer.httpCommunicationInfo);
 
-    static async sendMidiMessage(httpCommunicationInfo: HttpCommunicationInfo, midiMessageProps: MidiMessageProps): Promise<void> {
+    async function sendMidiMessage(midiMessageProps: MidiMessageProps) {
         const { noteNumber, velocity, isNoteOn } = midiMessageProps;
-
         fetch(`http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MidiInput/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`,
             {
                 method: 'GET',
@@ -23,5 +19,11 @@ export class MIDI_HTTP_Service {
     }
 
     // FUNCTION SKELETONS - TODO WHEN DESKTOP UPDATE IS IN
-    async getMidiOutputDevices(): Promise<string[]> { return ['TODO', 'Index in returned array is the device ID']; }
-};
+    async function getMidiOutputDevices(): Promise<string[]> { return ['TODO', 'Index in returned array is the device ID']; }
+
+
+    return [
+        sendMidiMessage,
+        getMidiOutputDevices,
+    ];
+}

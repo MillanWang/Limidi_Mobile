@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { DEFAULT_NOTE_NUMBER, Scale, ScaleService } from '../ScaleService';
+import { DEFAULT_NOTE_NUMBER, ScaleService } from '../ScaleService';
 import { NOTE } from '../../constants/MIDI_Notes';
+import { Scale } from '../../constants/Scales';
 
 const NATURAL_NOTE_SEQUENCE = [
     NOTE.C,
@@ -31,7 +32,7 @@ describe('ScaleService', () => {
         }
 
         // Reset the note number to C0 
-        ss.setCurrentNoteNumber(0);
+        ss.setStartingNoteNumber(0);
         for (let i = 0; i < 60; i++) {
             //Should always increase by one when chromatic
             expect(ss.getNextNoteNumber()).toBe(i);
@@ -48,7 +49,7 @@ describe('ScaleService', () => {
             ss.setScale(scale);
 
             //Root note at 5th octave
-            ss.setCurrentNoteNumber(DEFAULT_NOTE_NUMBER + initialNoteNumberOffset);
+            ss.setStartingNoteNumber(DEFAULT_NOTE_NUMBER + initialNoteNumberOffset);
 
             // Make a clone of the natural note sequence. Shift it according to the initialNoteNumberOffset
             const currentNaturalNoteSequence = [...NATURAL_NOTE_SEQUENCE];
@@ -68,7 +69,7 @@ describe('ScaleService', () => {
             });
 
             //Reset to 0 Octave
-            ss.setCurrentNoteNumber(initialNoteNumberOffset);
+            ss.setStartingNoteNumber(initialNoteNumberOffset);
             currentNaturalNoteSequence.forEach((note) => {
                 expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
             })

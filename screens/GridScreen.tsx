@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import { StyleSheet, View, } from 'react-native';
 import { GridElementGrid } from '../components/GridElementGrid';
 import { GridScreenToolbar } from '../components/GridScreenToolbar';
-import { ScaleService } from '../services/ScaleService';
-
-const scaleService = new ScaleService();
 
 export default function GridScreen() {
 
@@ -13,12 +10,10 @@ export default function GridScreen() {
 
     return (
         <View style={styles.container}>
-
             <GridScreenToolbar
                 isPlayMode={isPlayMode} setIsPlayMode={setIsPlayMode}
                 isVisible={showGridEditDialog} setIsVisible={setShowGridEditDialog}
             />
-
             <GridElementGrid isPlayMode={isPlayMode} />
         </View>
 

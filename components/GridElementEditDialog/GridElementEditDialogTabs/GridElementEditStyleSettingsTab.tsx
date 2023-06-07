@@ -6,7 +6,7 @@ import {
     StyleSheet,
 
 } from 'react-native';
-import { Icon, Text, Switch } from "@rneui/themed";
+import { Icon, Text } from "@rneui/themed";
 
 import { ColorSelector } from '../../ColorSelector';
 
@@ -14,53 +14,50 @@ import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import {
     setGridElementUnpressedColor,
     setGridElementPressedColor,
-    setGridElementStyleLocked,
-} from '../../../redux/slices/ColorServiceSlice';
+} from '../../../redux/slices/GridPresetsSlice';
+import { PRESET_COLOR_LIST } from '../../../constants/Colors';
 
 export interface GridElementEditStyleProps {
     index: number,
 }
 
+
+
+
+// This whole tab is gonna need a lot of review
+/* 
+-Lock should be moved up to the tab selection area
+-Should only have selection for pressed and unpressed color here
+-Option to apply a color 
+ */
+
 export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyleProps) {
 
-    const currentGridElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementStyles[index]);
-    const colorPresetsState = useAppSelector(state => state.colorServiceReducer.colorPresets);
+    const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
+    const colorState = currentGridElementState.colorState;
+
     const dispatch = useAppDispatch();
 
     const [currentPreset, setCurrentPreset] = useState('Default'); //Possibly not needed?????
-
 
     function setColors(unpressedColor: string, pressedColor: string): void {
         dispatch(setGridElementUnpressedColor({ index, unpressedColor }));
         dispatch(setGridElementPressedColor({ index, pressedColor }));
     }
 
-    function toggleStyleLock() {
-        dispatch(setGridElementStyleLocked({ index, locked: !currentGridElementColorState.isLocked }));
-    }
-
-
-
     return (
         <View style={styles.styleSettingsContainer}>
-            <View style={styles.lockSwitchView}>
-                <Text>Lock Element Style: </Text>
-                <Switch onChange={toggleStyleLock} value={currentGridElementColorState.isLocked}></Switch>
-            </View>
-
 
             <View style={styles.colorSelectorContainers}>
-                <ColorSelector colorTitle="Unpressed Color : " color={currentGridElementColorState.unpressedColor} setColor={(unpressedColor) => { dispatch(setGridElementUnpressedColor({ index, unpressedColor })) }} />
-                <ColorSelector colorTitle="Pressed Color : " color={currentGridElementColorState.pressedColor} setColor={(pressedColor) => { dispatch(setGridElementPressedColor({ index, pressedColor })) }} />
-
+                <ColorSelector colorTitle="Unpressed Color : " color={colorState.unpressedColor} setColor={(unpressedColor) => { dispatch(setGridElementUnpressedColor({ index, unpressedColor })) }} />
+                <ColorSelector colorTitle="Pressed Color : " color={colorState.pressedColor} setColor={(pressedColor) => { dispatch(setGridElementPressedColor({ index, pressedColor })) }} />
             </View>
+
             {/* Color Presets */}
             <View style={styles.colorPresetContainer} >
-                {/* Save current as preset */}
-
                 {/* Load preset */}
                 <ScrollView style={styles.colorPresetSelector}>
-                    {colorPresetsState.map(preset => {
+                    {PRESET_COLOR_LIST.map(preset => {
                         return (
                             <View
                                 style={{ backgroundColor: preset.unpressedColor, ...styles.colorPreset }}
@@ -77,12 +74,10 @@ export function GridElementEditStyleSettingsTab({ index, }: GridElementEditStyle
                         );
                     })}
                 </ScrollView>
-                {/* TODO: COLOR PRESET CRUD */}
 
                 <View style={{ width: "40 %" }}>
                     <Text>Current Preset : {currentPreset}</Text>
                 </View>
-
             </View>
         </View >
     );

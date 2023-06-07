@@ -3,30 +3,26 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux'
-import { store } from './redux/store';
+import { persistor, store } from './redux/store';
 
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
 import GridScreen from './screens/GridScreen';
+import { PersistGate } from 'redux-persist/integration/react';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
 
   if (!isLoadingComplete) {
     return null;
   } else {
     return (
       <SafeAreaProvider>
-
         <Provider store={store}>{/* From Redux */}
-
-          <StatusBar />
-
-          <GridScreen />
-
+          <PersistGate persistor={persistor} >
+            <StatusBar />
+            <GridScreen />
+          </PersistGate>
         </Provider>
-
       </SafeAreaProvider>
     );
   }

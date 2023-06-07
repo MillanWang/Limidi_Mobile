@@ -10,6 +10,7 @@ import {
     Switch,
 } from '@rneui/themed';
 import GridEditDialog, { GridEditDialogProps } from '../components/GridEditDialog/GridEditDialog';
+import { GridLayoutButtons } from './GridLayoutPresetButtons';
 
 
 export interface GridScreenToolbarProps extends GridEditDialogProps {
@@ -25,11 +26,15 @@ export function GridScreenToolbar({
             <Text style={styles.playOrEditText}>{isPlayMode ? "PLAY" : "EDIT"}</Text>
 
             {!!!isPlayMode &&
+                // Settings icon
                 <View>
                     <Icon name='settings' color='#ffffff' onPress={() => { setIsVisible(true) }} />
                 </View>
             }
 
+            <GridLayoutButtons />
+
+            {/* Settings dialog */}
             <GridEditDialog isVisible={isVisible} setIsVisible={setIsVisible} />
         </View>
     );
@@ -38,7 +43,7 @@ export function GridScreenToolbar({
 const styles = StyleSheet.create({
     headerOptions: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     playOrEditText: {
         marginLeft: 5,

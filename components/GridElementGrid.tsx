@@ -11,7 +11,8 @@ export interface GridElementGridProps {
 }
 
 export function GridElementGrid({ isPlayMode, }: GridElementGridProps) {
-    const currentGridElementMidiState = useAppSelector(state => state.midiGridReducer);
+
+    const currentGridElementMidiState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset);
 
     // Creating the rows
     let gridElementRows: JSX.Element[] = [];

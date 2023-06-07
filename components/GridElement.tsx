@@ -5,12 +5,13 @@ import {
     View
 } from 'react-native';
 import { Text, } from "@rneui/themed";
-import { MIDI_HTTP_Service } from '../services/MIDI_HTTP_Service';
+import { useDesktopCommunication } from '../hooks/useDesktopCommunication';
 import { createMidiMessage, } from '../constants/MIDI_Notes';
 import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
 import { useAppSelector } from '../redux/hooks';
 
 const NOTE_ON = true;
+const NOTE_OFF = false;
 
 interface GridElementProps {
     index: number,
@@ -26,23 +27,23 @@ export default function GridElement(
         isPlayMode
     }: GridElementProps
 ) {
-    const currentGridElementInfo = useAppSelector(state => state.midiGridReducer.gridElements[index]);
-    const currentGriedElementColorState = useAppSelector(state => state.colorServiceReducer.gridElementStyles[index]);
-    const httpCommunicationInfo = useAppSelector(state => state.httpCommunicationsReducer.httpCommunicationInfo);
+    // Redux states
+    const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
+    const nameState = currentGridElementState.name;
+    const noteNumberState = currentGridElementState.midiState.noteNumber;
+    const velocityState = currentGridElementState.midiState.velocity;
+    const colorState = currentGridElementState.colorState;
 
+    const [sendMidiMessage] = useDesktopCommunication();
     const [elementHeight, setElementHeight] = useState(1);
     const [elementWidth, setElementWidth] = useState(1);
     const [dialogVisible, setDialogVisible] = useState(false);
 
     function playModeTouchStartHandler(event: any) {
-
         if (isPlayMode) {
             const velocity = getVelocityValue(event);
             fadeOut(Math.max(velocity / 127, 0.25)); // 25% as minimum opacity drop for really low velocities
-            MIDI_HTTP_Service.sendMidiMessage(
-                httpCommunicationInfo,
-                createMidiMessage(currentGridElementInfo.noteNumber, velocity, NOTE_ON)
-            );
+            sendMidiMessage(createMidiMessage(noteNumberState, velocity, NOTE_ON));
         } else {
             //Tap in  edit mode shows dialog
             setDialogVisible(true);
@@ -52,19 +53,16 @@ export default function GridElement(
     function playModeTouchEndHandler() {
         if (isPlayMode) {
             fadeIn();
-            MIDI_HTTP_Service.sendMidiMessage(
-                httpCommunicationInfo,
-                /* No velocity on note off*/
-                createMidiMessage(currentGridElementInfo.noteNumber, 0, !NOTE_ON)
-            );
+            /* No velocity on note off*/
+            sendMidiMessage(createMidiMessage(noteNumberState, 0, NOTE_OFF));
         }
     }
 
     function getVelocityValue(event: any): number {
-        if (currentGridElementInfo.velocity.isVertical) {
-            return Math.floor(currentGridElementInfo.velocity.floor + (currentGridElementInfo.velocity.ceiling - currentGridElementInfo.velocity.floor) * (1 - event.nativeEvent.locationY / elementHeight))
+        if (velocityState.isVertical) {
+            return Math.floor(velocityState.floor + (velocityState.ceiling - velocityState.floor) * (1 - event.nativeEvent.locationY / elementHeight))
         } else {
-            return Math.floor(currentGridElementInfo.velocity.floor + (currentGridElementInfo.velocity.ceiling - currentGridElementInfo.velocity.floor) * (event.nativeEvent.locationX / elementWidth))
+            return Math.floor(velocityState.floor + (velocityState.ceiling - velocityState.floor) * (event.nativeEvent.locationX / elementWidth))
         }
     }
 
@@ -91,12 +89,12 @@ export default function GridElement(
 
 
     return (
-        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: currentGriedElementColorState.pressedColor, }} onLayout={onLayout}>
+        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.pressedColor, }} onLayout={onLayout}>
             <Animated.View
                 style={{
                     ...styles.gridElementBasePressedView,
                     opacity: fadeAnim,
-                    backgroundColor: currentGriedElementColorState.unpressedColor,
+                    backgroundColor: colorState.unpressedColor,
                 }}
                 onTouchStart={playModeTouchStartHandler}
                 onTouchEnd={playModeTouchEndHandler}
@@ -105,8 +103,8 @@ export default function GridElement(
                 {/* Play Mode */}
                 {isPlayMode &&
                     <View style={styles.gridElementUnpressedView} >
-                        <Text style={{ color: currentGriedElementColorState.pressedColor }}>
-                            {currentGridElementInfo.name}
+                        <Text style={{ color: colorState.pressedColor }}>
+                            {nameState}
                         </Text>
                     </View>
                 }
@@ -114,8 +112,8 @@ export default function GridElement(
                 {/* Edit mode */}
                 {!isPlayMode &&
                     <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
-                        <Text style={{ color: currentGriedElementColorState.pressedColor }}>
-                            Edit {currentGridElementInfo.name}
+                        <Text style={{ color: colorState.pressedColor }}>
+                            Edit {nameState}
                         </Text>
                     </View>
                 }
