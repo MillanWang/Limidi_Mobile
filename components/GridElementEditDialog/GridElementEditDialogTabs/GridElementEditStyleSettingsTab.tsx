@@ -15,7 +15,7 @@ import {
     setGridElementUnpressedColor,
     setGridElementPressedColor,
 } from '../../../redux/slices/GridPresetsSlice';
-import { PRESET_COLOR_LIST } from '../../../constants/Colors';
+import { PRESET_COLOR_LIST } from '../../../constants/ColorPresets';
 
 export interface GridElementEditStyleProps {
     index: number,

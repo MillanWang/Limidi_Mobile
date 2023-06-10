@@ -1,4 +1,4 @@
-import { ColorPreset, DEFAULT, FROST, GRAPE, HULK, LAVA, SLIME } from "../../constants/Colors";
+import { ColorPreset, DEFAULT, FROST, GRAPE, HULK, LAVA, SLIME } from "../../constants/ColorPresets";
 import { Scale } from "../../constants/Scales";
 import { GridElementState } from "../interfaces/GridElement/GridElementState";
 import { GridState } from "../interfaces/GridState";
