@@ -8,14 +8,14 @@ import {
 } from 'react-native';
 import { Icon, Text } from "@rneui/themed";
 
-import { ColorSelector } from '../../ColorSelector';
+import { ColorSelector } from '../../../ColorSelector';
 
-import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../../../../redux/hooks';
 import {
     setGridElementUnpressedColor,
     setGridElementPressedColor,
-} from '../../../redux/slices/GridPresetsSlice';
-import { PRESET_COLOR_LIST } from '../../../constants/Colors';
+} from '../../../../redux/slices/GridPresetsSlice';
+import { PRESET_COLOR_LIST } from '../../../../constants/ColorPresets';
 
 export interface GridElementEditStyleProps {
     index: number,

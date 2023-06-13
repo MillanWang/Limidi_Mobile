@@ -2,9 +2,9 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Input, Slider, Text, Switch, } from "@rneui/themed";
-import { NOTE, } from '../../../constants/MIDI_Notes';
-import { Piano } from '../../Piano';
-import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
+import { NOTE, } from '../../../../constants/MIDI_Notes';
+import { Piano } from '../../../Piano';
+import { useAppSelector, useAppDispatch } from '../../../../redux/hooks';
 import {
     setGridElementNote,
     setGridElementVelocityCeiling,
@@ -13,7 +13,7 @@ import {
     setGridElementOctave,
     setGridElementName,
     setGridElementIsLocked,
-} from '../../../redux/slices/GridPresetsSlice';
+} from '../../../../redux/slices/GridPresetsSlice';
 
 export interface GridElementEditMidiProps {
     index: number,

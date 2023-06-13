@@ -4,7 +4,7 @@ import {
     View,
 } from 'react-native';
 
-import GridElement from '../components/GridElement';
+import GridElement from './GridElement/GridElement';
 import { useAppSelector } from '../redux/hooks';
 
 

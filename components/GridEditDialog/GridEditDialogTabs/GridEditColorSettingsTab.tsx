@@ -9,7 +9,7 @@ import {
 
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import { setGridColorPresetGlobally } from '../../../redux/slices/GridPresetsSlice';
-import { DEFAULT, PRESET_COLOR_LIST } from "../../../constants/Colors";
+import { DEFAULT, PRESET_COLOR_LIST } from "../../../constants/ColorPresets";
 
 export function GridEditStyleSettingsTab(): JSX.Element {
 
