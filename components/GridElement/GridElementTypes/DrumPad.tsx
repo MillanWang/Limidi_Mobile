@@ -5,28 +5,20 @@ import {
     View
 } from 'react-native';
 import { Text, } from "@rneui/themed";
-import { useDesktopCommunication } from '../hooks/useDesktopCommunication';
-import { createMidiMessage, } from '../constants/MIDI_Notes';
-import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
-import { useAppSelector } from '../redux/hooks';
+import { useDesktopCommunication } from '../../../hooks/useDesktopCommunication';
+import { createMidiMessage, } from '../../../constants/MIDI_Notes';
+
+import { useAppSelector } from '../../../redux/hooks';
 
 const NOTE_ON = true;
 const NOTE_OFF = false;
 
-interface GridElementProps {
-    index: number,
 
-    //Grid Controls
-    isPlayMode: boolean,
-};
+interface DrumPadProps {
+    index: number
+}
 
-
-export default function GridElement(
-    {
-        index,
-        isPlayMode
-    }: GridElementProps
-) {
+export default function DrumPad({ index }: DrumPadProps) {
     // Redux states
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const nameState = currentGridElementState.name;
@@ -37,25 +29,19 @@ export default function GridElement(
     const [sendMidiMessage] = useDesktopCommunication();
     const [elementHeight, setElementHeight] = useState(1);
     const [elementWidth, setElementWidth] = useState(1);
-    const [dialogVisible, setDialogVisible] = useState(false);
 
     function playModeTouchStartHandler(event: any) {
-        if (isPlayMode) {
-            const velocity = getVelocityValue(event);
-            fadeOut(Math.max(velocity / 127, 0.25)); // 25% as minimum opacity drop for really low velocities
-            sendMidiMessage(createMidiMessage(noteNumberState, velocity, NOTE_ON));
-        } else {
-            //Tap in  edit mode shows dialog
-            setDialogVisible(true);
-        }
+        const velocity = getVelocityValue(event);
+        fadeOut(Math.max(velocity / 127, 0.25)); // 25% as minimum opacity drop for really low velocities
+        sendMidiMessage(createMidiMessage(noteNumberState, velocity, NOTE_ON));
+
     }
 
     function playModeTouchEndHandler() {
-        if (isPlayMode) {
-            fadeIn();
-            /* No velocity on note off*/
-            sendMidiMessage(createMidiMessage(noteNumberState, 0, NOTE_OFF));
-        }
+        fadeIn();
+        /* No velocity on note off*/
+        sendMidiMessage(createMidiMessage(noteNumberState, 0, NOTE_OFF));
+
     }
 
     function getVelocityValue(event: any): number {
@@ -99,31 +85,11 @@ export default function GridElement(
                 onTouchStart={playModeTouchStartHandler}
                 onTouchEnd={playModeTouchEndHandler}
             >
-
-                {/* Play Mode */}
-                {isPlayMode &&
-                    <View style={styles.gridElementUnpressedView} >
-                        <Text style={{ color: colorState.pressedColor }}>
-                            {nameState}
-                        </Text>
-                    </View>
-                }
-
-                {/* Edit mode */}
-                {!isPlayMode &&
-                    <View style={{ ...styles.gridElementUnpressedView, ...styles.gridElementEditView }}>
-                        <Text style={{ color: colorState.pressedColor }}>
-                            Edit {nameState}
-                        </Text>
-                    </View>
-                }
-
-                {/* Edit Dialog - MIDI & Style Settings */}
-                <GridElementEditDialog
-                    index={index}
-                    dialogVisible={dialogVisible} setDialogVisible={setDialogVisible}
-                />
-
+                <View style={styles.gridElementUnpressedView} >
+                    <Text style={{ color: colorState.pressedColor }}>
+                        {nameState}
+                    </Text>
+                </View>
             </Animated.View>
         </View>
     );

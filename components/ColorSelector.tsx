@@ -5,7 +5,7 @@ import { Text, Button } from "@rneui/themed";
 
 import {
     ALL_ELEMENTAL_COLORS,
-  invertHex,
+    invertHex,
 } from '../constants/Colors';
 
 
@@ -16,31 +16,7 @@ interface ColorSelectorProps {
     setColor(color: string): void
 }
 
-//Should be a tab view for different colors
-// Tabs do not even need to have the same number of colors. They should just be rectangular
-/*
-Tab ideas - 4 Palettes, each based on a classical element
-- FIRE: Red, yellow, orange, pink
-- WATER: Blue green cyan teal purple
-- EARTH: green, brown, stone, blacks
-- AIR: bbBlue, whites, lightgreys, pinks
- */
 
-
-
-const ELEMENT_TABS = [
-    /*
-    // TODO - These are gonna need to carry more info.
-    - Element name
-    - Tab button style info
-    - Reference to the color series 
-        - Should still use object of arrays for more interesting color names
-    */
-    "Fire",
-    "Water",
-    "Earth",
-    "Air",
-]
 
 export function ColorSelector({ colorTitle, color, setColor, }: ColorSelectorProps) {
     const [colorSeriesIndex, setColorSeriesIndex] = useState(0)
