@@ -17,16 +17,28 @@ export function getNoteKeyFromNoteNumber(noteNumber: number): string {
     return `${Object.keys(NOTE)[noteNumber % 12]}${Math.floor(noteNumber / 12)}`;
 }
 
-export interface MidiMessageProps {
+export interface MidiNoteProps {
     noteNumber: number, // 0-120
     velocity: number, // 0-127
     isNoteOn: boolean
 }
 
-export function createMidiMessage(noteNumber: number, velocity: number, isNoteOn: boolean): MidiMessageProps {
+export function createMidiNote(noteNumber: number, velocity: number, isNoteOn: boolean): MidiNoteProps {
     return {
         noteNumber: noteNumber,
         velocity: velocity,
         isNoteOn: isNoteOn,
     };
-} //TODO : Backend shall expect notenumber instead of separate note and octave. 
+}
+
+export interface MidiControlChangeProps {
+    controlIndex: number, // 0-127
+    level: number, // 0-127
+}
+
+export function createMidiControlChange(controlIndex: number, level: number): MidiControlChangeProps {
+    return {
+        controlIndex: controlIndex,
+        level: level,
+    };
+}

@@ -6,6 +6,8 @@ import {
 } from 'react-native';
 import { Text, } from "@rneui/themed";
 import { useAppSelector } from '../../../redux/hooks';
+import { useDesktopCommunication } from '../../../hooks/useDesktopCommunication';
+import { createMidiControlChange } from '../../../constants/MIDI_Notes';
 
 
 interface ControlChangeProps {
@@ -16,6 +18,8 @@ export default function ControlChange({ index }: ControlChangeProps) {
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const nameState = currentGridElementState.name;
     const colorState = currentGridElementState.colorState;
+
+    const {sendMidiControlChange} = useDesktopCommunication();
 
     // Needed for positional knowledge. Can probably be factored out to grid element once more certain about it
     const [elementHeight, setElementHeight] = useState(1);
@@ -29,6 +33,12 @@ export default function ControlChange({ index }: ControlChangeProps) {
         console.log("position")
         console.log(`Height:${100 * event.nativeEvent.locationY / elementHeight}%`)
         console.log(`Width:${100 * event.nativeEvent.locationX / elementWidth}%`)
+        sendMidiControlChange(
+            createMidiControlChange(
+                4,
+                Math.floor(127 * event.nativeEvent.locationX / elementWidth)
+            )
+        )
     }
 
     return (

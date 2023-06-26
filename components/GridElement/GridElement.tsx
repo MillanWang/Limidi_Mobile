@@ -34,7 +34,7 @@ export default function GridElement(
     const [dialogVisible, setDialogVisible] = useState(false);
 
 
-    const isDrum = true; // Temp var for drum vs mod
+    const isDrum = !true; // Temp var for drum vs mod
 
     return (
         <>

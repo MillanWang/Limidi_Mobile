@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 import { Text, } from "@rneui/themed";
 import { useDesktopCommunication } from '../../../hooks/useDesktopCommunication';
-import { createMidiMessage, } from '../../../constants/MIDI_Notes';
+import { createMidiNote, } from '../../../constants/MIDI_Notes';
 
 import { useAppSelector } from '../../../redux/hooks';
 
@@ -26,21 +26,21 @@ export default function DrumPad({ index }: DrumPadProps) {
     const velocityState = currentGridElementState.midiState.velocity;
     const colorState = currentGridElementState.colorState;
 
-    const [sendMidiMessage] = useDesktopCommunication();
+    const { sendMidiNote } = useDesktopCommunication();
     const [elementHeight, setElementHeight] = useState(1);
     const [elementWidth, setElementWidth] = useState(1);
 
     function playModeTouchStartHandler(event: any) {
         const velocity = getVelocityValue(event);
         fadeOut(Math.max(velocity / 127, 0.25)); // 25% as minimum opacity drop for really low velocities
-        sendMidiMessage(createMidiMessage(noteNumberState, velocity, NOTE_ON));
+        sendMidiNote(createMidiNote(noteNumberState, velocity, NOTE_ON));
 
     }
 
     function playModeTouchEndHandler() {
         fadeIn();
         /* No velocity on note off*/
-        sendMidiMessage(createMidiMessage(noteNumberState, 0, NOTE_OFF));
+        sendMidiNote(createMidiNote(noteNumberState, 0, NOTE_OFF));
 
     }
 
