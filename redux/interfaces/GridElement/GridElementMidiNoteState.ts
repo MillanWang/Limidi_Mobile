@@ -1,4 +1,4 @@
-export interface GridElementMidiState {
+export interface GridElementMidiNoteState {
     noteNumber: number,
     velocity: {
         floor: number,

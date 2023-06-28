@@ -39,6 +39,6 @@ export interface MidiControlChangeProps {
 export function createMidiControlChange(controlIndex: number, level: number): MidiControlChangeProps {
     return {
         controlIndex: controlIndex,
-        level: level,
+        level: Math.max(0, (Math.min(127, level))),
     };
 }

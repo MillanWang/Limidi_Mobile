@@ -22,8 +22,8 @@ export default function DrumPad({ index }: DrumPadProps) {
     // Redux states
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const nameState = currentGridElementState.name;
-    const noteNumberState = currentGridElementState.midiState.noteNumber;
-    const velocityState = currentGridElementState.midiState.velocity;
+    const noteNumberState = currentGridElementState.midiNoteState.noteNumber;
+    const velocityState = currentGridElementState.midiNoteState.velocity;
     const colorState = currentGridElementState.colorState;
 
     const { sendMidiNote } = useDesktopCommunication();

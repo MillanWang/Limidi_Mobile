@@ -34,13 +34,13 @@ export default function GridElement(
     const [dialogVisible, setDialogVisible] = useState(false);
 
 
-    const isDrum = !true; // Temp var for drum vs mod
+    const isMidiNote = !currentGridElementState.isMidiNote
 
     return (
         <>
 
-            {isPlayMode && isDrum && <DrumPad index={index} />}
-            {isPlayMode && !isDrum && <ControlChange index={index} />}
+            {isPlayMode && isMidiNote && <DrumPad index={index} />}
+            {isPlayMode && !isMidiNote && <ControlChange index={index} />}
 
 
             {/* Edit mode */}

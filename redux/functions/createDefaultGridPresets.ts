@@ -4,18 +4,18 @@ import { GridElementState } from "../interfaces/GridElement/GridElementState";
 import { GridState } from "../interfaces/GridState";
 import { rescaleGridElements } from "./rescaleGridElements";
 
-function createGridElements( colorPreset: ColorPreset): GridElementState[] {
+function createGridElements(colorPreset: ColorPreset): GridElementState[] {
 
     const allGridElements: GridElementState[] = [];
 
     //Make a state for all possible GridElements. 12rows*12Columns is the biggest possible grid
     for (let i = 0; i < 12 * 12; i++) {
-    
+
         allGridElements.push(
             {
                 // Name and note number don't matter because they get set during rescaling
                 name: '',
-                midiState: {
+                midiNoteState: {
                     noteNumber: 1,
                     velocity: { floor: 64, ceiling: 127, isVertical: true, },
                 },
@@ -23,6 +23,12 @@ function createGridElements( colorPreset: ColorPreset): GridElementState[] {
                     pressedColor: colorPreset.pressedColor,
                     unpressedColor: colorPreset.unpressedColor,
                 },
+                controlChangeState: {
+                    iconName: "",
+                    xAxisControlIndex: (i * 2) % 128, // 127 is max index
+                    yAxisControlIndex: (i * 2 + 1) % 128, // 127 is max index
+                },
+                isMidiNote: false,
                 isLocked: false,
             });
     }

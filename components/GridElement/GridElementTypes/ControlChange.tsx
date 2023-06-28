@@ -2,24 +2,26 @@ import React, { useRef, useState } from 'react';
 import {
     Animated,
     StyleSheet,
-    View
+    View,
 } from 'react-native';
-import { Text, } from "@rneui/themed";
+import { Text, Icon } from "@rneui/themed";
 import { useAppSelector } from '../../../redux/hooks';
 import { useDesktopCommunication } from '../../../hooks/useDesktopCommunication';
 import { createMidiControlChange } from '../../../constants/MIDI_Notes';
+// import { Icon } from '@rneui/base';
 
 
 interface ControlChangeProps {
     index: number,
 }
 
+const ICON_SIZE = 33
 export default function ControlChange({ index }: ControlChangeProps) {
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const nameState = currentGridElementState.name;
     const colorState = currentGridElementState.colorState;
 
-    const {sendMidiControlChange} = useDesktopCommunication();
+    const { sendMidiControlChange } = useDesktopCommunication();
 
     // Needed for positional knowledge. Can probably be factored out to grid element once more certain about it
     const [elementHeight, setElementHeight] = useState(1);
@@ -29,16 +31,27 @@ export default function ControlChange({ index }: ControlChangeProps) {
         setElementWidth(event.nativeEvent.layout.width);
     }
 
+
+    const [xPositionAbsolute, setXPositionAbsolute] = useState(elementWidth / 2)
+    const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2)
+
     function logPositionalPercent(event: any): void {
-        console.log("position")
-        console.log(`Height:${100 * event.nativeEvent.locationY / elementHeight}%`)
-        console.log(`Width:${100 * event.nativeEvent.locationX / elementWidth}%`)
-        sendMidiControlChange(
-            createMidiControlChange(
-                4,
-                Math.floor(127 * event.nativeEvent.locationX / elementWidth)
+
+        if (event.currentTarget === event.target) { // Got the background
+            console.log(event.nativeEvent.target)
+            setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.locationX)))
+            setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.locationY)))
+
+            sendMidiControlChange(
+                createMidiControlChange(
+                    4,
+                    Math.floor(127 * event.nativeEvent.locationX / elementWidth)
+                )
             )
-        )
+        } else {
+            //Touch started on the icon
+            // TODO : Figure out how to get the position of the touch relative to the parent instead of relative to the icon
+        }
     }
 
     return (
@@ -47,9 +60,23 @@ export default function ControlChange({ index }: ControlChangeProps) {
                 style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.unpressedColor, }}
                 onLayout={onLayout}
                 onTouchMove={logPositionalPercent}
-                onTouchStart={logPositionalPercent}
             >
-                <Text style={{ color: colorState.pressedColor, }} >HEY CC</Text>
+                <View
+                    style={{
+                        position: 'absolute',
+                        top: yPositionAbsolute,
+                        left: xPositionAbsolute,
+                        backgroundColor: "red",
+                        height: ICON_SIZE,
+                        width: ICON_SIZE,
+                    }}
+                >
+
+                    <Icon
+                        name="rowing"
+                        color={colorState.pressedColor}
+                    />
+                </View>
             </View>
         </>
     );

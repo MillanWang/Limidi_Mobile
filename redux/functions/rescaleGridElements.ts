@@ -13,7 +13,7 @@ export function rescaleGridElements(grid: GridState) {
         const currentNoteNumber = scaleService.getNextNoteNumber();
         if (!currentGridElement.isLocked) {
             currentGridElement.name = `${getNoteKeyFromNoteNumber(currentNoteNumber)}`;
-            currentGridElement.midiState.noteNumber = currentNoteNumber;
+            currentGridElement.midiNoteState.noteNumber = currentNoteNumber;
         }
     }
 
