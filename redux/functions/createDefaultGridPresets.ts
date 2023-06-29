@@ -8,8 +8,8 @@ function createGridElements(colorPreset: ColorPreset): GridElementState[] {
 
     const allGridElements: GridElementState[] = [];
 
-    //Make a state for all possible GridElements. 12rows*12Columns is the biggest possible grid
-    for (let i = 0; i < 12 * 12; i++) {
+    //Make a state for all possible GridElements. 102rows*10Columns is the biggest possible grid
+    for (let i = 0; i < 10 * 10; i++) {
 
         allGridElements.push(
             {

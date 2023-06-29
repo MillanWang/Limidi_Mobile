@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import {
     Animated,
+    GestureResponderEvent,
     StyleSheet,
     View,
 } from 'react-native';
@@ -16,42 +17,50 @@ interface ControlChangeProps {
 }
 
 const ICON_SIZE = 33
+const TOP_BAR_HEIGHT = 60;
+
 export default function ControlChange({ index }: ControlChangeProps) {
-    const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
+    const currentGridState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset);
+    const { rowCount, columnCount } = currentGridState
+    const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index])
     const nameState = currentGridElementState.name;
     const colorState = currentGridElementState.colorState;
 
     const { sendMidiControlChange } = useDesktopCommunication();
 
-    // Needed for positional knowledge. Can probably be factored out to grid element once more certain about it
-    const [elementHeight, setElementHeight] = useState(1);
+    // Positional knowledge
     const [elementWidth, setElementWidth] = useState(1);
+    const [elementHeight, setElementHeight] = useState(1);
+    const [spaceFromLeft, setSpaceFromLeft] = useState(1);
+    const [spaceFromTop, setSpaceFromTop] = useState(1);
+
+
+
     function onLayout(event: any) {
-        setElementHeight(event.nativeEvent.layout.height);
         setElementWidth(event.nativeEvent.layout.width);
+        setElementHeight(event.nativeEvent.layout.height);
+        console.log(event.nativeEvent.layout.height);
+        setSpaceFromLeft(((index) % columnCount) * event.nativeEvent.layout.width)
+        setSpaceFromTop(TOP_BAR_HEIGHT + (rowCount - Math.floor(index / columnCount) - 1) * event.nativeEvent.layout.height)
     }
 
 
     const [xPositionAbsolute, setXPositionAbsolute] = useState(elementWidth / 2)
     const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2)
 
-    function logPositionalPercent(event: any): void {
+    function logPositionalPercent(event: GestureResponderEvent): void {
 
-        if (event.currentTarget === event.target) { // Got the background
-            console.log(event.nativeEvent.target)
-            setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.locationX)))
-            setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.locationY)))
+        // TODO : Align the icon with the center instead of with the top left corner. Apple pencil type testing 
 
-            sendMidiControlChange(
-                createMidiControlChange(
-                    4,
-                    Math.floor(127 * event.nativeEvent.locationX / elementWidth)
-                )
+        setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.pageX - spaceFromLeft)))
+        setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.pageY - spaceFromTop)))
+        sendMidiControlChange(
+            createMidiControlChange(
+                4,
+                Math.floor(127 * (event.nativeEvent.pageX - spaceFromLeft)/ elementWidth)
             )
-        } else {
-            //Touch started on the icon
-            // TODO : Figure out how to get the position of the touch relative to the parent instead of relative to the icon
-        }
+        )
+
     }
 
     return (
@@ -60,7 +69,10 @@ export default function ControlChange({ index }: ControlChangeProps) {
                 style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.unpressedColor, }}
                 onLayout={onLayout}
                 onTouchMove={logPositionalPercent}
+                onTouchStart={logPositionalPercent}
+
             >
+
                 <View
                     style={{
                         position: 'absolute',

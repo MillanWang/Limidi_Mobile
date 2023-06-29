@@ -75,23 +75,25 @@ export default function DrumPad({ index }: DrumPadProps) {
 
 
     return (
-        <View style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.pressedColor, }} onLayout={onLayout}>
-            <Animated.View
-                style={{
-                    ...styles.gridElementBasePressedView,
-                    opacity: fadeAnim,
-                    backgroundColor: colorState.unpressedColor,
-                }}
-                onTouchStart={playModeTouchStartHandler}
-                onTouchEnd={playModeTouchEndHandler}
-            >
-                <View style={styles.gridElementUnpressedView} >
-                    <Text style={{ color: colorState.pressedColor }}>
-                        {nameState}
-                    </Text>
-                </View>
-            </Animated.View>
-        </View>
+        <>
+            <View style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.pressedColor, }} onLayout={onLayout}>
+                <Animated.View
+                    style={{
+                        ...styles.gridElementBasePressedView,
+                        opacity: fadeAnim,
+                        backgroundColor: colorState.unpressedColor,
+                    }}
+                    onTouchStart={playModeTouchStartHandler}
+                    onTouchEnd={playModeTouchEndHandler}
+                >
+                    <View style={styles.gridElementUnpressedView} >
+                        <Text style={{ color: colorState.pressedColor }}>
+                            {nameState}
+                        </Text>
+                    </View>
+                </Animated.View>
+            </View>
+        </>
     );
 }; // end of GridElement
 

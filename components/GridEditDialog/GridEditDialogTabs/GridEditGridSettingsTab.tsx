@@ -31,13 +31,13 @@ export function GridEditGridSettingsTab(): JSX.Element {
         <View style={styles.container}>
             <Text>Number of Columns: {columnState}</Text>
             <Slider
-                maximumValue={12} minimumValue={1} step={1}
+                maximumValue={10} minimumValue={1} step={1}
                 value={columnState}
                 onValueChange={(value) => { dispatch(setColumnCount(value)) }}
             />
             <Text>Number of Rows: {rowState}</Text>
             <Slider
-                maximumValue={12} minimumValue={1} step={1}
+                maximumValue={10} minimumValue={1} step={1}
                 value={rowState}
                 onValueChange={(value) => { dispatch(setRowCount(value)) }}
             />
