@@ -18,8 +18,8 @@ interface HttpCommunicationsState {
 
 const initialState: HttpCommunicationsState = {
     httpCommunicationInfo: {
-        ip: "192.168.0.13", // Apartment Wifi
-        // ip: "192.168.12.14", // Home
+        ip: "192.168.0.14", // Apartment Wifi
+
         port: "4848",
         midiDeviceID: '2',
     },

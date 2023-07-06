@@ -1,9 +1,14 @@
 import { GridElementColorState } from "./GridElementColorState";
-import { GridElementMidiState } from "./GridElementMidiState";
+import { GridElementMidiControlState } from "./GridElementMidiControlChangeState";
+import { GridElementMidiNoteState } from "./GridElementMidiNoteState";
 
 export interface GridElementState {
     name: string,
-    midiState: GridElementMidiState,
+    
+    midiNoteState: GridElementMidiNoteState,
+    controlChangeState: GridElementMidiControlState,
     colorState: GridElementColorState,
+
+    isMidiNote:boolean,
     isLocked: boolean,
 }

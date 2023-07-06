@@ -13,6 +13,7 @@ import {
     setGridElementOctave,
     setGridElementName,
     setGridElementIsLocked,
+    setGridElementIsMidiNote,
 } from '../../../../redux/slices/GridPresetsSlice';
 
 export interface GridElementEditMidiProps {
@@ -23,12 +24,16 @@ export function GridElementEditMidiSettingsTab({ index, }: GridElementEditMidiPr
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const nameState = currentGridElementState.name;
     const lockedState = currentGridElementState.isLocked;
-    const noteNumberState = currentGridElementState.midiState.noteNumber;
-    const velocityState = currentGridElementState.midiState.velocity;
+    const isMidiNoteModeState = currentGridElementState.isMidiNote;
+    const noteNumberState = currentGridElementState.midiNoteState.noteNumber;
+    const velocityState = currentGridElementState.midiNoteState.velocity;
     const dispatch = useAppDispatch();
 
     function toggleElementMidiLock() {
-        dispatch(setGridElementIsLocked({ index, isLocked: !currentGridElementState.isLocked }));
+        dispatch(setGridElementIsLocked({ index, isLocked: !lockedState }));
+    }
+    function toggleElementMidiNoteMode() {
+        dispatch(setGridElementIsMidiNote({ index, isMidiNote: !isMidiNoteModeState }));
     }
 
 
@@ -37,7 +42,11 @@ export function GridElementEditMidiSettingsTab({ index, }: GridElementEditMidiPr
             {/* MIDI settings Lock */}
             <View style={styles.lockSwitchView}>
                 <Text>Lock Grid Element: </Text>
-                <Switch value={lockedState} onChange={toggleElementMidiLock}></Switch>
+                <Switch value={lockedState} onChange={toggleElementMidiLock} />
+            </View>
+            <View style={styles.lockSwitchView}>
+                <Text>MIDI Note Mode: </Text>
+                <Switch value={isMidiNoteModeState} onChange={toggleElementMidiNoteMode} />
             </View>
 
             {/* Name control */}

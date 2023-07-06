@@ -132,13 +132,22 @@ export const GridPresetsSlice = createSlice({
                 grid.gridElements[index].isLocked = isLocked;
             }
         },
-        //Grid element MIDI operations
+        setGridElementIsMidiNote: (state, action) => {
+
+            const { index, isMidiNote } = action.payload;
+            const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
+
+            for (let grid of grids) {
+                grid.gridElements[index].isMidiNote = isMidiNote;
+            }
+        },
+        //Grid element MIDI note operations
         setGridElementNote: (state, action) => {
             const { index, newNoteNumber } = action.payload;
             const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
             for (let grid of grids) {
-                const originalOctaveOffset = Math.floor(grid.gridElements[index].midiState.noteNumber / 12) * 12;
-                grid.gridElements[index].midiState.noteNumber = newNoteNumber + originalOctaveOffset;
+                const originalOctaveOffset = Math.floor(grid.gridElements[index].midiNoteState.noteNumber / 12) * 12;
+                grid.gridElements[index].midiNoteState.noteNumber = newNoteNumber + originalOctaveOffset;
             }
         },
         setGridElementOctave: (state, action) => {
@@ -146,8 +155,8 @@ export const GridPresetsSlice = createSlice({
             const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
 
             for (let grid of grids) {
-                grid.gridElements[index].midiState.noteNumber = grid.gridElements[index].midiState.noteNumber % 12; //Keep original note
-                grid.gridElements[index].midiState.noteNumber += newNoteOctave * 12; //Add octave offset
+                grid.gridElements[index].midiNoteState.noteNumber = grid.gridElements[index].midiNoteState.noteNumber % 12; //Keep original note
+                grid.gridElements[index].midiNoteState.noteNumber += newNoteOctave * 12; //Add octave offset
             }
         },
         setGridElementVelocityCeiling: (state, action) => {
@@ -155,9 +164,9 @@ export const GridPresetsSlice = createSlice({
             const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
 
             for (let grid of grids) {
-                grid.gridElements[index].midiState.velocity.ceiling = ceiling;
-                if (grid.gridElements[index].midiState.velocity.ceiling < grid.gridElements[index].midiState.velocity.floor) {
-                    grid.gridElements[index].midiState.velocity.floor = ceiling;
+                grid.gridElements[index].midiNoteState.velocity.ceiling = ceiling;
+                if (grid.gridElements[index].midiNoteState.velocity.ceiling < grid.gridElements[index].midiNoteState.velocity.floor) {
+                    grid.gridElements[index].midiNoteState.velocity.floor = ceiling;
                 }
             }
         },
@@ -166,9 +175,9 @@ export const GridPresetsSlice = createSlice({
             const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
 
             for (let grid of grids) {
-                grid.gridElements[index].midiState.velocity.floor = floor;
-                if (grid.gridElements[index].midiState.velocity.floor > grid.gridElements[index].midiState.velocity.ceiling) {
-                    grid.gridElements[index].midiState.velocity.ceiling = floor;
+                grid.gridElements[index].midiNoteState.velocity.floor = floor;
+                if (grid.gridElements[index].midiNoteState.velocity.floor > grid.gridElements[index].midiNoteState.velocity.ceiling) {
+                    grid.gridElements[index].midiNoteState.velocity.ceiling = floor;
                 }
             }
         },
@@ -177,7 +186,32 @@ export const GridPresetsSlice = createSlice({
             const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
 
             for (let grid of grids) {
-                grid.gridElements[index].midiState.velocity.isVertical = isVertical;
+                grid.gridElements[index].midiNoteState.velocity.isVertical = isVertical;
+            }
+        },
+        // Grid element control change operations
+        setGridElementControlChangeXIndex: (state, action) => {
+            const { index, xAxisControlIndex } = action.payload;
+            const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
+
+            for (let grid of grids) {
+                grid.gridElements[index].controlChangeState.xAxisControlIndex = xAxisControlIndex
+            }
+        },
+        setGridElementControlChangeYIndex: (state, action) => {
+            const { index, yAxisControlIndex } = action.payload;
+            const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
+
+            for (let grid of grids) {
+                grid.gridElements[index].controlChangeState.yAxisControlIndex = yAxisControlIndex
+            }
+        },
+        setGridElementControlChangeIconString: (state, action) => {
+            const { index, iconString } = action.payload;
+            const grids = [state.currentGridPreset, state.gridPresets[state.currentPresetIndex]]
+
+            for (let grid of grids) {
+                grid.gridElements[index].controlChangeState.iconName = iconString
             }
         },
         // Grid element color operations
@@ -225,12 +259,17 @@ export const {
     // Grid element operations
     setGridElementName,
     setGridElementIsLocked,
+    setGridElementIsMidiNote,
     //Grid element MIDI operations
     setGridElementNote,
     setGridElementOctave,
     setGridElementVelocityCeiling,
     setGridElementVelocityFloor,
     setGridElementVelocityIsVertical,
+    // Grid element control change operations
+    setGridElementControlChangeXIndex,
+    setGridElementControlChangeYIndex,
+    setGridElementControlChangeIconString,
     // Grid element color operations
     setGridElementUnpressedColor,
     setGridElementPressedColor,
