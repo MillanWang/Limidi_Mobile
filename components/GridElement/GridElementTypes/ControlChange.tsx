@@ -9,6 +9,7 @@ import { Text, Icon } from "@rneui/themed";
 import { useAppSelector } from '../../../redux/hooks';
 import { useDesktopCommunication } from '../../../hooks/useDesktopCommunication';
 import { createMidiControlChange } from '../../../constants/MIDI_Notes';
+import { LinearGradient } from 'expo-linear-gradient';
 // import { Icon } from '@rneui/base';
 
 
@@ -16,7 +17,7 @@ interface ControlChangeProps {
     index: number,
 }
 
-const ICON_SIZE = 33
+const ICON_SIZE = 55
 const TOP_BAR_HEIGHT = 60;
 
 export default function ControlChange({ index }: ControlChangeProps) {
@@ -48,63 +49,168 @@ export default function ControlChange({ index }: ControlChangeProps) {
     const [xPositionAbsolute, setXPositionAbsolute] = useState(elementWidth / 2)
     const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2)
 
-    function logPositionalPercent(event: GestureResponderEvent): void {
 
-        // TODO : Align the icon with the center instead of with the top left corner. Apple pencil type testing 
-
-        setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.pageX - spaceFromLeft)))
-        setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.pageY - spaceFromTop)))
+    // TODO: Incorporate some kind of throttle or debounce system here for performance sake. No need for every pixel change
+    function logPositionalPercent(event: GestureResponderEvent) {
+        setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.pageX - spaceFromLeft - (ICON_SIZE / 2))))
+        setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.pageY - spaceFromTop - (ICON_SIZE / 2))))
         sendMidiControlChange(
             createMidiControlChange(
-                4,
-                Math.floor(127 * (event.nativeEvent.pageX - spaceFromLeft)/ elementWidth)
+                24,
+                Math.floor(127 * (event.nativeEvent.pageX - spaceFromLeft) / elementWidth)
+            )
+        )
+        sendMidiControlChange(
+            createMidiControlChange(
+                14,
+                Math.floor(127 - 127 * (event.nativeEvent.pageY - spaceFromTop) / elementHeight)
             )
         )
 
     }
 
+
+    const fadeAnim = useRef(new Animated.Value(1)).current;
+    function fadeIn() {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 300,
+            useNativeDriver: true
+        }).start();
+    };
+    function fadeOut(velocityPercent: number) {
+        Animated.timing(fadeAnim, {
+            toValue: 1 - velocityPercent,
+            duration: 5,
+            useNativeDriver: true
+        }).start();
+    };
+
+    function playModeTouchStartHandler() {
+        fadeOut(0.5);
+
+    }
+
+    function playModeTouchEndHandler() {
+        fadeIn();
+    }
+
     return (
         <>
             <View
-                style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.unpressedColor, }}
+                style={{ ...styles.gridElementBasePressedView, backgroundColor: colorState.pressedColor, }}
                 onLayout={onLayout}
                 onTouchMove={logPositionalPercent}
                 onTouchStart={logPositionalPercent}
 
             >
+                <LinearGradient // Review how much this is desired. Consider radial alternatives
+                    colors={['transparent', 'rgba(0,0,0,0.8)',]}
+                    // start={{x:0, y:0.99}}
+                    style={{ left: 0, right: 0, top: 0, height: elementHeight, }}
 
-                <View
-                    style={{
-                        position: 'absolute',
-                        top: yPositionAbsolute,
-                        left: xPositionAbsolute,
-                        backgroundColor: "red",
-                        height: ICON_SIZE,
-                        width: ICON_SIZE,
-                    }}
                 >
 
-                    <Icon
-                        name="rowing"
-                        color={colorState.pressedColor}
-                    />
-                </View>
+
+                    <Animated.View
+                        style={{
+                            ...styles.gridElementBasePressedView,
+                            opacity: fadeAnim,
+                            backgroundColor: colorState.unpressedColor,
+                        }}
+                        onTouchStart={playModeTouchStartHandler}
+                        onTouchEnd={playModeTouchEndHandler}
+                    >
+
+
+
+                        <View
+                            style={{
+                                position: 'absolute',
+                                top: yPositionAbsolute,
+                                left: xPositionAbsolute,
+                                backgroundColor: colorState.pressedColor,
+                                height: ICON_SIZE,
+                                width: ICON_SIZE,
+                                justifyContent: "center",
+                                borderRadius: 100 //Big enough to be a circle
+                            }}
+                        >
+
+                            <Icon
+                                //Changes on move as one option. Hard set to a value as another option
+                                name={ioniconValidIconNames[Math.floor(Math.random() * ioniconValidIconNames.length)]}
+                                type="ionicon"
+                                color={colorState.unpressedColor}
+                            />
+                        </View>
+                    </Animated.View>
+                </LinearGradient>
             </View>
         </>
     );
 }
 
 
+const ioniconValidIconNames = [
+    "logo-bitcoin",
+    "logo-euro",
+    "logo-no-smoking",
+    "logo-chrome",
+    "logo-apple",
+    "logo-android",
+    "logo-react",
+    "logo-usd",
+    "logo-nodejs",
+    "logo-javascript",
+    "logo-yen",
+    "medical",
+    "move",
+    "nuclear",
+    "planet",
+    "pulse",
+    "qr-code",
+    "rainy",
+    "reload",
+    "shield",
+    "snow",
+    "skull",
+    "star",
+    "sync",
+    "terminal",
+    "trophy",
+    "water",
+    "wifi",
+    "wine",
+    "ios-beer",
+    "ios-grid",
+    "aperture",
+    "aperture-outline",
+    "bug",
+    "code-slash",
+    "compass",
+    "cube",
+    "earth",
+    "expand",
+    "flash",
+    "git-compare",
+    "hardware-chip-outline",
+    "infinite",
+    "leaf",
+    "finger-print"
+]
+
 
 const styles = StyleSheet.create({
     gridElementBasePressedView: {
         flex: 1,
+        borderWidth: 0.5,
+
     },
     gridElementUnpressedView: {
         flex: 2,
         alignItems: 'center',
         justifyContent: 'center',
-        borderWidth: 1,
     },
     gridElementEditView: {
         flexDirection: "row",
