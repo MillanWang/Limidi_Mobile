@@ -45,16 +45,18 @@ export function ColorSelector({ colorTitle, color, setColor, }: ColorSelectorPro
                 flexDirection: "row"
             }}>
 
-                {ALL_ELEMENTAL_COLORS[colorSeriesIndex].colorGrid.map((element) => {
+                {ALL_ELEMENTAL_COLORS[colorSeriesIndex].colorGrid.map((element, columnIndex) => {
                     // Columns
                     return (
                         <View style={{
                             flex: 1
-                        }}>
-                            {element.map(currentColor => {
+                        }}
+                        key={`ColorColumn_${columnIndex}`}>
+                            {element.map((currentColor, elemIndex) => {
                                 // Elements in a coluimn
                                 return (
                                     <View
+                                    key={`ColorElementIndex_${elemIndex}`}
                                         style={{
                                             backgroundColor: currentColor,
                                             // borderColor: "black",
