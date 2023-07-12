@@ -2,7 +2,6 @@ import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 
 
-// TODO
 interface HttpCommunicationsState {
     httpCommunicationInfo:
     {
@@ -10,10 +9,6 @@ interface HttpCommunicationsState {
         port: string,
         midiDeviceID: string,
     },
-    //Evnetually, might want a feature to have each GE choose a midi device.
-    //That would be useful for setting up one just for DAW controls and one for instruments
-    //It would be a list of states for each grid elem similar to midi and color slice
-    //Desktop app changes would be needed for this. 
 }
 
 const initialState: HttpCommunicationsState = {
@@ -34,16 +29,13 @@ export const HttpCommunicationsSlice = createSlice({
         },
         setPort: (state, action) => {
             state.httpCommunicationInfo.port = action.payload.port;
-            console.log("x")
         },
-        setMidiOutputDeviceID: (state, action) => { }, // TODO: Awaiting desktop update for this functionality
     }
 });
 
 export const {
     setIP,
     setPort,
-    setMidiOutputDeviceID,
 
 } = HttpCommunicationsSlice.actions;
 

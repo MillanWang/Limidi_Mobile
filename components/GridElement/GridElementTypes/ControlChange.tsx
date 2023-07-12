@@ -88,7 +88,6 @@ export default function ControlChange({ index }: ControlChangeProps) {
 
     function playModeTouchStartHandler() {
         fadeOut(0.5);
-
     }
 
     function playModeTouchEndHandler() {

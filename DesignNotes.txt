@@ -1,14 +1,3 @@
-Immediate TODOS
--Persistence of application state
--Saved preset system
--Modulation pads
--Improve communications with Desktop server. Probably need to use the side thread approach and/or a socket based approach
--Replace color selector circles wtih a quantized set of colors. Too much control available with the selectors
-
-
-
-
-
 
 MOBILE
 
