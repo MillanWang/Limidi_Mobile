@@ -1,9 +1,5 @@
 # GoToMarket Steps
 
-## DONE
-
-- x
-
 ## TODO
 
 - DATA
@@ -50,3 +46,7 @@
   - Get onto android app store
   - Get onto apple app store
   - Host a website to download the platform specific desktop app
+
+## DONE
+
+- x
