@@ -34,7 +34,7 @@ export default function GridElement(
     const [dialogVisible, setDialogVisible] = useState(false);
 
 
-    const isMidiNote = !currentGridElementState.isMidiNote
+    const isMidiNote = currentGridElementState.isMidiNote
 
     return (
         <>
