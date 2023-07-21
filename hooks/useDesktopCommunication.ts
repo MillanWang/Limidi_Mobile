@@ -20,6 +20,7 @@ export function useDesktopCommunication() {
 
     async function sendMidiControlChange(midiControlChangeProps: MidiControlChangeProps) {
         const { controlIndex, level } = midiControlChangeProps;
+        if (controlIndex < 0) return;
         fetch(`http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MidiControlChange/?controlIndex=${controlIndex}&level=${level}`,
             {
                 method: 'GET',

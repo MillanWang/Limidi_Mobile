@@ -32,63 +32,51 @@ enum ControlChangeDirection {
 }
 
 export function ControlChangeSettingsPanel({ index, }: ControlChangeSettingsPanelProps) {
+    const dispatch = useAppDispatch();
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const isMidiNoteModeState = currentGridElementState.isMidiNote;
 
     const nameState = currentGridElementState.name;
 
+    const iconNameState = currentGridElementState.controlChangeState.iconName;
+    const xAxisControlIndexState = currentGridElementState.controlChangeState.xAxisControlIndex;
+    const yAxisControlIndexState = currentGridElementState.controlChangeState.yAxisControlIndex;
 
-    const iconName = currentGridElementState.controlChangeState.iconName;
-    const xAxisControlIndex = currentGridElementState.controlChangeState.xAxisControlIndex;
-    const yAxisControlIndex = currentGridElementState.controlChangeState.yAxisControlIndex;
 
-
-    const dispatch = useAppDispatch();
-
-    function toggleElementMidiNoteMode() {
-        dispatch(setGridElementIsMidiNote({ index, isMidiNote: !isMidiNoteModeState }));
-    }
-
-    const [mostRecentValidXControlIndex, setMostRecentValidXControlIndex] = useState(xAxisControlIndex)
-    const [mostRecentValidYControlIndex, setMostRecentValidYControlIndex] = useState(yAxisControlIndex)
-
-    const [ccDirection, setCcDirection] = useState(ControlChangeDirection.horizontal);
+    const [ccDirection, setCcDirection] = useState(ControlChangeDirection.xy);
 
     function horizontalOnPress() {
         setCcDirection(ControlChangeDirection.horizontal)
-        dispatch(setGridElementControlChangeXIndex({ index, yAxisControlIndex: -1 }))
-
+        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: Math.abs(xAxisControlIndexState) }))
+        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: -1 * yAxisControlIndexState }))
     }
     function verticalOnPress() {
         setCcDirection(ControlChangeDirection.vertical)
-        dispatch(setGridElementControlChangeYIndex({ index, xAxisControlIndex: -1 }))
+        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: Math.abs(yAxisControlIndexState) }))
+        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: -1 * xAxisControlIndexState }))
     }
     function xyOnPress() {
         setCcDirection(ControlChangeDirection.xy)
-        dispatch(setGridElementControlChangeXIndex({ index, yAxisControlIndex: mostRecentValidYControlIndex }))
-        dispatch(setGridElementControlChangeYIndex({ index, xAxisControlIndex: mostRecentValidXControlIndex }))
+        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: Math.abs(xAxisControlIndexState) }))
+        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: Math.abs(yAxisControlIndexState) }))
     }
 
 
     function horizontalCcIndexMinusOnPress() {
-        if (mostRecentValidXControlIndex - 1 < 0) return;
-        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: mostRecentValidXControlIndex - 1 }))
-        setMostRecentValidXControlIndex(mostRecentValidXControlIndex - 1)
+        if (Math.abs(xAxisControlIndexState) - 1 < 0) return;
+        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: Math.abs(xAxisControlIndexState) - 1 }))
     }
     function horizontalCcIndexPlusOnPress() {
-        if (mostRecentValidXControlIndex + 1 > 127) return;
-        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: mostRecentValidXControlIndex + 1 }))
-        setMostRecentValidXControlIndex(mostRecentValidXControlIndex + 1)
+        if (Math.abs(xAxisControlIndexState) + 1 > 127) return;
+        dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: Math.abs(xAxisControlIndexState) + 1 }))
     }
     function verticalCcIndexMinusOnPress() {
-        if (mostRecentValidYControlIndex - 1 < 0) return;
-        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: mostRecentValidYControlIndex - 1 }))
-        setMostRecentValidYControlIndex(mostRecentValidYControlIndex - 1)
+        if (Math.abs(yAxisControlIndexState) - 1 < 0) return;
+        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: Math.abs(yAxisControlIndexState) - 1 }))
     }
     function verticalCcIndexPlusOnPress() {
-        if (mostRecentValidYControlIndex + 1 > 127) return;
-        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: mostRecentValidYControlIndex + 1 }))
-        setMostRecentValidYControlIndex(mostRecentValidYControlIndex + 1)
+        if (Math.abs(yAxisControlIndexState) + 1 > 127) return;
+        dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: Math.abs(yAxisControlIndexState) + 1 }))
     }
 
 
@@ -140,7 +128,7 @@ export function ControlChangeSettingsPanel({ index, }: ControlChangeSettingsPane
                     <Text>Horizontal Control Change Index</Text>
                     <View style={{ flexDirection: "row" }}>
                         <Button title="-" onPress={horizontalCcIndexMinusOnPress} />
-                        <Text>{`${mostRecentValidXControlIndex}`}</Text>
+                        <Text>{`${xAxisControlIndexState}`}</Text>
                         <Button title="+" onPress={horizontalCcIndexPlusOnPress} />
                     </View>
                 </View>
@@ -150,7 +138,7 @@ export function ControlChangeSettingsPanel({ index, }: ControlChangeSettingsPane
                     <Text>Vertical Control Change Index</Text>
                     <View style={{ flexDirection: "row" }}>
                         <Button title="-" onPress={verticalCcIndexMinusOnPress} />
-                        <Text>{`${mostRecentValidYControlIndex}`}</Text>
+                        <Text>{`${yAxisControlIndexState}`}</Text>
                         <Button title="+" onPress={verticalCcIndexPlusOnPress} />
                     </View>
                 </View>

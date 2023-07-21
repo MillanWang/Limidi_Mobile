@@ -4,7 +4,7 @@ import {
     StyleSheet,
     View
 } from 'react-native';
-import { Text, } from "@rneui/themed";
+import { Icon, Text, } from "@rneui/themed";
 import GridElementEditDialog from './GridElementEditDialog/GridElementEditDialog';
 import { useAppSelector } from '../../redux/hooks';
 import DrumPad from './GridElementTypes/DrumPad';
@@ -31,6 +31,9 @@ export default function GridElement(
     const currentGridElementState = useAppSelector(state => state.gridPresetsReducer.currentGridPreset.gridElements[index]);
     const nameState = currentGridElementState.name;
     const colorState = currentGridElementState.colorState;
+    const lockedState = currentGridElementState.isLocked;
+    const isMidiNoteSTate = currentGridElementState.isMidiNote;
+
     const [dialogVisible, setDialogVisible] = useState(false);
 
 
@@ -53,9 +56,20 @@ export default function GridElement(
                     }}
                     onTouchStart={() => { setDialogVisible(true); }}
                 >
-                    <Text style={{ color: colorState.pressedColor }}>
-                        Edit #{index}
-                    </Text>
+                    <View style={{ flexDirection: "column", alignItems: "center" }}>
+                        <View style={{ flexDirection: "row" }}>
+                            <Icon color={colorState.pressedColor} type="ionicon" name={lockedState ? "lock-closed" : "lock-open"} />
+                            {isMidiNoteSTate ?
+                                <Icon color={colorState.pressedColor} type="material-community" name={"piano"} /> :
+                                <Icon color={colorState.pressedColor} type="feather" name={"sliders"} />
+                            }
+                        </View>
+                        <Text style={{ color: colorState.pressedColor }}>
+                            Edit {nameState} (#{index})
+                        </Text>
+                    </View>
+
+
                     {/* TODO: Show lock here and also show name of element */}
                 </View>
             }
