@@ -51,32 +51,49 @@ export default function ControlChange({ index }: ControlChangeProps) {
     const [xPositionAbsolute, setXPositionAbsolute] = useState(elementWidth / 2)
     const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2)
 
+    function getIconName() {
+        if (iconNameState && iconNameState !== "") {
+            return iconNameState
+        }
+        else if (xAxisControlIndexState > 0 && yAxisControlIndexState > 0) {
+            // XY default
+            return "move"
+        }
+        else if (yAxisControlIndexState > 0) {
+            // Vertical default
+            return "swap-vertical"
+        }
+        else if (xAxisControlIndexState > 0) {
+            // Horizontal default
+            return "swap-horizontal"
+        }
+        return "move"
+    }
 
     // TODO: Incorporate some kind of throttle or debounce system here for performance sake. No need for every pixel change
     function onSliderChange(event: GestureResponderEvent) {
         if (xAxisControlIndexState > 0) {
             setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.pageX - spaceFromLeft - (ICON_SIZE / 2))))
-            // sendMidiControlChange(
-            //     createMidiControlChange(
-            //         xAxisControlIndexState,
-            //         Math.floor(127 * (event.nativeEvent.pageX - spaceFromLeft) / elementWidth)
-            //     )
-            // )
+            sendMidiControlChange(
+                createMidiControlChange(
+                    xAxisControlIndexState,
+                    Math.floor(127 * (event.nativeEvent.pageX - spaceFromLeft) / elementWidth)
+                )
+            )
         } else {
             // Locked horizontally
             // Vertical only control 
-            // setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.pageX - spaceFromLeft - (ICON_SIZE / 2))))
             setXPositionAbsolute((elementWidth / 2) - (ICON_SIZE / 2))
         }
 
         if (yAxisControlIndexState > 0) {
             setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.pageY - spaceFromTop - (ICON_SIZE / 2))))
-            // sendMidiControlChange(
-            //     createMidiControlChange(
-            //         yAxisControlIndexState,
-            //         Math.floor(127 - 127 * (event.nativeEvent.pageY - spaceFromTop) / elementHeight)
-            //     )
-            // )
+            sendMidiControlChange(
+                createMidiControlChange(
+                    yAxisControlIndexState,
+                    Math.floor(127 - 127 * (event.nativeEvent.pageY - spaceFromTop) / elementHeight)
+                )
+            )
         } else {
             // Locked vertically
             // Horizontal only control 
@@ -100,7 +117,6 @@ export default function ControlChange({ index }: ControlChangeProps) {
             useNativeDriver: true
         }).start();
     };
-
     function playModeTouchStartHandler() { fadeOut(0.5); }
     function playModeTouchEndHandler() { fadeIn(); }
 
@@ -111,10 +127,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
                 onLayout={onLayout}
                 onTouchMove={onSliderChange}
                 onTouchStart={onSliderChange}
-
             >
-
-
                 <Animated.View
                     style={{
                         ...styles.gridElementBasePressedView,
@@ -138,7 +151,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
                     >
                         <Icon
                             //Changes on move as one option. Hard set to a value as another option
-                            name={"swap-horizontal"}
+                            name={getIconName()}
                             type="ionicon"
                             color={colorState.unpressedColor}
                         />
@@ -149,75 +162,6 @@ export default function ControlChange({ index }: ControlChangeProps) {
         </>
     );
 }
-
-
-const horizontalIconNamesIonicon = [
-    "swap-horizontal",
-    "code-outline",
-    "code-slash-outline"
-]
-const verticalIconNamesIonicon = [
-    "swap-vertical",
-    "chevron-collapse",
-    "chevron-expand",
-]
-const xyIconNamesIonicon = [
-    "repeat",
-    "resize",
-    "move",
-    "logo-apple-ar",
-    "expand",
-    "contract",
-]
-
-
-const ioniconValidIconNames = [
-    "logo-bitcoin",
-    "logo-euro",
-    "logo-no-smoking",
-    "logo-chrome",
-    "logo-apple",
-    "logo-android",
-    "logo-react",
-    "logo-usd",
-    "logo-nodejs",
-    "logo-javascript",
-    "logo-yen",
-    "medical",
-    "move",
-    "nuclear",
-    "planet",
-    "pulse",
-    "qr-code",
-    "rainy",
-    "reload",
-    "shield",
-    "snow",
-    "skull",
-    "star",
-    "sync",
-    "terminal",
-    "trophy",
-    "water",
-    "wifi",
-    "wine",
-    "ios-beer",
-    "ios-grid",
-    "aperture",
-    "aperture-outline",
-    "bug",
-    "code-slash",
-    "compass",
-    "cube",
-    "earth",
-    "expand",
-    "flash",
-    "git-compare",
-    "hardware-chip-outline",
-    "infinite",
-    "leaf",
-    "finger-print"
-]
 
 
 const styles = StyleSheet.create({
