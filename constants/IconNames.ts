@@ -17,7 +17,6 @@ export const xyIconNamesIonicon = [
     "repeat",
     "resize",
     "move",
-    "logo-apple-ar",
     "expand",
     "contract",
 ]

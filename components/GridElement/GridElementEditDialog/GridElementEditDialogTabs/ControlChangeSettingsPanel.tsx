@@ -11,7 +11,7 @@ import {
     setGridElementControlChangeYIndex
 } from '../../../../redux/slices/GridPresetsSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { iconNames } from '../../../../constants/IconNames';
+import { iconNames, ioniconValidIconNames } from '../../../../constants/IconNames';
 
 
 
@@ -145,28 +145,11 @@ export function ControlChangeSettingsPanel({ index, }: ControlChangeSettingsPane
             <View>
                 <Text>Icon</Text>
                 <View style={{ flexDirection: "row" }}>
-                    <View
-                        style={{
-                            backgroundColor: colorState.pressedColor,
-                            height: 50, width: 50,
-                            justifyContent: "center",
-                            borderRadius: 100 //Big enough to be a circle
-                        }}
-                    >
-                        <Icon
-                            //Changes on move as one option. Hard set to a value as another option
-                            name={"move"}
-                            type="ionicon"
-                            color={colorState.unpressedColor}
-                        />
-                    </View>
-
+                    <IconWithTitle name={"move"} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} showTitle />
                     <Button title="Set Icon" onPress={() => { setIconDialogOpen(true) }} />
                     <IconSelectDialog dialogVisible={iconDialogOpen} setDialogVisible={setIconDialogOpen} index={index} />
                 </View>
             </View>
-
-
         </View>
     );
 }// end GridElementEditMidiOptionsTab
@@ -189,16 +172,29 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
     const xAxisControlIndexState = currentGridElementState.controlChangeState.xAxisControlIndex;
     const yAxisControlIndexState = currentGridElementState.controlChangeState.yAxisControlIndex;
 
-    const iconsToUse: string[] = iconNames[getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)]
+    const directionalIcons: string[] = iconNames[getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)]
+
     return (
         <Dialog isVisible={dialogVisible} >
 
-            <Text>Grid Element: 78987</Text>
-            {iconsToUse.map((iconName) => {
-                return (<>
-                    <Text>{iconName}</Text>
-                </>)
-            })}
+            <Text>Grid Element: {index}</Text>
+            <Text>Directional Icons</Text>
+            <View style={{ flexDirection: "row" }}>
+                {directionalIcons.map((iconName) => {
+                    return (<>
+                        <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
+                    </>)
+                })}
+            </View>
+
+            <Text>General Icons</Text>
+            <View style={{ flexDirection: "row" }}>
+                {ioniconValidIconNames.map((iconName) => {
+                    return (<>
+                        <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
+                    </>)
+                })}
+            </View>
 
             <Button
                 title={"Save"}
@@ -207,6 +203,32 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
         </Dialog>
     );
 }
+
+interface IconWithTitleProps {
+    name: string,
+    backgroundColor: string,
+    iconColor: string,
+    showTitle?: boolean
+}
+function IconWithTitle({ name, backgroundColor, iconColor, showTitle = false }: IconWithTitleProps) {
+    return (
+        <View >
+            {showTitle && <Text>{name}</Text>}
+            <View
+                style={{
+                    backgroundColor,
+                    height: 50, width: 50,
+                    justifyContent: "center",
+                    borderRadius: 100, //Big enough to be a circle
+                }}
+            >
+                <Icon name={name} type="ionicon" color={iconColor} />
+            </View>
+        </View>
+    )
+}
+
+
 
 const styles = StyleSheet.create({
     lockSwitchView: {
