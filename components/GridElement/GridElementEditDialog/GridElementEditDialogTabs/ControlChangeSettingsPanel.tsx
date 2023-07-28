@@ -145,7 +145,7 @@ export function ControlChangeSettingsPanel({ index, }: ControlChangeSettingsPane
             <View>
                 <Text>Icon</Text>
                 <View style={{ flexDirection: "row" }}>
-                    <IconWithTitle name={"move"} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} showTitle />
+                    <IconWithTitle name={iconNameState} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
                     <Button title="Set Icon" onPress={() => { setIconDialogOpen(true) }} />
                     <IconSelectDialog dialogVisible={iconDialogOpen} setDialogVisible={setIconDialogOpen} index={index} />
                 </View>
@@ -174,6 +174,13 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
 
     const directionalIcons: string[] = iconNames[getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)]
 
+    const iconTouchHandler = (name: string) => {
+        return () => {
+            dispatch(setGridElementControlChangeIconString({ index, iconString: name }))
+            console.log(name);
+        }
+    }
+
     return (
         <Dialog isVisible={dialogVisible} >
 
@@ -181,18 +188,18 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
             <Text>Directional Icons</Text>
             <View style={{ flexDirection: "row" }}>
                 {directionalIcons.map((iconName) => {
-                    return (<>
+                    return (<Button onPress={iconTouchHandler(iconName)} color={"#ffffff"} buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}>
                         <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
-                    </>)
+                    </Button>)
                 })}
             </View>
 
             <Text>General Icons</Text>
             <View style={{ flexDirection: "row" }}>
                 {ioniconValidIconNames.map((iconName) => {
-                    return (<>
+                    return (<Button onPress={iconTouchHandler(iconName)} color={"#ffffff"} buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}>
                         <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
-                    </>)
+                    </Button>)
                 })}
             </View>
 
@@ -210,10 +217,13 @@ interface IconWithTitleProps {
     iconColor: string,
     showTitle?: boolean
 }
-function IconWithTitle({ name, backgroundColor, iconColor, showTitle = false }: IconWithTitleProps) {
+function IconWithTitle({ name, backgroundColor, iconColor, }: IconWithTitleProps) {
+    let formattedName = name.replaceAll("logo-", "").replaceAll("-", " ");
+    formattedName = formattedName.charAt(0).toUpperCase() + formattedName.slice(1);
+
     return (
         <View >
-            {showTitle && <Text>{name}</Text>}
+            <Text>{formattedName}</Text>
             <View
                 style={{
                     backgroundColor,
