@@ -10,8 +10,8 @@ export const horizontalIconNamesIonicon = [
 ]
 export const verticalIconNamesIonicon = [
     "swap-vertical",
-    "chevron-collapse",
-    "chevron-expand",
+    "chevron-up",
+    // "chevron-expand"
 ]
 export const xyIconNamesIonicon = [
     "repeat",
@@ -30,12 +30,12 @@ export const ioniconValidIconNames = [
     "logo-apple",
     "logo-android",
     "logo-react",
+    "logo-tux",
     "logo-usd",
     "logo-nodejs",
     "logo-javascript",
     "logo-yen",
     "medical",
-    "move",
     "nuclear",
     "planet",
     "pulse",
@@ -43,6 +43,7 @@ export const ioniconValidIconNames = [
     "rainy",
     "reload",
     "shield",
+    "cash",
     "snow",
     "skull",
     "star",
@@ -52,14 +53,25 @@ export const ioniconValidIconNames = [
     "water",
     "wifi",
     "wine",
+    "eye",
+    "film",
+    "flash",
+    "musical-note",
+    "musical-notes",
+    "flash-off",
+    "key",
+    "mic",
     "ios-beer",
     "ios-grid",
     "aperture",
-    "aperture-outline",
     "bug",
     "code-slash",
     "compass",
+    "attach-outline",
     "cube",
+    "repeat",
+    "paw",
+    "rocket",
     "earth",
     "expand",
     "flash",
@@ -69,6 +81,19 @@ export const ioniconValidIconNames = [
     "leaf",
     "finger-print"
 ]
+
+export const ioniconIconNameAliases: Record<string, string> = {
+    "logo-usd": "USD",
+    "hardware-chip-outline": "CPU",
+    "logo-no-smoking": "No Smoke",
+    "qr-code": "QR",
+    "git-compare": "Compare",
+    "finger-print": "Touch",
+    "swap-horizontal": "Horizontal",
+    "swap-vertical": "Vertical",
+    "musical-note": "Note",
+    "musical-notes": "Notes",
+}
 
 export const iconNames: Record<ControlChangeDirection, string[]> = {
     horizontal: horizontalIconNamesIonicon,

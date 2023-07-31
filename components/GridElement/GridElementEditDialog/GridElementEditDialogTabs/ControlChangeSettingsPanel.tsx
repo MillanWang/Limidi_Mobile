@@ -1,6 +1,6 @@
 
 import React, { ReactComponentElement, ReactElement, useState } from 'react';
-import { View, StyleSheet, } from 'react-native';
+import { View, StyleSheet, ScrollView, } from 'react-native';
 import { Input, Slider, Text, Switch, Button, Icon, Tooltip, Dialog } from "@rneui/themed";
 import { NOTE, } from '../../../../constants/MIDI_Notes';
 import { Piano } from '../../../Piano';
@@ -11,7 +11,7 @@ import {
     setGridElementControlChangeYIndex
 } from '../../../../redux/slices/GridPresetsSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { iconNames, ioniconValidIconNames } from '../../../../constants/IconNames';
+import { iconNames, ioniconIconNameAliases, ioniconValidIconNames } from '../../../../constants/IconNames';
 
 
 
@@ -53,16 +53,28 @@ export function ControlChangeSettingsPanel({ index, }: ControlChangeSettingsPane
         setCcDirection(ControlChangeDirection.horizontal)
         dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: Math.abs(xAxisControlIndexState) }))
         dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: -1 * yAxisControlIndexState }))
+        if (!ioniconValidIconNames.includes(iconNameState)) {
+            // Default directional name
+            dispatch(setGridElementControlChangeIconString({ index, iconString: "swap-horizontal" }))
+        }
     }
     function verticalModeOnPress() {
         setCcDirection(ControlChangeDirection.vertical)
         dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: Math.abs(yAxisControlIndexState) }))
         dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: -1 * xAxisControlIndexState }))
+        if (!ioniconValidIconNames.includes(iconNameState)) {
+            // Default directional name
+            dispatch(setGridElementControlChangeIconString({ index, iconString: "swap-vertical" }))
+        }
     }
     function xyModeOnPress() {
         setCcDirection(ControlChangeDirection.xy)
         dispatch(setGridElementControlChangeXIndex({ index, xAxisControlIndex: Math.abs(xAxisControlIndexState) }))
         dispatch(setGridElementControlChangeYIndex({ index, yAxisControlIndex: Math.abs(yAxisControlIndexState) }))
+        if (!ioniconValidIconNames.includes(iconNameState)) {
+            // Default directional name
+            dispatch(setGridElementControlChangeIconString({ index, iconString: "move" }))
+        }
     }
 
 
@@ -177,38 +189,72 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
     const iconTouchHandler = (name: string) => {
         return () => {
             dispatch(setGridElementControlChangeIconString({ index, iconString: name }))
-            console.log(name);
         }
     }
 
+    const iconsPerRow = 9;
+    const generalIconRows = getGeneralIconNameRows(iconsPerRow);
+
+
     return (
-        <Dialog isVisible={dialogVisible} >
+        <Dialog
+            isVisible={dialogVisible}
+        >
+            <ScrollView
+                style={{ height: 300 }}
+            >
+                <Text>Grid Element: {index}</Text>
+                <Text>Directional Icons</Text>
+                <View style={{ flexDirection: "row" }}>
+                    {directionalIcons.map((iconName) => {
+                        return (<Button onPress={iconTouchHandler(iconName)} color={"#ffffff"} buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}>
+                            <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
+                        </Button>)
+                    })}
+                </View>
 
-            <Text>Grid Element: {index}</Text>
-            <Text>Directional Icons</Text>
-            <View style={{ flexDirection: "row" }}>
-                {directionalIcons.map((iconName) => {
-                    return (<Button onPress={iconTouchHandler(iconName)} color={"#ffffff"} buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}>
-                        <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
-                    </Button>)
-                })}
-            </View>
+                <Text>General Icons</Text>
+                <View style={{ flexDirection: "column" }}>
+                    {generalIconRows.map((row, i) => {
+                        return (
+                            <View style={{ flexDirection: "row" }}>
+                                {row.map((iconName, j) => {
+                                    return (
+                                        <Button
+                                            onPress={iconTouchHandler(iconName)}
+                                            color={"#ffffff"}
+                                            buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}
+                                            key={`icon_row-${i}_elem-${j}_name-${iconName}`}
+                                        >
+                                            <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
+                                        </Button>
+                                    )
+                                })}
+                            </View>
+                        )
+                    })}
+                </View>
 
-            <Text>General Icons</Text>
-            <View style={{ flexDirection: "row" }}>
-                {ioniconValidIconNames.map((iconName) => {
-                    return (<Button onPress={iconTouchHandler(iconName)} color={"#ffffff"} buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}>
-                        <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
-                    </Button>)
-                })}
-            </View>
-
+            </ScrollView>
             <Button
                 title={"Save"}
                 onPress={() => { setDialogVisible(false) }}
             />
         </Dialog>
     );
+}
+
+function getGeneralIconNameRows(iconsPerRow: number) {
+    const listOfRows = [];
+    for (let i = 0; i < ioniconValidIconNames.length; i++) {
+        if (i % iconsPerRow === 0) {
+            listOfRows.push([ioniconValidIconNames[i]])
+        } else {
+            listOfRows[Math.floor(i / iconsPerRow)].push(ioniconValidIconNames[i])
+        }
+    }
+    return listOfRows
+
 }
 
 interface IconWithTitleProps {
@@ -218,12 +264,14 @@ interface IconWithTitleProps {
     showTitle?: boolean
 }
 function IconWithTitle({ name, backgroundColor, iconColor, }: IconWithTitleProps) {
-    let formattedName = name.replaceAll("logo-", "").replaceAll("-", " ");
+    let formattedName = ioniconIconNameAliases[name] ?? name.replaceAll("logo-", "").replaceAll("ios-", "").replaceAll("-", " ");
     formattedName = formattedName.charAt(0).toUpperCase() + formattedName.slice(1);
 
     return (
-        <View >
-            <Text>{formattedName}</Text>
+        <View style={{
+            alignItems: "center",
+            width: 60
+        }}>
             <View
                 style={{
                     backgroundColor,
@@ -234,6 +282,7 @@ function IconWithTitle({ name, backgroundColor, iconColor, }: IconWithTitleProps
             >
                 <Icon name={name} type="ionicon" color={iconColor} />
             </View>
+            <Text>{formattedName}</Text>
         </View>
     )
 }
