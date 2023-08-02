@@ -197,17 +197,18 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
 
 
     return (
-        <Dialog
-            isVisible={dialogVisible}
-        >
-            <ScrollView
-                style={{ height: 300 }}
-            >
+        <Dialog isVisible={dialogVisible}>
+            <ScrollView style={{ height: 300 }}>
                 <Text>Grid Element: {index}</Text>
                 <Text>Directional Icons</Text>
                 <View style={{ flexDirection: "row" }}>
-                    {directionalIcons.map((iconName) => {
-                        return (<Button onPress={iconTouchHandler(iconName)} color={"#ffffff"} buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}>
+                    {directionalIcons.map((iconName, i) => {
+                        return (<Button
+                            onPress={iconTouchHandler(iconName)}
+                            color={"#ffffff"}
+                            buttonStyle={{ borderWidth: 3, borderColor: iconName === iconNameState ? "#000000" : "#ffffff" }}
+                            key={`directional_icon-${i}`}
+                        >
                             <IconWithTitle name={iconName} backgroundColor={colorState.pressedColor} iconColor={colorState.unpressedColor} />
                         </Button>)
                     })}
@@ -217,7 +218,7 @@ function IconSelectDialog({ index, dialogVisible, setDialogVisible, }: IconSelec
                 <View style={{ flexDirection: "column" }}>
                     {generalIconRows.map((row, i) => {
                         return (
-                            <View style={{ flexDirection: "row" }}>
+                            <View style={{ flexDirection: "row" }} key={`icon_row-${i}`}>
                                 {row.map((iconName, j) => {
                                     return (
                                         <Button

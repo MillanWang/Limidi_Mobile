@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react';
 import {
     Animated,
     GestureResponderEvent,
+    ImageBackground,
     StyleSheet,
     View,
 } from 'react-native';
@@ -9,14 +10,13 @@ import { Text, Icon } from "@rneui/themed";
 import { useAppSelector } from '../../../redux/hooks';
 import { useDesktopCommunication } from '../../../hooks/useDesktopCommunication';
 import { createMidiControlChange } from '../../../constants/MIDI_Notes';
-import { LinearGradient } from 'expo-linear-gradient';
-// import { Icon } from '@rneui/base';
-
+import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/ControlChangeSettingsPanel"
 
 interface ControlChangeProps {
     index: number,
 }
 
+const hex = require('../../../assets/images/Hex.png'); //Strange how during dev, this disapeared when going between presets
 const ICON_SIZE = 55
 const TOP_BAR_HEIGHT = 60;
 
@@ -38,6 +38,12 @@ export default function ControlChange({ index }: ControlChangeProps) {
     const [elementHeight, setElementHeight] = useState(1);
     const [spaceFromLeft, setSpaceFromLeft] = useState(1);
     const [spaceFromTop, setSpaceFromTop] = useState(1);
+
+    const currentControlChangeDirection = xAxisControlIndexState > 0 && yAxisControlIndexState > 0 ?
+        ControlChangeDirection.xy :
+        xAxisControlIndexState > 0 ?
+            ControlChangeDirection.horizontal :
+            ControlChangeDirection.vertical;
 
     function onLayout(event: any) {
         setElementWidth(event.nativeEvent.layout.width);
@@ -72,7 +78,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
 
     // TODO: Incorporate some kind of throttle or debounce system here for performance sake. No need for every pixel change
     function onSliderChange(event: GestureResponderEvent) {
-        if (xAxisControlIndexState > 0) {
+        if (currentControlChangeDirection === ControlChangeDirection.horizontal || currentControlChangeDirection === ControlChangeDirection.xy) {
             setXPositionAbsolute(Math.min(elementWidth - ICON_SIZE, Math.max(0, event.nativeEvent.pageX - spaceFromLeft - (ICON_SIZE / 2))))
             sendMidiControlChange(
                 createMidiControlChange(
@@ -86,7 +92,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
             setXPositionAbsolute((elementWidth / 2) - (ICON_SIZE / 2))
         }
 
-        if (yAxisControlIndexState > 0) {
+        if (currentControlChangeDirection === ControlChangeDirection.vertical || currentControlChangeDirection === ControlChangeDirection.xy) {
             setYPositionAbsolute(Math.min(elementHeight - ICON_SIZE, Math.max(0, event.nativeEvent.pageY - spaceFromTop - (ICON_SIZE / 2))))
             sendMidiControlChange(
                 createMidiControlChange(
@@ -102,23 +108,32 @@ export default function ControlChange({ index }: ControlChangeProps) {
     }
 
 
+    const [isInMotion, setIsInMotion] = useState(false)
     const fadeAnim = useRef(new Animated.Value(1)).current;
     function fadeIn() {
         Animated.timing(fadeAnim, {
             toValue: 1,
             duration: 300,
-            useNativeDriver: true
+            useNativeDriver: true,
         }).start();
     };
-    function fadeOut(velocityPercent: number) {
+    function fadeOut(opacity: number) {
         Animated.timing(fadeAnim, {
-            toValue: 1 - velocityPercent,
-            duration: 5,
+            toValue: opacity,
+            duration: 1,
             useNativeDriver: true
-        }).start();
+        }).start(() => {
+            setIsInMotion(true);
+        });
     };
-    function playModeTouchStartHandler() { fadeOut(0.5); }
-    function playModeTouchEndHandler() { fadeIn(); }
+    function playModeTouchStartHandler() {
+        fadeOut(0.25);
+    }
+    function playModeTouchEndHandler() {
+        setIsInMotion(false);
+        fadeIn();
+    }
+
 
     return (
         <>
@@ -128,35 +143,51 @@ export default function ControlChange({ index }: ControlChangeProps) {
                 onTouchMove={onSliderChange}
                 onTouchStart={onSliderChange}
             >
-                <Animated.View
-                    style={{
-                        ...styles.gridElementBasePressedView,
-                        opacity: fadeAnim,
-                        backgroundColor: colorState.unpressedColor,
+
+                <ImageBackground
+                    source={hex}
+                    resizeMode="cover"
+                    imageStyle={{
+                        opacity:
+                            currentControlChangeDirection === ControlChangeDirection.xy && isInMotion ?
+                                Math.min(0.25, xPositionAbsolute / elementWidth) : 0
                     }}
-                    onTouchStart={playModeTouchStartHandler}
-                    onTouchEnd={playModeTouchEndHandler}
-                >
-                    <View
+                    style={{ width: elementWidth, height: elementHeight, }}>
+                    <Animated.View
                         style={{
-                            position: 'absolute',
-                            top: yPositionAbsolute,
-                            left: xPositionAbsolute,
-                            backgroundColor: colorState.pressedColor,
-                            height: ICON_SIZE,
-                            width: ICON_SIZE,
-                            justifyContent: "center",
-                            borderRadius: 100 //Big enough to be a circle
+                            ...styles.gridElementBasePressedView,
+                            opacity: isInMotion ?
+                                Math.max(0.15, currentControlChangeDirection === ControlChangeDirection.horizontal ?
+                                    (1 - xPositionAbsolute / elementWidth) : yPositionAbsolute / elementHeight) :
+                                fadeAnim,
+                            backgroundColor: colorState.unpressedColor,
                         }}
+                        onTouchStart={playModeTouchStartHandler}
+                        onTouchEnd={playModeTouchEndHandler}
                     >
-                        <Icon
-                            //Changes on move as one option. Hard set to a value as another option
-                            name={getIconName()}
-                            type="ionicon"
-                            color={colorState.unpressedColor}
-                        />
-                    </View>
-                </Animated.View>
+
+                        <View
+                            style={{
+                                position: 'absolute',
+                                top: yPositionAbsolute,
+                                left: xPositionAbsolute,
+                                backgroundColor: colorState.pressedColor,
+                                height: ICON_SIZE,
+                                width: ICON_SIZE,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                borderRadius: 100 //Big enough to be a circle
+                            }}
+                        >
+                            <Icon
+                                //Changes on move as one option. Hard set to a value as another option
+                                name={getIconName()}
+                                type="ionicon"
+                                color={colorState.unpressedColor}
+                            />
+                        </View>
+                    </Animated.View>
+                </ImageBackground>
 
             </View>
         </>

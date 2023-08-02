@@ -32,7 +32,7 @@ export default function GridElement(
     const nameState = currentGridElementState.name;
     const colorState = currentGridElementState.colorState;
     const lockedState = currentGridElementState.isLocked;
-    const isMidiNoteSTate = currentGridElementState.isMidiNote;
+    const isMidiNoteState = currentGridElementState.isMidiNote;
 
     const [dialogVisible, setDialogVisible] = useState(false);
 
@@ -59,7 +59,7 @@ export default function GridElement(
                     <View style={{ flexDirection: "column", alignItems: "center" }}>
                         <View style={{ flexDirection: "row" }}>
                             <Icon color={colorState.pressedColor} type="ionicon" name={lockedState ? "lock-closed" : "lock-open"} />
-                            {isMidiNoteSTate ?
+                            {isMidiNoteState ?
                                 <Icon color={colorState.pressedColor} type="material-community" name={"piano"} /> :
                                 <Icon color={colorState.pressedColor} type="feather" name={"sliders"} />
                             }
