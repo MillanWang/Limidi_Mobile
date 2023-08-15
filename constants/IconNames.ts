@@ -1,26 +1,14 @@
-import { ControlChangeDirection } from "../components/GridElement/GridElementEditDialog/GridElementEditDialogTabs/ControlChangeSettingsPanel"
+import { ControlChangeDirection } from "../components/GridElement/GridElementEditDialog/GridElementEditDialogTabs/ControlChangeSettingsPanel";
 
+export const horizontalIconNamesIonicon = ["swap-horizontal", "code-outline", "code-slash-outline"];
 
-
-
-export const horizontalIconNamesIonicon = [
-    "swap-horizontal",
-    "code-outline",
-    "code-slash-outline"
-]
 export const verticalIconNamesIonicon = [
     "swap-vertical",
     "chevron-up",
     // "chevron-expand"
-]
-export const xyIconNamesIonicon = [
-    "repeat",
-    "resize",
-    "move",
-    "expand",
-    "contract",
-]
+];
 
+export const xyIconNamesIonicon = ["repeat", "resize", "move", "expand", "contract"];
 
 export const ioniconValidIconNames = [
     "logo-bitcoin",
@@ -79,8 +67,8 @@ export const ioniconValidIconNames = [
     "hardware-chip-outline",
     "infinite",
     "leaf",
-    "finger-print"
-]
+    "finger-print",
+];
 
 export const ioniconIconNameAliases: Record<string, string> = {
     "logo-usd": "USD",
@@ -93,10 +81,10 @@ export const ioniconIconNameAliases: Record<string, string> = {
     "swap-vertical": "Vertical",
     "musical-note": "Note",
     "musical-notes": "Notes",
-}
+};
 
 export const iconNames: Record<ControlChangeDirection, string[]> = {
     horizontal: horizontalIconNamesIonicon,
     vertical: verticalIconNamesIonicon,
     xy: xyIconNamesIonicon,
-}
+};
