@@ -15,11 +15,7 @@
     - isLocked Icons
 - CONTROL CHANGE
   - Debouncing/throttling of api calls
-  - CC elem color reflecting the level when pressed. Color when single. Color+HexagonTexture when XY
-  - CC port selection
   - CC port uniqueness warning
-  - CC icon selection
-  - CC vertical/horizontal/XY selection
 - SCALES
   - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.
   - Add FL studio FPC default for 4 column
@@ -49,4 +45,17 @@
 
 ## DONE
 
-- x
+- DATA
+- MENU
+- GRID
+  - CC port selection
+  - CC icon selection
+  - CC vertical/horizontal/XY selection
+  - CC elem color reflecting the level when pressed. Color when single. Color+HexagonTexture when XY
+- CONTROL CHANGE
+- SCALES
+- COLOR
+- NETWORKING
+- DESKTOP APP
+- BUGS
+- LAUNCH

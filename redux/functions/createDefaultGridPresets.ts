@@ -24,11 +24,11 @@ function createGridElements(colorPreset: ColorPreset): GridElementState[] {
                     unpressedColor: colorPreset.unpressedColor,
                 },
                 controlChangeState: {
-                    iconName: "",
+                    iconName: "move",
                     xAxisControlIndex: (i * 2) % 128, // 127 is max index
                     yAxisControlIndex: (i * 2 + 1) % 128, // 127 is max index
                 },
-                isMidiNote: false,
+                isMidiNote: true,
                 isLocked: false,
             });
     }
