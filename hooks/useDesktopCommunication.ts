@@ -1,59 +1,58 @@
 import { useState } from "react";
 import { MidiControlChangeProps, MidiNoteProps } from "../constants/MIDI_Notes";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setMostRecentNetworkFailTime } from "../redux/slices/HttpCommunicationsSlice";
 
 export function useDesktopCommunication() {
-    const httpCommunicationInfo = useAppSelector(
-        (state) => state.httpCommunicationsReducer.httpCommunicationInfo
-    );
+    const {
+        httpCommunicationInfo: { ip, port },
+        mostRecentNetworkFailTime,
+        mostRecentNetworkFixTime,
+    } = useAppSelector((state) => state.httpCommunicationsReducer);
+    const dispatch = useAppDispatch();
 
-    async function sendMidiNote(midiNoteProps: MidiNoteProps) {
-        const { noteNumber, velocity, isNoteOn } = midiNoteProps;
-        fetch(
-            `http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`,
-            {
-                method: "GET",
-            }
-        ).then((response) => {
-            if (!response.ok) {
-                console.log(`${Date.now()} ${response.status} MIDI note fault`);
-            }
-        });
+    async function sendMidiNote({ noteNumber, velocity, isNoteOn }: MidiNoteProps) {
+        fetch(`http://${ip}:${port}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
+            method: "GET",
+        })
+            .then(responseHandler)
+            .catch(fetchErrorCatcher);
     }
 
-    const MINIMUM_CC_INTERVAL_DELAY = 300;
+    const MINIMUM_CC_INTERVAL_DELAY = 100;
     const [previousCcTime, setPreviousCcTime] = useState(0);
-    async function sendMidiControlChange(
-        midiControlChangeProps: MidiControlChangeProps
-    ) {
-        const { controlIndex, level } = midiControlChangeProps;
-        return;
+    async function sendMidiControlChange({ controlIndex, level }: MidiControlChangeProps) {
         if (controlIndex < 0) return;
         if (Date.now() - previousCcTime < MINIMUM_CC_INTERVAL_DELAY) return;
         setPreviousCcTime(Date.now());
-        console.log(previousCcTime);
-        fetch(
-            `http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MidiControlChange/?controlIndex=${controlIndex}&level=${level}`,
-            {
-                method: "GET",
-            }
-        ).then((response) => {
-            if (!response.ok) {
-                console.log(
-                    `${Date.now()} ${response.status} MIDI control change fault`
-                );
-            }
-        });
+        fetch(`http://${ip}:${port}/MidiControlChange/?controlIndex=${controlIndex}&level=${level}`, {
+            method: "GET",
+        })
+            .then(responseHandler)
+            .catch(fetchErrorCatcher);
     }
 
-    // FUNCTION SKELETONS - TODO WHEN DESKTOP UPDATE IS IN
-    async function getMidiOutputDevices(): Promise<string[]> {
-        return ["TODO", "Index in returned array is the device ID"];
-    }
+    const responseHandler = (response: Response) => {
+        if (!response.ok) {
+            console.log(`${Date.now()} ${response.status} MIDI API fault`);
+        }
+    };
+
+    const MINIMUM_NETWORK_FAIL_INTERVAL_DELAY = 1000 * 10; // 10 seconds
+    const fetchErrorCatcher = (error: any) => {
+        console.log(`${Date.now()} ${error} MIDI API fault`);
+
+        const isNetworkError = `${error}`.includes("TypeError: Network request failed");
+        const isErrorNew = Date.now() - mostRecentNetworkFixTime > MINIMUM_NETWORK_FAIL_INTERVAL_DELAY;
+
+        if (isNetworkError && isErrorNew) {
+            console.log("dispatch(setHasRecentNetworkFail(Date.now()));");
+            dispatch(setMostRecentNetworkFailTime(Date.now()));
+        }
+    };
 
     return {
         sendMidiNote,
         sendMidiControlChange,
-        getMidiOutputDevices,
     };
 }

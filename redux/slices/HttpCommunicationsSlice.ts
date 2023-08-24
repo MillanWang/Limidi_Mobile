@@ -7,6 +7,8 @@ interface HttpCommunicationsState {
         port: string;
         midiDeviceID: string;
     };
+    mostRecentNetworkFailTime: number;
+    mostRecentNetworkFixTime: number;
 }
 
 const initialState: HttpCommunicationsState = {
@@ -16,6 +18,8 @@ const initialState: HttpCommunicationsState = {
         port: "4848",
         midiDeviceID: "2",
     },
+    mostRecentNetworkFailTime: 0,
+    mostRecentNetworkFixTime: 0,
 };
 
 export const HttpCommunicationsSlice = createSlice({
@@ -28,9 +32,15 @@ export const HttpCommunicationsSlice = createSlice({
         setPort: (state, action) => {
             state.httpCommunicationInfo.port = action.payload.port;
         },
+        setMostRecentNetworkFailTime: (state, action) => {
+            state.mostRecentNetworkFailTime = action.payload.mostRecentNetworkFailTime;
+        },
+        setMostRecentNetworkFixTime: (state, action) => {
+            state.mostRecentNetworkFixTime = action.payload.mostRecentNetworkFixTime;
+        },
     },
 });
 
-export const { setIP, setPort } = HttpCommunicationsSlice.actions;
+export const { setIP, setPort, setMostRecentNetworkFailTime, setMostRecentNetworkFixTime } = HttpCommunicationsSlice.actions;
 
 export default HttpCommunicationsSlice.reducer;

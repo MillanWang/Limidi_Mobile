@@ -33,7 +33,6 @@
   - Windows desktop app that wraps around IIS. Maybe even websocket impl?
   - MacOS desktop port
 - BUGS
-  - BUG - Windows IIS randomly throws errors from IIS
   - BUG - The faulty dependencies that throw dependabot alerts
 - LAUNCH
   - Phone-sized screen testing and theme fitting
