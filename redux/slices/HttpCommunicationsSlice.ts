@@ -33,6 +33,7 @@ export const HttpCommunicationsSlice = createSlice({
             state.httpCommunicationInfo.port = action.payload.port;
         },
         setMostRecentNetworkFailTime: (state, action) => {
+            console.log(action.payload.mostRecentNetworkFailTime);
             state.mostRecentNetworkFailTime = action.payload.mostRecentNetworkFailTime;
         },
         setMostRecentNetworkFixTime: (state, action) => {

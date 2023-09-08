@@ -11,8 +11,11 @@ export function useDesktopCommunication() {
     } = useAppSelector((state) => state.httpCommunicationsReducer);
     const dispatch = useAppDispatch();
 
+    async function sendHeartbeatMessage() {
+        return fetch(`http://${ip}:${port}/TODO_HEARTBEAT-ENDPOINT`, { method: "GET" });
+    }
     async function sendMidiNote({ noteNumber, velocity, isNoteOn }: MidiNoteProps) {
-        fetch(`http://${ip}:${port}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
+        fetch(`http://${ip}2:${port}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
             method: "GET",
         })
             .then(responseHandler)
@@ -47,11 +50,12 @@ export function useDesktopCommunication() {
 
         if (isNetworkError && isErrorNew) {
             console.log("dispatch(setHasRecentNetworkFail(Date.now()));");
-            dispatch(setMostRecentNetworkFailTime(Date.now()));
+            dispatch(setMostRecentNetworkFailTime({ mostRecentNetworkFailTime: Date.now() }));
         }
     };
 
     return {
+        sendHeartbeatMessage,
         sendMidiNote,
         sendMidiControlChange,
     };
