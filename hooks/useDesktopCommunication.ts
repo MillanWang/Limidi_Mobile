@@ -3,12 +3,16 @@ import { MidiControlChangeProps, MidiNoteProps } from "../constants/MIDI_Notes";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setMostRecentNetworkFailTime } from "../redux/slices/HttpCommunicationsSlice";
 
+// TODO - Gotta make a means to put a time limit on the fetches because they be taking tooo long.
+// Perhaps a heartbeat ping system would also be nice to ensure that the connection is alive and well thorughout
+
 export function useDesktopCommunication() {
     const {
         httpCommunicationInfo: { ip, port },
         mostRecentNetworkFailTime,
         mostRecentNetworkFixTime,
     } = useAppSelector((state) => state.httpCommunicationsReducer);
+
     const dispatch = useAppDispatch();
 
     async function sendHeartbeatMessage() {

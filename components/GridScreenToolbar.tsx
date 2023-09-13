@@ -1,10 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { Icon, Switch } from "@rneui/themed";
+import { Button, Icon, Switch } from "@rneui/themed";
 import GridEditDialog, { GridEditDialogProps } from "../components/GridEditDialog/GridEditDialog";
-import { GridLayoutButtons } from "./GridLayoutPresetButtons";
-import NetworkErrorDialog from "./NetworkErrorDialog";
+import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
+import NetworkErrorDialog from "./NetworkError/NetworkErrorDialog";
+import { NetworkErrorFixer } from "./NetworkError/NetworkErrorFixer";
 
 export interface GridScreenToolbarProps extends GridEditDialogProps {
     isPlayMode: boolean;
@@ -34,12 +35,12 @@ export function GridScreenToolbar({ isPlayMode, setIsPlayMode, isVisible, setIsV
                 </View>
             )}
 
-            <GridLayoutButtons />
+            <NetworkErrorFixer />
+
+            <GridLayoutPresetButtons />
 
             {/* Settings dialog */}
             <GridEditDialog isVisible={isVisible} setIsVisible={setIsVisible} />
-
-            <NetworkErrorDialog />
         </View>
     );
 }

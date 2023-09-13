@@ -26,9 +26,9 @@
   - Color preset selector
   - Improve color themes
 - NETWORKING
-  - QR Code scanning of desktop app to get IP addy and port. Easy-to-type alternative when no camera permission is granted
-  - Mobile error message system for lost connection with desktop
-  - Sanitization of networking values
+  - Heartbeat ping system to maintain stable connection
+  - Sanitization of networking values from QR codes
+  - Generating QR codes from desktop app
 - DESKTOP APP
   - Windows desktop app that wraps around IIS. Maybe even websocket impl?
   - MacOS desktop port
