@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { Button, Dialog, Icon, Text } from "@rneui/themed";
+import { Button, Dialog, Icon, Input, Text } from "@rneui/themed";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setMostRecentNetworkFixTime } from "../../redux/slices/HttpCommunicationsSlice";
+import { setBaseAddress, setMostRecentNetworkFixTime } from "../../redux/slices/HttpCommunicationsSlice";
 import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-interface NetworkErrorDialogProps {
+interface NetworkConfigDialogProps {
     isModalOpen: boolean;
     setIsModalOpen(isModalOpen: boolean): void;
 }
 
-export default function NetworkErrorDialog({ isModalOpen, setIsModalOpen }: NetworkErrorDialogProps) {
+export default function NetworkConfigDialog({ isModalOpen, setIsModalOpen }: NetworkConfigDialogProps) {
     const { sendHeartbeatMessage } = useDesktopCommunication();
     const dispatch = useAppDispatch();
 
@@ -23,14 +23,20 @@ export default function NetworkErrorDialog({ isModalOpen, setIsModalOpen }: Netw
             }
         });
     };
+
+    const [tabIndex, setTabIndex] = useState(0);
+
     return (
         <Dialog isVisible={isModalOpen}>
-            <View style={styles.dialogTabSelectorContainer}>
-                <Text>Disconnected from Limidi Desktop</Text>
+            <View style={{ flexDirection: "row" }}>
+                <Button onPress={() => setTabIndex(0)}>Scan QR Code</Button>
+                <Button onPress={() => setTabIndex(1)}>Manual Configuration</Button>
             </View>
 
+            <ConditionalInvalidAddressFormatText />
             <View style={styles.dialogContentContainer}>
-                <ConnectionCodeScanner />
+                {tabIndex === 0 && <ConnectionCodeScanner />}
+                {tabIndex === 1 && <ManualNetworkConfig />}
             </View>
 
             <View style={styles.saveButtonContainer}>
@@ -87,6 +93,45 @@ export function ConnectionCodeScanner() {
             )}
         </View>
     );
+}
+
+export function ManualNetworkConfig() {
+    const { baseAddress } = useAppSelector((state) => state.httpCommunicationsReducer.httpCommunicationInfo);
+    const dispatch = useAppDispatch();
+
+    return (
+        <View>
+            <Text>Enter IP address and port as shown in Limidi Desktop</Text>
+            <Input keyboardType="number-pad" defaultValue={baseAddress} onChangeText={(baseAddress) => dispatch(setBaseAddress({ baseAddress }))} />
+            <Text>Example: "192.168.0.21:4848"</Text>F
+        </View>
+    );
+}
+
+export function ConditionalInvalidAddressFormatText() {
+    const { baseAddress } = useAppSelector((state) => state.httpCommunicationsReducer.httpCommunicationInfo);
+
+    return <View>{isValidIpWithPort(baseAddress) ? <Text>Valid format</Text> : <Text>Error: "{baseAddress}" is not a valid format</Text>}</View>;
+}
+
+function isValidIpWithPort(addr: string) {
+    function isValidIPAddress(ipAddress: string): boolean {
+        const segments = ipAddress.split(".");
+        if (segments.length !== 4) return false;
+
+        for (const segment of segments) {
+            const num = parseInt(segment, 10);
+            if (isNaN(num) || num < 0 || num > 255) return false;
+        }
+        return true;
+    }
+
+    function isValidPort(portNumber: number) {
+        return isNaN(portNumber) || portNumber < 0 || portNumber > 65535;
+    }
+    if (addr === undefined) return false;
+    const parts = addr.split(":");
+    return parts.length !== 2 && isValidIPAddress(parts[0]) && isValidPort(parseInt(parts[1], 10));
 }
 
 const styles = StyleSheet.create({

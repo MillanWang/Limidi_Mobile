@@ -8,7 +8,7 @@ import { setMostRecentNetworkFailTime } from "../redux/slices/HttpCommunications
 
 export function useDesktopCommunication() {
     const {
-        httpCommunicationInfo: { ip, port },
+        httpCommunicationInfo: { baseAddress },
         mostRecentNetworkFailTime,
         mostRecentNetworkFixTime,
     } = useAppSelector((state) => state.httpCommunicationsReducer);
@@ -16,10 +16,10 @@ export function useDesktopCommunication() {
     const dispatch = useAppDispatch();
 
     async function sendHeartbeatMessage() {
-        return fetch(`http://${ip}:${port}/TODO_HEARTBEAT-ENDPOINT`, { method: "GET" });
+        return fetch(`http://${baseAddress}/TODO_HEARTBEAT-ENDPOINT`, { method: "GET" });
     }
     async function sendMidiNote({ noteNumber, velocity, isNoteOn }: MidiNoteProps) {
-        fetch(`http://${ip}2:${port}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
+        fetch(`http://${baseAddress}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
             method: "GET",
         })
             .then(responseHandler)
@@ -32,7 +32,7 @@ export function useDesktopCommunication() {
         if (controlIndex < 0) return;
         if (Date.now() - previousCcTime < MINIMUM_CC_INTERVAL_DELAY) return;
         setPreviousCcTime(Date.now());
-        fetch(`http://${ip}:${port}/MidiControlChange/?controlIndex=${controlIndex}&level=${level}`, {
+        fetch(`http://${baseAddress}/MidiControlChange/?controlIndex=${controlIndex}&level=${level}`, {
             method: "GET",
         })
             .then(responseHandler)

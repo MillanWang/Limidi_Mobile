@@ -2,21 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 
 interface HttpCommunicationsState {
-    httpCommunicationInfo: {
-        ip: string;
-        port: string;
-        midiDeviceID: string;
-    };
+    httpCommunicationInfo: { baseAddress: string };
     mostRecentNetworkFailTime: number;
     mostRecentNetworkFixTime: number;
 }
 
 const initialState: HttpCommunicationsState = {
     httpCommunicationInfo: {
-        ip: "192.168.0.14", // Apartment Wifi
-
-        port: "4848",
-        midiDeviceID: "2",
+        baseAddress: "192.168.0.12", // Apartment Wifi
     },
     mostRecentNetworkFailTime: 0,
     mostRecentNetworkFixTime: 0,
@@ -26,11 +19,8 @@ export const HttpCommunicationsSlice = createSlice({
     name: "HttpCommunications",
     initialState,
     reducers: {
-        setIP: (state, action) => {
-            state.httpCommunicationInfo.ip = action.payload.ip;
-        },
-        setPort: (state, action) => {
-            state.httpCommunicationInfo.port = action.payload.port;
+        setBaseAddress: (state, action) => {
+            state.httpCommunicationInfo.baseAddress = action.payload.ip;
         },
         setMostRecentNetworkFailTime: (state, action) => {
             console.log(action.payload.mostRecentNetworkFailTime);
@@ -42,6 +32,6 @@ export const HttpCommunicationsSlice = createSlice({
     },
 });
 
-export const { setIP, setPort, setMostRecentNetworkFailTime, setMostRecentNetworkFixTime } = HttpCommunicationsSlice.actions;
+export const { setBaseAddress, setMostRecentNetworkFailTime, setMostRecentNetworkFixTime } = HttpCommunicationsSlice.actions;
 
 export default HttpCommunicationsSlice.reducer;
