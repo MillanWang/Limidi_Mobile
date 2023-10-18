@@ -14,16 +14,6 @@ interface NetworkConfigDialogProps {
 
 export default function NetworkConfigDialog({ isModalOpen, setIsModalOpen }: NetworkConfigDialogProps) {
     const { sendHeartbeatMessage } = useDesktopCommunication();
-    const dispatch = useAppDispatch();
-
-    const checkConnection = () => {
-        sendHeartbeatMessage().then((response) => {
-            if (JSON.stringify(response) === "GOOD RESPONSE") {
-                dispatch(setMostRecentNetworkFixTime({ mostRecentNetworkFixTime: Date.now() }));
-            }
-        });
-    };
-
     const [tabIndex, setTabIndex] = useState(0);
 
     return (
@@ -40,7 +30,7 @@ export default function NetworkConfigDialog({ isModalOpen, setIsModalOpen }: Net
             </View>
 
             <View style={styles.saveButtonContainer}>
-                <Button onPress={checkConnection}>Check Connection</Button>
+                <Button onPress={sendHeartbeatMessage}>Check Connection</Button>
                 <Button onPress={() => setIsModalOpen(false)}>Close Modal</Button>
             </View>
         </Dialog>
@@ -103,7 +93,7 @@ export function ManualNetworkConfig() {
         <View>
             <Text>Enter IP address and port as shown in Limidi Desktop</Text>
             <Input keyboardType="number-pad" defaultValue={baseAddress} onChangeText={(baseAddress) => dispatch(setBaseAddress({ baseAddress }))} />
-            <Text>Example: "192.168.0.21:4848"</Text>F
+            <Text>Example: "192.168.0.21:4848"</Text>
         </View>
     );
 }
@@ -145,3 +135,43 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
 });
+const x = {
+    type: "default",
+    status: 404,
+    ok: false,
+    statusText: "",
+    headers: {
+        map: {
+            connection: "keep-alive",
+            "content-length": "162",
+            "content-security-policy": "default-src 'none'",
+            "content-type": "text/html; charset=utf-8",
+            date: "Wed, 18 Oct 2023 02:42:04 GMT",
+            "keep-alive": "timeout=5",
+            "x-content-type-options": "nosniff",
+            "x-powered-by": "Express",
+        },
+    },
+    url: "http://192.168.0.13:4849/TODO_HEARTBEAT-ENDPOINT",
+    bodyUsed: false,
+    _bodyInit: {
+        _data: {
+            size: 162,
+            offset: 0,
+            blobId: "A5704B7E-675E-4203-A7D4-1131B323BA05",
+            type: "text/html",
+            name: "TODO_HEARTBEAT-ENDPOINT.html",
+            __collector: {},
+        },
+    },
+    _bodyBlob: {
+        _data: {
+            size: 162,
+            offset: 0,
+            blobId: "A5704B7E-675E-4203-A7D4-1131B323BA05",
+            type: "text/html",
+            name: "TODO_HEARTBEAT-ENDPOINT.html",
+            __collector: {},
+        },
+    },
+};

@@ -1,43 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View } from "react-native";
-import { Button, Dialog, Text } from "@rneui/themed";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import NetworkConfigDialog from "./NetworkConfigDialog";
 import { Icon } from "@rneui/themed";
+import React, { useState } from "react";
+import { View } from "react-native";
+import { useAppSelector } from "../../redux/hooks";
+import NetworkConfigDialog from "./NetworkConfigDialog";
 
 const MIN_TIME_BETWEEN_FIX = 5000;
 
-export const NetworkConfigButton = () => {
+interface NetworkConfigButtonProps {
+    isEditMode: boolean;
+}
+
+export const NetworkConfigButton = ({ isEditMode }: NetworkConfigButtonProps) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { mostRecentNetworkFailTime, mostRecentNetworkFixTime } = useAppSelector((state) => state.httpCommunicationsReducer);
-    const isButtonVisible = !false && mostRecentNetworkFailTime - mostRecentNetworkFixTime > MIN_TIME_BETWEEN_FIX;
+    const hasRecentError = mostRecentNetworkFailTime - mostRecentNetworkFixTime > MIN_TIME_BETWEEN_FIX;
+    const isButtonVisible = isEditMode || hasRecentError;
 
     return (
         <>
             {isButtonVisible && (
-                <View
-                    style={{
-                        width: "33%",
-                        backgroundColor: "green",
-                        flex: 1,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                    }}
-                >
-                    <Button
-                        buttonStyle={{
-                            backgroundColor: "#bbbbbb",
-                            borderRadius: 100,
-                        }}
+                <View>
+                    <Icon
+                        name={hasRecentError ? "wifi-off" : "wifi"}
+                        color={hasRecentError ? "red" : "#ffffff"}
                         onPress={() => setIsModalOpen(true)}
-                    >
-                        <Icon name={isButtonVisible ? "wifi-off" : "wifi"} color={isButtonVisible ? "red" : "#ffffff"} />
-                    </Button>
-                    <NetworkConfigDialog isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+                    />
                 </View>
             )}
+            <NetworkConfigDialog isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         </>
     );
 };

@@ -1,10 +1,8 @@
+import { Icon, Switch } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-
-import { Button, Icon, Switch } from "@rneui/themed";
 import GridEditDialog, { GridEditDialogProps } from "../components/GridEditDialog/GridEditDialog";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
-import NetworkConfigDialog from "./NetworkConfig/NetworkConfigDialog";
 import { NetworkConfigButton } from "./NetworkConfig/NetworkConfigButton";
 
 export interface GridScreenToolbarProps extends GridEditDialogProps {
@@ -12,30 +10,33 @@ export interface GridScreenToolbarProps extends GridEditDialogProps {
     setIsPlayMode(isPlayMode: boolean): void;
 }
 export function GridScreenToolbar({ isPlayMode, setIsPlayMode, isVisible, setIsVisible }: GridScreenToolbarProps) {
+    const getTextColor = (isEnabled: boolean) => (isEnabled ? "#ffffff" : "#888888");
+
     return (
         <View style={styles.headerOptions}>
-            <Switch
-                onChange={() => {
-                    setIsPlayMode(!isPlayMode);
-                }}
-                value={!isPlayMode}
-            ></Switch>
-            <Text style={styles.playOrEditText}>{isPlayMode ? "PLAY" : "EDIT"}</Text>
+            <View style={{ flexDirection: "row" }}>
+                <Text style={{ ...styles.modeTextIndicator, color: getTextColor(isPlayMode) }}>{"PLAY"}</Text>
+                <Switch
+                    onChange={() => setIsPlayMode(!isPlayMode)}
+                    value={!isPlayMode}
+                    thumbColor={"green"}
+                    color="red"
+                    trackColor={{ false: "#ffffff", true: "#ffffff" }}
+                >
+                    <Text style={{ color: getTextColor(!isPlayMode) }}>{"Yes"}</Text>
+                </Switch>
+                <Text style={{ ...styles.modeTextIndicator, color: getTextColor(!isPlayMode) }}>{"EDIT"}</Text>
+            </View>
 
-            {!!!isPlayMode && (
-                // Settings icon
+            {!isPlayMode && (
                 <View>
-                    <Icon
-                        name="settings"
-                        color="#ffffff"
-                        onPress={() => {
-                            setIsVisible(true);
-                        }}
-                    />
+                    {/* TODO - This should be it's own compoennt carrying its dialog */}
+                    <Icon name="settings" color="#ffffff" onPress={() => setIsVisible(true)} />
+                    <Text style={{ color: "#ffffff" }}>SETTINGS</Text>
                 </View>
             )}
 
-            <NetworkConfigButton />
+            <NetworkConfigButton isEditMode={!isPlayMode} />
 
             <GridLayoutPresetButtons />
 
@@ -50,8 +51,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
     },
-    playOrEditText: {
-        marginLeft: 5,
-        color: "#ffffff",
+    modeTextIndicator: {
+        margin: 5,
+        // color: "#ffffff",
     },
 });

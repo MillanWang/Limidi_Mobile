@@ -9,7 +9,7 @@ interface HttpCommunicationsState {
 
 const initialState: HttpCommunicationsState = {
     httpCommunicationInfo: {
-        baseAddress: "192.168.0.12", // Apartment Wifi
+        baseAddress: "192.168.0.13:4849", // Apartment Wifi
     },
     mostRecentNetworkFailTime: 0,
     mostRecentNetworkFixTime: 0,
@@ -20,7 +20,8 @@ export const HttpCommunicationsSlice = createSlice({
     initialState,
     reducers: {
         setBaseAddress: (state, action) => {
-            state.httpCommunicationInfo.baseAddress = action.payload.ip;
+            state.httpCommunicationInfo.baseAddress = action.payload.baseAddress;
+            console.log(state.httpCommunicationInfo.baseAddress);
         },
         setMostRecentNetworkFailTime: (state, action) => {
             console.log(action.payload.mostRecentNetworkFailTime);
