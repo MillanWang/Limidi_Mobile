@@ -15,15 +15,15 @@ export function useDesktopCommunication() {
 
     const dispatch = useAppDispatch();
 
-    // const baseAddress = "192.168.0.13:4849";
-
     async function sendHeartbeatMessage() {
         // TODO - Add a shorter timeout cause this should be super fast over LAN
 
         console.log("Heartbeat started");
-        fetch(`http://${baseAddress}/Heartbeat`, { method: "GET" })
-            .then((response) => {
-                if (response.status === 200) {
+
+        fetchWithTimeout(`http://${baseAddress}/Heartbeat`, { method: "GET" })
+            // fetch(`http://${baseAddress}/Heartbeat`, { method: "GET" })
+            .then((response: any) => {
+                if (response.ok) {
                     console.log("Heartbeat verified");
                     dispatch(setMostRecentNetworkFixTime({ mostRecentNetworkFixTime: Date.now() }));
                 }
@@ -31,7 +31,7 @@ export function useDesktopCommunication() {
             .catch(fetchErrorCatcher);
     }
     async function sendMidiNote({ noteNumber, velocity, isNoteOn }: MidiNoteProps) {
-        fetch(`http://${baseAddress}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
+        fetchWithTimeout(`http://${baseAddress}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`, {
             method: "GET",
         })
             .then(responseHandler)
@@ -44,14 +44,14 @@ export function useDesktopCommunication() {
         if (controlIndex < 0) return;
         if (Date.now() - previousCcTime < MINIMUM_CC_INTERVAL_DELAY) return;
         setPreviousCcTime(Date.now());
-        fetch(`http://${baseAddress}/ControlChangeInput/?controlIndex=${controlIndex}&level=${level}`, {
+        fetchWithTimeout(`http://${baseAddress}/ControlChangeInput/?controlIndex=${controlIndex}&level=${level}`, {
             method: "GET",
         })
             .then(responseHandler)
             .catch(fetchErrorCatcher);
     }
 
-    const responseHandler = (response: Response) => {
+    const responseHandler = (response: any) => {
         if (!response.ok) {
             console.log(`${Date.now()} ${response.status} MIDI API fault`);
         }
@@ -74,4 +74,14 @@ export function useDesktopCommunication() {
         sendMidiNote,
         sendMidiControlChange,
     };
+}
+async function fetchWithTimeout(url: string, options: any, timeout = 1000) {
+    return Promise.race([
+        fetch(url, options),
+        new Promise((_, reject) =>
+            setTimeout(() => {
+                reject(new Error("timeout"));
+            }, timeout)
+        ),
+    ]);
 }

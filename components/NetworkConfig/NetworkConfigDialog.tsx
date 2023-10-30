@@ -38,6 +38,8 @@ export default function NetworkConfigDialog({ isModalOpen, setIsModalOpen }: Net
 }
 
 export function ConnectionCodeScanner() {
+    const dispatch = useAppDispatch();
+    const { sendHeartbeatMessage } = useDesktopCommunication();
     const [hasPermission, setHasPermission] = useState(false);
     const [scanData, setScanData] = useState<string | undefined>("<No scan yet>");
 
@@ -47,6 +49,7 @@ export function ConnectionCodeScanner() {
             setHasPermission(status === "granted");
         })();
     }, []);
+
     if (!hasPermission) {
         return (
             <View>
@@ -57,6 +60,10 @@ export function ConnectionCodeScanner() {
     const handleBarCodeScanned = (result: { type: string; data: string }) => {
         if (result.type === "org.iso.QRCode") {
             setScanData(result.data);
+            if (isValidIpWithPort(result.data)) {
+                dispatch(setBaseAddress({ baseAddress: result.data }));
+                sendHeartbeatMessage();
+            }
         }
     };
 
@@ -117,11 +124,13 @@ function isValidIpWithPort(addr: string) {
     }
 
     function isValidPort(portNumber: number) {
-        return isNaN(portNumber) || portNumber < 0 || portNumber > 65535;
+        return !isNaN(portNumber) && portNumber > 0 && portNumber < 65535;
     }
+
     if (addr === undefined) return false;
+
     const parts = addr.split(":");
-    return parts.length !== 2 && isValidIPAddress(parts[0]) && isValidPort(parseInt(parts[1], 10));
+    return parts.length === 2 && isValidIPAddress(parts[0]) && isValidPort(parseInt(parts[1], 10));
 }
 
 const styles = StyleSheet.create({
@@ -135,43 +144,3 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
 });
-const x = {
-    type: "default",
-    status: 404,
-    ok: false,
-    statusText: "",
-    headers: {
-        map: {
-            connection: "keep-alive",
-            "content-length": "162",
-            "content-security-policy": "default-src 'none'",
-            "content-type": "text/html; charset=utf-8",
-            date: "Wed, 18 Oct 2023 02:42:04 GMT",
-            "keep-alive": "timeout=5",
-            "x-content-type-options": "nosniff",
-            "x-powered-by": "Express",
-        },
-    },
-    url: "http://192.168.0.13:4849/TODO_HEARTBEAT-ENDPOINT",
-    bodyUsed: false,
-    _bodyInit: {
-        _data: {
-            size: 162,
-            offset: 0,
-            blobId: "A5704B7E-675E-4203-A7D4-1131B323BA05",
-            type: "text/html",
-            name: "TODO_HEARTBEAT-ENDPOINT.html",
-            __collector: {},
-        },
-    },
-    _bodyBlob: {
-        _data: {
-            size: 162,
-            offset: 0,
-            blobId: "A5704B7E-675E-4203-A7D4-1131B323BA05",
-            type: "text/html",
-            name: "TODO_HEARTBEAT-ENDPOINT.html",
-            __collector: {},
-        },
-    },
-};
