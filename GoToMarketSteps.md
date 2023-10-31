@@ -28,7 +28,6 @@
 - NETWORKING
   - Heartbeat ping system to maintain stable connection
   - Sanitization of networking values from QR codes
-  - Generating QR codes from desktop app
 - DESKTOP APP
   - Windows desktop app that wraps around IIS. Maybe even websocket impl?
   - MacOS desktop port
@@ -55,6 +54,7 @@
 - SCALES
 - COLOR
 - NETWORKING
+  - Generating QR codes from desktop app
 - DESKTOP APP
 - BUGS
 - LAUNCH

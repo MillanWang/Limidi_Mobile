@@ -1,11 +1,10 @@
+import { Button, Dialog, Icon, Input, Text } from "@rneui/themed";
+import { BarCodeScanner } from "expo-barcode-scanner";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-
-import { Button, Dialog, Icon, Input, Text } from "@rneui/themed";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setBaseAddress, setMostRecentNetworkFixTime } from "../../redux/slices/HttpCommunicationsSlice";
 import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 
 interface NetworkConfigDialogProps {
     isModalOpen: boolean;

@@ -21,10 +21,8 @@ export const HttpCommunicationsSlice = createSlice({
     reducers: {
         setBaseAddress: (state, action) => {
             state.httpCommunicationInfo.baseAddress = action.payload.baseAddress;
-            console.log(state.httpCommunicationInfo.baseAddress);
         },
         setMostRecentNetworkFailTime: (state, action) => {
-            console.log(action.payload.mostRecentNetworkFailTime);
             state.mostRecentNetworkFailTime = action.payload.mostRecentNetworkFailTime;
         },
         setMostRecentNetworkFixTime: (state, action) => {

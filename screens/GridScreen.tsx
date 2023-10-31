@@ -5,16 +5,10 @@ import { GridScreenToolbar } from "../components/GridScreenToolbar";
 
 export default function GridScreen() {
     const [isPlayMode, setIsPlayMode] = useState(true);
-    const [showGridEditDialog, setShowGridEditDialog] = useState(false);
 
     return (
         <View style={styles.container}>
-            <GridScreenToolbar
-                isPlayMode={isPlayMode}
-                setIsPlayMode={setIsPlayMode}
-                isVisible={showGridEditDialog}
-                setIsVisible={setShowGridEditDialog}
-            />
+            <GridScreenToolbar isPlayMode={isPlayMode} setIsPlayMode={setIsPlayMode} />
             <GridElementGrid isPlayMode={isPlayMode} />
         </View>
     );

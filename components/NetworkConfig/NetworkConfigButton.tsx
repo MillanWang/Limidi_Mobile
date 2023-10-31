@@ -1,6 +1,6 @@
 import { Icon } from "@rneui/themed";
 import React, { useState } from "react";
-import { View } from "react-native";
+import { View, Text } from "react-native";
 import { useAppSelector } from "../../redux/hooks";
 import NetworkConfigDialog from "./NetworkConfigDialog";
 
@@ -20,12 +20,13 @@ export const NetworkConfigButton = ({ isEditMode }: NetworkConfigButtonProps) =>
     return (
         <>
             {isButtonVisible && (
-                <View>
+                <View style={{ padding: 5 }}>
                     <Icon
                         name={hasRecentError ? "wifi-off" : "wifi"}
                         color={hasRecentError ? "red" : "#ffffff"}
                         onPress={() => setIsModalOpen(true)}
                     />
+                    <Text style={{ color: hasRecentError ? "red" : "#ffffff" }}>NETWORK</Text>
                 </View>
             )}
             <NetworkConfigDialog isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
