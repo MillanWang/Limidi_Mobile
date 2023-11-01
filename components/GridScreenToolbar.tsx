@@ -1,52 +1,40 @@
-import React from 'react';
-import {
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
+import { Button } from "@rneui/themed";
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { GridSettingsButton } from "./GridEditDialog/GridSettingsButton";
+import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
+import { NetworkConfigButton } from "./NetworkConfig/NetworkConfigButton";
 
-import {
-    Icon,
-    Switch,
-} from '@rneui/themed';
-import GridEditDialog, { GridEditDialogProps } from '../components/GridEditDialog/GridEditDialog';
-import { GridLayoutButtons } from './GridLayoutPresetButtons';
+export interface GridScreenToolbarProps {
+    isPlayMode: boolean;
+    setIsPlayMode(isPlayMode: boolean): void;
+}
 
-
-export interface GridScreenToolbarProps extends GridEditDialogProps {
-    isPlayMode: boolean, setIsPlayMode(isPlayMode: boolean): void,
-};
-export function GridScreenToolbar({
-    isPlayMode, setIsPlayMode,
-    isVisible, setIsVisible,
-}: GridScreenToolbarProps) {
+export function GridScreenToolbar({ isPlayMode, setIsPlayMode }: GridScreenToolbarProps) {
     return (
         <View style={styles.headerOptions}>
-            <Switch onChange={() => { setIsPlayMode(!isPlayMode) }} value={!isPlayMode}></Switch>
-            <Text style={styles.playOrEditText}>{isPlayMode ? "PLAY" : "EDIT"}</Text>
+            <View style={{ flexDirection: "row" }}>
+                <Button onPress={() => setIsPlayMode(!isPlayMode)}>
+                    <View style={{ flexDirection: "column" }}>
+                        <Text style={{ ...styles.modeTextIndicator, color: "#ffffff" }}>{!isPlayMode ? "PLAY" : "EDIT"}</Text>
+                    </View>
+                </Button>
+            </View>
 
-            {!!!isPlayMode &&
-                // Settings icon
-                <View>
-                    <Icon name='settings' color='#ffffff' onPress={() => { setIsVisible(true) }} />
-                </View>
-            }
-
-            <GridLayoutButtons />
-
-            {/* Settings dialog */}
-            <GridEditDialog isVisible={isVisible} setIsVisible={setIsVisible} />
+            <GridSettingsButton isPlayMode={isPlayMode} />
+            <NetworkConfigButton isEditMode={!isPlayMode} />
+            <GridLayoutPresetButtons />
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     headerOptions: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        flexDirection: "row",
+        alignItems: "center",
     },
-    playOrEditText: {
-        marginLeft: 5,
-        color: '#ffffff'
+    modeTextIndicator: {
+        // margin: 5,
+        // color: "#ffffff",
     },
 });

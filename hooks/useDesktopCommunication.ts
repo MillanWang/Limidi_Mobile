@@ -1,59 +1,78 @@
 import { useState } from "react";
 import { MidiControlChangeProps, MidiNoteProps } from "../constants/MIDI_Notes";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setMostRecentNetworkFailTime, setMostRecentNetworkFixTime } from "../redux/slices/HttpCommunicationsSlice";
 
 export function useDesktopCommunication() {
-    const httpCommunicationInfo = useAppSelector(
-        (state) => state.httpCommunicationsReducer.httpCommunicationInfo
-    );
+    const {
+        httpCommunicationInfo: { baseAddress },
+        mostRecentNetworkFailTime,
+        mostRecentNetworkFixTime,
+    } = useAppSelector((state) => state.httpCommunicationsReducer);
 
-    async function sendMidiNote(midiNoteProps: MidiNoteProps) {
-        const { noteNumber, velocity, isNoteOn } = midiNoteProps;
-        fetch(
-            `http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`,
-            {
-                method: "GET",
-            }
-        ).then((response) => {
-            if (!response.ok) {
-                console.log(`${Date.now()} ${response.status} MIDI note fault`);
-            }
-        });
+    const dispatch = useAppDispatch();
+
+    async function sendHeartbeatMessage() {
+        console.log(`Heartbeat started at ${Date.now()}`);
+        fetchWithTimeout(`http://${baseAddress}/Heartbeat`)
+            .then((response: any) => {
+                if (response.ok) {
+                    console.log(`Heartbeat verified at ${Date.now()}`);
+                    dispatch(setMostRecentNetworkFixTime({ mostRecentNetworkFixTime: Date.now() }));
+                }
+            })
+            .catch(fetchErrorCatcher);
     }
 
-    const MINIMUM_CC_INTERVAL_DELAY = 300;
+    async function sendMidiNote({ noteNumber, velocity, isNoteOn }: MidiNoteProps) {
+        fetchWithTimeout(`http://${baseAddress}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`)
+            .then(responseHandler)
+            .catch(fetchErrorCatcher);
+    }
+
+    const MINIMUM_CC_INTERVAL_DELAY = 100;
     const [previousCcTime, setPreviousCcTime] = useState(0);
-    async function sendMidiControlChange(
-        midiControlChangeProps: MidiControlChangeProps
-    ) {
-        const { controlIndex, level } = midiControlChangeProps;
-        return;
+    async function sendMidiControlChange({ controlIndex, level }: MidiControlChangeProps) {
         if (controlIndex < 0) return;
         if (Date.now() - previousCcTime < MINIMUM_CC_INTERVAL_DELAY) return;
         setPreviousCcTime(Date.now());
-        console.log(previousCcTime);
-        fetch(
-            `http://${httpCommunicationInfo.ip}:${httpCommunicationInfo.port}/MidiControlChange/?controlIndex=${controlIndex}&level=${level}`,
-            {
-                method: "GET",
-            }
-        ).then((response) => {
-            if (!response.ok) {
-                console.log(
-                    `${Date.now()} ${response.status} MIDI control change fault`
-                );
-            }
-        });
+        fetchWithTimeout(`http://${baseAddress}/ControlChangeInput/?controlIndex=${controlIndex}&level=${level}`)
+            .then(responseHandler)
+            .catch(fetchErrorCatcher);
     }
 
-    // FUNCTION SKELETONS - TODO WHEN DESKTOP UPDATE IS IN
-    async function getMidiOutputDevices(): Promise<string[]> {
-        return ["TODO", "Index in returned array is the device ID"];
-    }
+    const MINIMUM_NETWORK_FAIL_INTERVAL_DELAY = 1000 * 5;
+    const responseHandler = (response: any) => {
+        if (!response.ok) {
+            console.log(`${Date.now()} ${response.status} MIDI API fault`);
+        }
+    };
+
+    const fetchErrorCatcher = (error: any) => {
+        console.log(`${Date.now()} ${error} API fault`);
+        const isNetworkError = `${error}`.includes("timeout");
+        const isErrorNew = Date.now() - mostRecentNetworkFixTime > MINIMUM_NETWORK_FAIL_INTERVAL_DELAY;
+
+        if (isNetworkError && isErrorNew) {
+            console.log("dispatch(setHasRecentNetworkFail(Date.now()));");
+            dispatch(setMostRecentNetworkFailTime({ mostRecentNetworkFailTime: Date.now() }));
+        }
+    };
+
+    const fetchWithTimeout = async (url: string, timeout = 2000) => {
+        return Promise.race([
+            fetch(url, { method: "GET" }),
+            new Promise((_, reject) =>
+                setTimeout(() => {
+                    reject(new Error("timeout"));
+                }, timeout)
+            ),
+        ]);
+    };
 
     return {
+        sendHeartbeatMessage,
         sendMidiNote,
         sendMidiControlChange,
-        getMidiOutputDevices,
     };
 }

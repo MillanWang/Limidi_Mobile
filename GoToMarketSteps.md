@@ -8,6 +8,7 @@
 - MENU
   - Shrinking down maximum grid size. Choosing maximums
   - Note octave level as a |-|number|+| section instead of a slider
+  - Grid sizes controled with |-|number|+| section instead of a slider
   - Tabbed header to replace buttons
 - GRID
   - Grid edit mode - Element info indication.
@@ -26,14 +27,12 @@
   - Color preset selector
   - Improve color themes
 - NETWORKING
-  - QR Code scanning of desktop app to get IP addy and port. Easy-to-type alternative when no camera permission is granted
-  - Mobile error message system for lost connection with desktop
-  - Sanitization of networking values
+  - Heartbeat ping system to maintain stable connection
+  - Sanitization of networking values from QR codes
 - DESKTOP APP
   - Windows desktop app that wraps around IIS. Maybe even websocket impl?
   - MacOS desktop port
 - BUGS
-  - BUG - Windows IIS randomly throws errors from IIS
   - BUG - The faulty dependencies that throw dependabot alerts
 - LAUNCH
   - Phone-sized screen testing and theme fitting
@@ -56,6 +55,7 @@
 - SCALES
 - COLOR
 - NETWORKING
+  - Generating QR codes from desktop app
 - DESKTOP APP
 - BUGS
 - LAUNCH

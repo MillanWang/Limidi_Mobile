@@ -155,6 +155,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
                     };
                     return (
                         <View
+                            key={`CcSubIcon_${i}_${j}`}
                             style={{
                                 ...styles.ccIcon,
                                 top: getIconPosition(yPositionAbsolute, i),

@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
     const isLoadingComplete = useCachedResources();
+    // AsyncStorage.clear()
 
     if (!isLoadingComplete) {
         return null;
