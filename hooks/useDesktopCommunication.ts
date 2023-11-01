@@ -13,17 +13,17 @@ export function useDesktopCommunication() {
     const dispatch = useAppDispatch();
 
     async function sendHeartbeatMessage() {
-        console.log("Heartbeat started");
-
+        console.log(`Heartbeat started at ${Date.now()}`);
         fetchWithTimeout(`http://${baseAddress}/Heartbeat`)
             .then((response: any) => {
                 if (response.ok) {
-                    console.log("Heartbeat verified");
+                    console.log(`Heartbeat verified at ${Date.now()}`);
                     dispatch(setMostRecentNetworkFixTime({ mostRecentNetworkFixTime: Date.now() }));
                 }
             })
             .catch(fetchErrorCatcher);
     }
+
     async function sendMidiNote({ noteNumber, velocity, isNoteOn }: MidiNoteProps) {
         fetchWithTimeout(`http://${baseAddress}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`)
             .then(responseHandler)
@@ -45,8 +45,6 @@ export function useDesktopCommunication() {
     const responseHandler = (response: any) => {
         if (!response.ok) {
             console.log(`${Date.now()} ${response.status} MIDI API fault`);
-        } else if (response.ok && mostRecentNetworkFixTime - mostRecentNetworkFailTime > MINIMUM_NETWORK_FAIL_INTERVAL_DELAY) {
-            dispatch(setMostRecentNetworkFixTime({ mostRecentNetworkFixTime: Date.now() }));
         }
     };
 

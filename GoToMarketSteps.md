@@ -8,6 +8,7 @@
 - MENU
   - Shrinking down maximum grid size. Choosing maximums
   - Note octave level as a |-|number|+| section instead of a slider
+  - Grid sizes controled with |-|number|+| section instead of a slider
   - Tabbed header to replace buttons
 - GRID
   - Grid edit mode - Element info indication.
