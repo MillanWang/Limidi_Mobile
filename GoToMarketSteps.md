@@ -38,6 +38,7 @@
   - Phone-sized screen testing and theme fitting
   - Free and paid version feature flag. Ad in element zero
   - Make android APK
+  - Figure out a workaround for the android onTouchHandler multitouch issue
   - Get onto android app store
   - Get onto apple app store
   - Host a website to download the platform specific desktop app
