@@ -1,14 +1,12 @@
-import { Icon, Switch } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import GridEditDialog, { GridEditDialogProps } from "../../components/GridEditDialog/GridEditDialog";
-import { GridLayoutPresetButtons } from "../GridLayoutPresetButtons";
-import { NetworkConfigButton } from "../NetworkConfig/NetworkConfigButton";
+import GridEditDialog from "../../components/GridEditDialog/GridEditDialog";
+import { Button } from "@rneui/themed";
+import { styles } from "../GridScreenToolbar";
 
 export interface GridSettingsButtonProps {
-    //extends GridEditDialogProps {
     isPlayMode: boolean;
-    // setIsPlayMode(isPlayMode: boolean): void;
 }
 
 export function GridSettingsButton({ isPlayMode }: GridSettingsButtonProps) {
@@ -16,9 +14,9 @@ export function GridSettingsButton({ isPlayMode }: GridSettingsButtonProps) {
     return (
         <>
             {!isPlayMode && (
-                <View>
-                    <Icon name="settings" color="#ffffff" onPress={() => setShowGridEditDialog(true)} />
-                    <Text style={{ color: "#ffffff" }}>SETTINGS</Text>
+                <View style={{ borderColor: "red", borderWidth: 2 }} onTouchEndCapture={() => setShowGridEditDialog(true)}>
+                    <Icon name="settings" color="#ffffff" size={16} />
+                    <Text style={styles.modalButtonText}>SETTINGS</Text>
                 </View>
             )}
 
@@ -26,14 +24,3 @@ export function GridSettingsButton({ isPlayMode }: GridSettingsButtonProps) {
         </>
     );
 }
-
-const styles = StyleSheet.create({
-    headerOptions: {
-        flexDirection: "row",
-        alignItems: "center",
-    },
-    modeTextIndicator: {
-        margin: 5,
-        // color: "#ffffff",
-    },
-});

@@ -21,14 +21,14 @@ export function GridScreenToolbar({ isPlayMode, setIsPlayMode }: GridScreenToolb
                 </Button>
             </View>
 
-            <GridSettingsButton isPlayMode={isPlayMode} />
             <NetworkConfigButton isEditMode={!isPlayMode} />
+            <GridSettingsButton isPlayMode={isPlayMode} />
             <GridLayoutPresetButtons />
         </View>
     );
 }
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     headerOptions: {
         flexDirection: "row",
         alignItems: "center",
@@ -36,5 +36,13 @@ const styles = StyleSheet.create({
     modeTextIndicator: {
         // margin: 5,
         // color: "#ffffff",
+    },
+    modalButtonText: {
+        color: "#FFFFFF",
+        fontSize: 10,
+    },
+    modalButtonIcon: {
+        color: "#FFFFFF",
+        fontSize: 12,
     },
 });
