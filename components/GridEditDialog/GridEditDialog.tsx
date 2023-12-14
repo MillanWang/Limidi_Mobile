@@ -1,10 +1,8 @@
+import { Button, Dialog } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-
-import { Button, Dialog } from "@rneui/themed";
-
-import { GridEditGridSettingsTab } from "./GridEditDialogTabs/GridEditGridSettingsTab";
 import { GridEditStyleSettingsTab } from "./GridEditDialogTabs/GridEditColorSettingsTab";
+import { GridEditGridSettingsTab } from "./GridEditDialogTabs/GridEditGridSettingsTab";
 import { GridEditScaleSettingsTab } from "./GridEditDialogTabs/GridEditScaleSettingsTab";
 
 export interface GridEditDialogProps {

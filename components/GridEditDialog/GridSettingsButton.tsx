@@ -6,24 +6,21 @@ import { Button } from "@rneui/themed";
 import { styles } from "../GridScreenToolbar";
 
 export interface GridSettingsButtonProps {
-  isPlayMode: boolean;
+    isPlayMode: boolean;
 }
 
 export function GridSettingsButton({ isPlayMode }: GridSettingsButtonProps) {
-  const [showGridEditDialog, setShowGridEditDialog] = useState(false);
-  return (
-    <>
-      {!isPlayMode && (
-        <View onTouchEndCapture={() => setShowGridEditDialog(true)}>
-          <Icon name="settings" color="#ffffff" size={16} />
-          <Text style={styles.modalButtonText}>SETTINGS</Text>
-        </View>
-      )}
+    const [showGridEditDialog, setShowGridEditDialog] = useState(false);
+    return (
+        <>
+            {!isPlayMode && (
+                <View style={{ borderColor: "red", borderWidth: 2 }} onTouchEndCapture={() => setShowGridEditDialog(true)}>
+                    <Icon name="settings" color="#ffffff" size={16} />
+                    <Text style={styles.modalButtonText}>SETTINGS</Text>
+                </View>
+            )}
 
-      <GridEditDialog
-        isVisible={showGridEditDialog}
-        setIsVisible={setShowGridEditDialog}
-      />
-    </>
-  );
+            <GridEditDialog isVisible={showGridEditDialog} setIsVisible={setShowGridEditDialog} />
+        </>
+    );
 }
