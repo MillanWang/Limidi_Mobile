@@ -8,15 +8,20 @@
 - MENU
   - Shrinking down maximum grid size. Choosing maximums
   - Note octave level as a |-|number|+| section instead of a slider
-  - Grid sizes controled with |-|number|+| section instead of a slider
-  - Tabbed header to replace buttons
+  - Header component update
+    - Corner monosized play-edit indicator
+    - Network lost warning
+  - New menu selector component
+    - Colorable
+    - Based on buttons with full touch events instead of just first touch during scroll
 - GRID
   - Grid edit mode - Element info indication.
-    - CC/Note
+    - CC/Note - Piano vs Knob icon
     - isLocked Icons
 - CONTROL CHANGE
   - Debouncing/throttling of api calls
   - CC port uniqueness warning
+  - Limits on the total number of CC components. Probably gonna be a performance bottleneck with all those API calls
 - SCALES
   - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.
   - Add FL studio FPC default for 4 column
@@ -24,39 +29,24 @@
   - "Dirty" indicator when user deviates away from scale default
 - COLOR
   - Elemental color selector
+    - Cut in favour of having more presets. Elimintate the possibility of being able to choose your way into uglyness
   - Color preset selector
-  - Improve color themes
+  - Improve color themes for grid icons
+  - Dark mode all of the app manu areas
 - NETWORKING
-  - Heartbeat ping system to maintain stable connection
   - Sanitization of networking values from QR codes
+  - Auto attempting the heartbeat when typing in the manual typer
 - DESKTOP APP
-  - Windows desktop app that wraps around IIS. Maybe even websocket impl?
-  - MacOS desktop port
+  - Add button to restart the whole app
+  - Indicator for network availability
+  - Styling
 - BUGS
   - BUG - The faulty dependencies that throw dependabot alerts
 - LAUNCH
   - Phone-sized screen testing and theme fitting
-  - Free and paid version feature flag. Ad in element zero
-  - Make android APK
-  - Figure out a workaround for the android onTouchHandler multitouch issue
-  - Get onto android app store
+  - Free and paid version feature flag
+    - Paywalled features
+      - Color selection
+      - Multiple hotswapable presets
   - Get onto apple app store
   - Host a website to download the platform specific desktop app
-
-## DONE
-
-- DATA
-- MENU
-- GRID
-  - CC port selection
-  - CC icon selection
-  - CC vertical/horizontal/XY selection
-  - CC elem color reflecting the level when pressed. Color when single. Color+HexagonTexture when XY
-- CONTROL CHANGE
-- SCALES
-- COLOR
-- NETWORKING
-  - Generating QR codes from desktop app
-- DESKTOP APP
-- BUGS
-- LAUNCH
