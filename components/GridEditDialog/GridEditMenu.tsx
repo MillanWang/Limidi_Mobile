@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
   },
   dialogContentContainer: {
     height: "100%",
+    paddingHorizontal: 12,
     backgroundColor: "white",
   },
 });
