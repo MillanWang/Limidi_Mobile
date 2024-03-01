@@ -8,6 +8,7 @@ import {
 } from "../../../../redux/slices/GridPresetsSlice";
 import { ControlChangeSettingsPanel } from "./ControlChangeSettingsPanel";
 import { NoteSettingsPanel } from "./NoteSettingsPanel";
+import { Button } from "@rneui/themed";
 
 export interface GridElementEditMidiProps {
   index: number;
@@ -40,8 +41,12 @@ export function GridElementEditMidiSettingsTab({
       {/* MIDI settings Lock */}
       <View style={styles.lockSwitchView}>
         <Text>Lock Grid Element: </Text>
-        <Switch value={lockedState} onChange={toggleElementMidiLock} />
-        <Icon type="ionicon" name={lockedState ? "lock-closed" : "lock-open"} />
+        <Button onPress={toggleElementMidiLock}>
+          <Icon
+            type="ionicon"
+            name={lockedState ? "lock-closed" : "lock-open"}
+          />
+        </Button>
       </View>
       <View style={styles.lockSwitchView}>
         <Text style={{ fontWeight: isMidiNoteModeState ? "bold" : "300" }}>

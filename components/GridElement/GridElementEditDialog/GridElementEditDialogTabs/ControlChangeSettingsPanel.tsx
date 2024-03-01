@@ -12,6 +12,8 @@ import {
   setGridElementControlChangeXIndex,
   setGridElementControlChangeYIndex,
 } from "../../../../redux/slices/GridPresetsSlice";
+import { useDesktopCommunication } from "../../../../hooks/useDesktopCommunication";
+import { createMidiControlChange } from "../../../../constants/MIDI_Notes";
 
 export interface ControlChangeSettingsPanelProps {
   index: number;
@@ -52,8 +54,8 @@ export function ControlChangeSettingsPanel({
   const yAxisControlIndexState =
     currentGridElementState.controlChangeState.yAxisControlIndex;
 
+  const { sendMidiControlChange } = useDesktopCommunication();
   const [iconDialogOpen, setIconDialogOpen] = React.useState(false);
-
   const [ccDirection, setCcDirection] = useState(
     getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)
   );
@@ -165,6 +167,10 @@ export function ControlChangeSettingsPanel({
     );
   }
 
+  function sendTestInput(inputIndex: number) {
+    return () => sendMidiControlChange(createMidiControlChange(inputIndex, 0));
+  }
+
   const modeButtonList = [
     {
       text: "Horizontal",
@@ -187,19 +193,17 @@ export function ControlChangeSettingsPanel({
       <View>
         <Text>Control Change Orientation</Text>
         <View style={{ flexDirection: "row" }}>
-          {modeButtonList.map((element, i) => {
-            return (
-              <Button
-                buttonStyle={{
-                  backgroundColor:
-                    ccDirection === element.enum ? "black" : "blue",
-                }}
-                onPress={element.onPress}
-                title={element.text}
-                key={`button_${element.text}_${i}`}
-              />
-            );
-          })}
+          {modeButtonList.map((element, i) => (
+            <Button
+              buttonStyle={{
+                backgroundColor:
+                  ccDirection === element.enum ? "black" : "blue",
+              }}
+              onPress={element.onPress}
+              title={element.text}
+              key={`button_${element.text}_${i}`}
+            />
+          ))}
         </View>
       </View>
 
@@ -211,6 +215,10 @@ export function ControlChangeSettingsPanel({
             <Button title="-" onPress={horizontalCcIndexMinusOnPress} />
             <Text>{`${xAxisControlIndexState}`}</Text>
             <Button title="+" onPress={horizontalCcIndexPlusOnPress} />
+            <Button
+              title="Test"
+              onPress={sendTestInput(xAxisControlIndexState)}
+            />
           </View>
         </View>
       )}
@@ -222,6 +230,10 @@ export function ControlChangeSettingsPanel({
             <Button title="-" onPress={verticalCcIndexMinusOnPress} />
             <Text>{`${yAxisControlIndexState}`}</Text>
             <Button title="+" onPress={verticalCcIndexPlusOnPress} />
+            <Button
+              title="Test"
+              onPress={sendTestInput(yAxisControlIndexState)}
+            />
           </View>
         </View>
       )}
@@ -234,12 +246,7 @@ export function ControlChangeSettingsPanel({
             backgroundColor={colorState.pressedColor}
             iconColor={colorState.unpressedColor}
           />
-          <Button
-            title="Set Icon"
-            onPress={() => {
-              setIconDialogOpen(true);
-            }}
-          />
+          <Button title="Set Icon" onPress={() => setIconDialogOpen(true)} />
           <IconSelectDialog
             dialogVisible={iconDialogOpen}
             setDialogVisible={setIconDialogOpen}
@@ -282,12 +289,10 @@ function IconSelectDialog({
       getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)
     ];
 
-  const iconTouchHandler = (name: string) => {
-    return () => {
-      dispatch(
-        setGridElementControlChangeIconString({ index, iconString: name })
-      );
-    };
+  const iconTouchHandler = (name: string) => () => {
+    dispatch(
+      setGridElementControlChangeIconString({ index, iconString: name })
+    );
   };
 
   const iconsPerRow = 9;
@@ -326,37 +331,30 @@ function IconSelectDialog({
           {generalIconRows.map((row, i) => {
             return (
               <View style={{ flexDirection: "row" }} key={`icon_row-${i}`}>
-                {row.map((iconName, j) => {
-                  return (
-                    <Button
-                      onPress={iconTouchHandler(iconName)}
-                      color={"#ffffff"}
-                      buttonStyle={{
-                        borderWidth: 3,
-                        borderColor:
-                          iconName === iconNameState ? "#000000" : "#ffffff",
-                      }}
-                      key={`icon_row-${i}_elem-${j}_name-${iconName}`}
-                    >
-                      <IconWithTitle
-                        name={iconName}
-                        backgroundColor={colorState.pressedColor}
-                        iconColor={colorState.unpressedColor}
-                      />
-                    </Button>
-                  );
-                })}
+                {row.map((iconName, j) => (
+                  <Button
+                    onPress={iconTouchHandler(iconName)}
+                    color={"#ffffff"}
+                    buttonStyle={{
+                      borderWidth: 3,
+                      borderColor:
+                        iconName === iconNameState ? "#000000" : "#ffffff",
+                    }}
+                    key={`icon_row-${i}_elem-${j}_name-${iconName}`}
+                  >
+                    <IconWithTitle
+                      name={iconName}
+                      backgroundColor={colorState.pressedColor}
+                      iconColor={colorState.unpressedColor}
+                    />
+                  </Button>
+                ))}
               </View>
             );
           })}
         </View>
       </ScrollView>
-      <Button
-        title={"Save"}
-        onPress={() => {
-          setDialogVisible(false);
-        }}
-      />
+      <Button title={"Save"} onPress={() => setDialogVisible(false)} />
     </Dialog>
   );
 }
