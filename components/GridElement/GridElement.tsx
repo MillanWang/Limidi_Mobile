@@ -5,6 +5,7 @@ import GridElementEditDialog from "./GridElementEditDialog/GridElementEditDialog
 import { useAppSelector } from "../../redux/hooks";
 import DrumPad from "./GridElementTypes/DrumPad";
 import ControlChange from "./GridElementTypes/ControlChange";
+import { theme } from "../../constants/theme";
 
 interface GridElementProps {
   index: number;
@@ -89,6 +90,6 @@ const styles = StyleSheet.create({
   },
   gridElementEditView: {
     flexDirection: "row",
-    borderColor: "#ffffff",
+    borderColor: theme.color.white,
   },
 });

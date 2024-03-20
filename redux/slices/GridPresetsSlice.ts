@@ -26,7 +26,7 @@ const defaultState: GridPresetsState = {
   gridPresets: defaultPresets,
 };
 
-const maxGridDimension = 8;
+export const MaxGridDimension = 8;
 
 export const GridPresetsSlice = createSlice({
   name: "GridPresets",
@@ -66,7 +66,7 @@ export const GridPresetsSlice = createSlice({
     setColumnCount: (state, action) => {
       const newColumnCount = Math.min(
         Math.max(action.payload, 1),
-        maxGridDimension
+        MaxGridDimension
       );
       state.currentGridPreset.columnCount = newColumnCount;
       state.gridPresets[state.currentPresetIndex].columnCount = newColumnCount;
@@ -74,7 +74,7 @@ export const GridPresetsSlice = createSlice({
     setRowCount: (state, action) => {
       const newRowCount = Math.min(
         Math.max(action.payload, 1),
-        maxGridDimension
+        MaxGridDimension
       );
       state.currentGridPreset.rowCount = newRowCount;
       state.gridPresets[state.currentPresetIndex].rowCount = newRowCount;

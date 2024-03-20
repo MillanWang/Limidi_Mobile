@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Text, View } from "react-native";
 import { useAppSelector } from "../../redux/hooks";
 import { styles } from "../GridScreenToolbar";
+import { theme } from "../../constants/theme";
 
 const MIN_TIME_BETWEEN_FIX = 5000;
 
@@ -42,7 +43,7 @@ export const NetworkErrorIndicator = ({
           <Icon
             size={16}
             name={hasRecentError ? "wifi-off" : "wifi"}
-            color={hasRecentError ? "red" : "#ffffff"}
+            color={hasRecentError ? "red" : theme.color.white}
           />
         </View>
       )}

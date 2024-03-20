@@ -1,68 +1,107 @@
-import { Button, Icon, } from "@rneui/themed";
-import React, { useState } from 'react';
-import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
-} from 'react-native';
-
-import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
-import { setGridColorPresetGlobally } from '../../../redux/slices/GridPresetsSlice';
+import { Button, Icon } from "@rneui/themed";
+import React, { useState } from "react";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { DEFAULT, PRESET_COLOR_LIST } from "../../../constants/ColorPresets";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setGridColorPresetGlobally } from "../../../redux/slices/GridPresetsSlice";
+import { GridPreviewSizeSelector } from "../../GridPreview";
+import { theme } from "../../../constants/theme";
 
 export function GridEditStyleSettingsTab(): JSX.Element {
+  return (
+    <View style={styles.container}>
+      <GridPreviewSizeSelector />
 
-    const [currentPreset, setCurrentPreset] = useState(DEFAULT);
-    const dispatch = useAppDispatch();
+      <ColorThemeSelector />
+    </View>
+  );
+}
 
-    return (
-        <View style={styles.colorPresetContainer}>
+const ColorThemeSelector = () => {
+  const dispatch = useAppDispatch();
 
-            <ScrollView style={styles.colorPresetSelector}>
-                {PRESET_COLOR_LIST.map(preset => {
-                    return (
-                        <View
-                            style={{ backgroundColor: preset.unpressedColor, ...styles.colorPreset }}
-                            key={`ColorPreset_${preset.name}`}
-                            onTouchEndCapture={() => { setCurrentPreset(preset); }}
-                        >
-                            <Text style={{ color: preset.pressedColor, ...styles.colorPresetText }}>
-                                {preset.name}
-                            </Text>
-                            {currentPreset === preset &&
-                                <Icon name="done" color={preset.pressedColor} />
-                            }
-                        </View>
-                    );
-                })}
-            </ScrollView>
-            <View style={styles.colorPresetOptions}>
-                <Text>Current Preset : {currentPreset.name}</Text>
-                <Button onPress={() => { dispatch(setGridColorPresetGlobally(currentPreset)) }}>Apply Color Preset Globally</Button>
-            </View>
-        </View>
-    );
+  const [currentPreset, setCurrentPreset] = useState(DEFAULT);
+
+  const applySelectedPresetGlobally = () =>
+    dispatch(setGridColorPresetGlobally(currentPreset));
+
+  return (
+    <View style={styles.colorPresetContainer}>
+      <ScrollView style={styles.colorPresetSelector}>
+        {PRESET_COLOR_LIST.map((preset) => {
+          return (
+            <Button
+              buttonStyle={{
+                backgroundColor: preset.unpressedColor,
+                borderColor:
+                  currentPreset === preset
+                    ? preset.pressedColor
+                    : preset.unpressedColor,
+                ...styles.colorPresetButton,
+              }}
+              key={`ColorPreset_${preset.name}`}
+              onPress={() => setCurrentPreset(preset)}
+            >
+              <Text
+                style={{
+                  color: preset.pressedColor,
+                  ...styles.colorPresetText,
+                }}
+              >
+                {preset.name}
+              </Text>
+              {currentPreset === preset && (
+                <View style={styles.selectedCheckmarkIcon}>
+                  <Icon name="done" color={preset.pressedColor} />
+                </View>
+              )}
+            </Button>
+          );
+        })}
+      </ScrollView>
+      <View style={styles.colorPresetOptions}>
+        <Button
+          onPress={applySelectedPresetGlobally}
+          titleStyle={{
+            color: currentPreset.pressedColor,
+          }}
+          buttonStyle={{
+            backgroundColor: currentPreset.unpressedColor,
+            borderColor: currentPreset.pressedColor,
+            borderWidth: 2,
+          }}
+        >
+          Apply Color Preset Globally
+        </Button>
+      </View>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({
-    colorPresetContainer: {
-        height: 250,
-        flexDirection: 'row',
-        paddingTop: 10,
-    },
-    colorPresetSelector: {
-        width: "60 %"
-    },
-    colorPreset: {
-        borderWidth: 1,
-        height: 30,
-        flexDirection: 'row',
-    },
-    colorPresetText: {
-        alignSelf: "center",
-    },
-    colorPresetOptions: {
-        width: "40 %"
-    }
+  container: {},
+  colorPresetContainer: {
+    height: 250,
+    flexDirection: "row",
+    paddingTop: 10,
+  },
+  colorPresetSelector: {
+    width: "60%",
+    marginRight: 4,
+  },
+  colorPresetButton: {
+    borderWidth: 2,
+    height: 40,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  selectedCheckmarkIcon: {
+    marginLeft: "auto",
+  },
+  colorPresetText: {
+    alignSelf: "center",
+  },
+  colorPresetOptions: {
+    width: "40 %",
+  },
 });

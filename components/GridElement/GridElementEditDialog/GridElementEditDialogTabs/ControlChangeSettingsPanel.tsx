@@ -14,6 +14,7 @@ import {
 } from "../../../../redux/slices/GridPresetsSlice";
 import { useDesktopCommunication } from "../../../../hooks/useDesktopCommunication";
 import { createMidiControlChange } from "../../../../constants/MIDI_Notes";
+import { theme } from "../../../../constants/theme";
 
 export interface ControlChangeSettingsPanelProps {
   index: number;
@@ -308,11 +309,13 @@ function IconSelectDialog({
             return (
               <Button
                 onPress={iconTouchHandler(iconName)}
-                color={"#ffffff"}
+                color={theme.color.white}
                 buttonStyle={{
                   borderWidth: 3,
                   borderColor:
-                    iconName === iconNameState ? "#000000" : "#ffffff",
+                    iconName === iconNameState
+                      ? theme.color.black
+                      : theme.color.white,
                 }}
                 key={`directional_icon-${i}`}
               >
@@ -334,11 +337,13 @@ function IconSelectDialog({
                 {row.map((iconName, j) => (
                   <Button
                     onPress={iconTouchHandler(iconName)}
-                    color={"#ffffff"}
+                    color={theme.color.white}
                     buttonStyle={{
                       borderWidth: 3,
                       borderColor:
-                        iconName === iconNameState ? "#000000" : "#ffffff",
+                        iconName === iconNameState
+                          ? theme.color.black
+                          : theme.color.white,
                     }}
                     key={`icon_row-${i}_elem-${j}_name-${iconName}`}
                   >

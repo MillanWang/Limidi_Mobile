@@ -1,6 +1,7 @@
 import { Button } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { theme } from "../constants/theme";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
 
@@ -27,7 +28,9 @@ export function GridScreenToolbar({
       <View style={{ flexDirection: "row" }}>
         <Button onPress={togglePlayMode}>
           <View style={{ flexDirection: "column" }}>
-            <Text style={{ ...styles.modeTextIndicator, color: "#ffffff" }}>
+            <Text
+              style={{ ...styles.modeTextIndicator, color: theme.color.white }}
+            >
               {!isPlayMode ? "PLAY" : "EDIT"}
             </Text>
           </View>
@@ -37,7 +40,9 @@ export function GridScreenToolbar({
       {!isPlayMode && (
         <Button onPress={() => setIsFullGridEditMode(!isFullGridEditMode)}>
           <View style={{ flexDirection: "column" }}>
-            <Text style={{ ...styles.modeTextIndicator, color: "#ffffff" }}>
+            <Text
+              style={{ ...styles.modeTextIndicator, color: theme.color.white }}
+            >
               {!isFullGridEditMode ? "SETTINGS" : "GRID"}
             </Text>
           </View>
@@ -55,16 +60,13 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-  modeTextIndicator: {
-    // margin: 5,
-    // color: "#ffffff",
-  },
+  modeTextIndicator: {},
   modalButtonText: {
-    color: "#FFFFFF",
+    color: theme.color.white,
     fontSize: 10,
   },
   modalButtonIcon: {
-    color: "#FFFFFF",
+    color: theme.color.white,
     fontSize: 12,
   },
 });

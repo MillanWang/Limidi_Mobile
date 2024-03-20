@@ -7,26 +7,39 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 
 export function ManualNetworkConfig() {
-    const { baseAddress } = useAppSelector((state) => state.httpCommunicationsReducer.httpCommunicationInfo);
-    const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const { sendHeartbeatMessage } = useDesktopCommunication();
 
-    return (
-        <View>
-            <Text>Enter IP address and port as shown in Limidi Desktop</Text>
-            <Input keyboardType="number-pad" defaultValue={baseAddress} onChangeText={(baseAddress) => dispatch(setBaseAddress({ baseAddress }))} />
-            <Text>Example: "192.168.0.21:4848"</Text>
-        </View>
-    );
+  const { baseAddress } = useAppSelector(
+    (state) => state.httpCommunicationsReducer.httpCommunicationInfo
+  );
+
+  const onChangeHandler = (baseAddress: string) => {
+    dispatch(setBaseAddress({ baseAddress }));
+    sendHeartbeatMessage();
+  };
+
+  return (
+    <View>
+      <Text>Enter IP address and port as shown in Limidi Desktop</Text>
+      <Input
+        keyboardType="number-pad"
+        defaultValue={baseAddress}
+        onChangeText={onChangeHandler}
+      />
+      <Text>Example: "192.168.0.21:4848"</Text>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    dialogTabSelectorContainer: {
-        flexDirection: "row",
-    },
-    dialogContentContainer: {
-        height: 500,
-    },
-    saveButtonContainer: {
-        flexDirection: "row",
-    },
+  dialogTabSelectorContainer: {
+    flexDirection: "row",
+  },
+  dialogContentContainer: {
+    height: 500,
+  },
+  saveButtonContainer: {
+    flexDirection: "row",
+  },
 });

@@ -4,6 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GridEditMenu } from "../components/GridEditDialog/GridEditMenu";
 import { GridElementGrid } from "../components/GridElementGrid";
 import { GridScreenToolbar } from "../components/GridScreenToolbar";
+import { theme } from "../constants/theme";
 
 export default function GridScreen() {
   const [isPlayMode, setIsPlayMode] = useState(true);
@@ -30,6 +31,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 30,
-    backgroundColor: "#000000",
+    backgroundColor: theme.color.black,
   },
 });
