@@ -1,10 +1,10 @@
 export enum Scale {
-    Chromatic = "Chromatic",
-    Ionian = "Ionian (Major)",
-    Dorian = "Dorian",
-    Phrygian = "Phrygian",
-    Lydian = "Lydian",
-    Mixolydian = "Mixolydian",
-    Aeolian = "Aeolian (Minor)",
-    Locrian = "Locrian"
+  Chromatic = "Chromatic",
+  Ionian = "Major (Ionian)",
+  Dorian = "Dorian",
+  Phrygian = "Phrygian",
+  Lydian = "Lydian",
+  Mixolydian = "Mixolydian",
+  Aeolian = "Minor (Aeolian)",
+  Locrian = "Locrian",
 }

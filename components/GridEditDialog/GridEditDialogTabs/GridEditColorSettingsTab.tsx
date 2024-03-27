@@ -5,7 +5,7 @@ import { DEFAULT, PRESET_COLOR_LIST } from "../../../constants/ColorPresets";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setGridColorPresetGlobally } from "../../../redux/slices/GridPresetsSlice";
 import { GridPreviewSizeSelector } from "../../GridPreview";
-import { theme } from "../../../constants/theme";
+import { FullGridOperationButtons } from "./FullGridOperationButtons";
 
 export function GridEditStyleSettingsTab(): JSX.Element {
   return (
@@ -71,8 +71,12 @@ const ColorThemeSelector = () => {
             borderWidth: 2,
           }}
         >
-          Apply Color Preset Globally
+          Apply Color Globally
         </Button>
+
+        <View style={{ marginTop: "auto" }}>
+          <FullGridOperationButtons />
+        </View>
       </View>
     </View>
   );
@@ -81,7 +85,6 @@ const ColorThemeSelector = () => {
 const styles = StyleSheet.create({
   container: {},
   colorPresetContainer: {
-    height: 250,
     flexDirection: "row",
     paddingTop: 10,
   },

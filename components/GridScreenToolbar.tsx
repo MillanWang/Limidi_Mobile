@@ -49,8 +49,10 @@ export function GridScreenToolbar({
         </Button>
       )}
 
-      <NetworkErrorIndicator isEditMode={!isPlayMode} />
-      <GridLayoutPresetButtons />
+      <View style={styles.rightSideIconsContainer}>
+        <NetworkErrorIndicator isEditMode={!isPlayMode} />
+        <GridLayoutPresetButtons />
+      </View>
     </View>
   );
 }
@@ -68,5 +70,11 @@ export const styles = StyleSheet.create({
   modalButtonIcon: {
     color: theme.color.white,
     fontSize: 12,
+  },
+
+  rightSideIconsContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    flexGrow: 1,
   },
 });

@@ -4,10 +4,13 @@ import { StyleSheet, Text, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   MaxGridDimension,
+  restoreCurrentPresetToDefault,
   setColumnCount,
   setRowCount,
+  unlockAllGridElements,
 } from "../redux/slices/GridPresetsSlice";
 import { theme } from "../constants/theme";
+import { Icon } from "@rneui/themed";
 
 interface GridPreviewProps {
   index?: number;
@@ -30,7 +33,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
 
   return (
     <View style={{ height: 150, width: 150 }}>
-      <View style={{ flex: 1, backgroundColor: "#000000" }}>
+      <View style={{ flex: 1, backgroundColor: theme.color.black }}>
         {rows.map((col, i) => (
           <View
             style={{ flexDirection: "row", flexGrow: 1 }}
@@ -75,6 +78,34 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
   );
 };
 
+export const RIP = () => {
+  const dispatch = useAppDispatch();
+  return (
+    <View>
+      <Button onPress={() => dispatch(unlockAllGridElements(null))}>
+        <Icon
+          name={"lock-open"}
+          type="ionicon"
+          color={theme.color.white}
+          style={{ marginRight: 4 }}
+        />
+        Unlock All
+      </Button>
+      <Button
+        // TODO - This needs a confirmation modal
+        onPress={() => dispatch(restoreCurrentPresetToDefault(null))}
+      >
+        <Icon
+          name={"sync"}
+          type="ionicon"
+          color={theme.color.white}
+          style={{ marginRight: 4 }}
+        />
+        Reset All
+      </Button>
+    </View>
+  );
+};
 export const GridPreviewSizeSelector = () => {
   const dispatch = useAppDispatch();
   const { columnCount, rowCount } = useAppSelector(

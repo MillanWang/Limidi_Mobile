@@ -296,7 +296,7 @@ function IconSelectDialog({
     );
   };
 
-  const iconsPerRow = 9;
+  const iconsPerRow = 3;
   const generalIconRows = getGeneralIconNameRows(iconsPerRow);
 
   return (

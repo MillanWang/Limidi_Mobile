@@ -16,19 +16,11 @@ export function GridLayoutPresetButtons() {
   );
 
   const setPresetIndexFunction = (presetIndex: number) => {
-    return () => {
-      dispatch(setPresetIndex({ index: presetIndex }));
-    };
+    return () => dispatch(setPresetIndex({ index: presetIndex }));
   };
 
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        flexGrow: 1,
-      }}
-    >
+    <>
       {PRESET_ICON_NAMES.map((iconNameString, presetIndex) => {
         return (
           <Icon
@@ -41,6 +33,6 @@ export function GridLayoutPresetButtons() {
           />
         );
       })}
-    </View>
+    </>
   );
 }

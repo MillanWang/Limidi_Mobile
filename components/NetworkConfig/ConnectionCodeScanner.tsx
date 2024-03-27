@@ -32,7 +32,7 @@ export function ConnectionCodeScanner() {
       setScanData(result.data);
       if (isValidIpWithPort(result.data)) {
         dispatch(setBaseAddress({ baseAddress: result.data }));
-        sendHeartbeatMessage();
+        setTimeout(() => sendHeartbeatMessage(), 1000);
       }
     }
   };

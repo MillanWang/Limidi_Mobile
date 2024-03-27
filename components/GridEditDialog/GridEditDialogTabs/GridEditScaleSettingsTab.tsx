@@ -10,6 +10,8 @@ import {
   setScale,
   setStartingOctave,
 } from "../../../redux/slices/GridPresetsSlice";
+import { FullGridOperationButtons } from "./FullGridOperationButtons";
+import { theme } from "../../../constants/theme";
 
 export function GridEditScaleSettings(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -25,7 +27,7 @@ export function GridEditScaleSettings(): JSX.Element {
   return (
     <View style={styles.container}>
       <View>
-        <Text>
+        <Text style={{ color: theme.color.white }}>
           Starting Note: {Object.values(NOTE)[startingNoteNumberState % 12]}
         </Text>
         <Piano
@@ -36,7 +38,9 @@ export function GridEditScaleSettings(): JSX.Element {
         />
       </View>
       <View>
-        <Text>Octave: {Math.floor(startingNoteNumberState / 12)}</Text>
+        <Text style={{ color: theme.color.white }}>
+          Octave: {Math.floor(startingNoteNumberState / 12)}
+        </Text>
         <Slider
           maximumValue={10}
           minimumValue={0}
@@ -50,36 +54,51 @@ export function GridEditScaleSettings(): JSX.Element {
       <View style={styles.scaleManagementView}>
         {/* Scale selector */}
         <View style={styles.scaleSelector}>
-          <Text>Selected Scale : {currentScale}</Text>
           <ScrollView style={styles.scaleSelectorScrollView}>
-            {Object.values(Scale).map((scale) => {
-              return (
-                <View
-                  key={scale}
-                  style={styles.scaleItem}
-                  onTouchEndCapture={() => setCurrentScale(scale)}
-                >
-                  <Text style={styles.scaleItemText}>{scale}</Text>
-                  {currentScale === scale && <Icon name="done" color="black" />}
-                </View>
-              );
-            })}
+            {Object.values(Scale).map((scale) => (
+              <Button
+                buttonStyle={{
+                  height: 40,
+                }}
+                key={`ScalePreset_${scale}`}
+                onPress={() => setCurrentScale(scale)}
+              >
+                <Text style={{ marginRight: "auto" }}>{scale}</Text>
+                {currentScale === scale && (
+                  <View style={{ marginLeft: "auto" }}>
+                    <Icon name="done" />
+                  </View>
+                )}
+              </Button>
+            ))}
           </ScrollView>
         </View>
         <View style={styles.applyScaleView}>
-          <Text>Current Scale : {scaleState}</Text>
           <Button
-            onPress={() => {
-              dispatch(setScale(currentScale));
-            }}
+            onPress={() => dispatch(setScale(currentScale))}
+            buttonStyle={{ flexWrap: "wrap" }}
           >
-            Apply Selected Scale
+            Apply {formatScaleName(currentScale)} Scale
           </Button>
+          <Text style={{ color: theme.color.white }}>
+            Current Scale : {scaleState}
+          </Text>
+          <View style={{ marginTop: "auto" }}>
+            <FullGridOperationButtons />
+          </View>
         </View>
       </View>
     </View>
   );
 }
+
+const formatScaleName = (name: string) => {
+  const index = name.indexOf("(");
+  if (index !== -1) {
+    return name.substring(0, index);
+  }
+  return name;
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -90,7 +109,6 @@ const styles = StyleSheet.create({
     paddingTop: 20,
   },
   scaleSelector: {
-    height: 180,
     flexDirection: "column",
     width: "60%",
   },
