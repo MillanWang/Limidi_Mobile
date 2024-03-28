@@ -11,6 +11,7 @@ import {
 } from "../redux/slices/GridPresetsSlice";
 import { theme } from "../constants/theme";
 import { Icon } from "@rneui/themed";
+import { IncrementorButton } from "./IncrementorButton";
 
 interface GridPreviewProps {
   index?: number;
@@ -114,7 +115,7 @@ export const GridPreviewSizeSelector = () => {
 
   const rowCountSelector = (
     <View style={{ ...styles.xyCentered, marginLeft: 4 }}>
-      <GridSizeEditButton
+      <IncrementorButton
         disabled={rowCount === MaxGridDimension}
         onPress={() => dispatch(setRowCount(rowCount + 1))}
         isPlus
@@ -122,7 +123,7 @@ export const GridPreviewSizeSelector = () => {
       <Text style={[styles.rowsLabelText, styles.labelText]}>
         Rows: {rowCount}
       </Text>
-      <GridSizeEditButton
+      <IncrementorButton
         disabled={rowCount === 1}
         onPress={() => dispatch(setRowCount(rowCount - 1))}
       />
@@ -131,14 +132,14 @@ export const GridPreviewSizeSelector = () => {
 
   const columnCountSelector = (
     <View style={{ flexDirection: "row", marginTop: 4, ...styles.xyCentered }}>
-      <GridSizeEditButton
+      <IncrementorButton
         disabled={columnCount === 1}
         onPress={() => dispatch(setColumnCount(columnCount - 1))}
       />
       <Text style={[styles.columnsLabelText, styles.labelText]}>
         Columns: {columnCount}
       </Text>
-      <GridSizeEditButton
+      <IncrementorButton
         disabled={columnCount === MaxGridDimension}
         onPress={() => dispatch(setColumnCount(columnCount + 1))}
         isPlus
@@ -156,26 +157,7 @@ export const GridPreviewSizeSelector = () => {
   );
 };
 
-const GridSizeEditButton = (props: {
-  onPress: () => void;
-  isPlus?: boolean;
-  disabled?: boolean;
-}) => {
-  const { onPress, isPlus, disabled } = props;
-  return (
-    <Button
-      disabled={disabled}
-      type="clear"
-      onPress={onPress}
-      buttonStyle={styles.gridSizeEditButtonStyle}
-      disabledStyle={styles.gridSizeEditButtonDisabledStyle}
-    >
-      {isPlus ? "+" : "-"}
-    </Button>
-  );
-};
-
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
   },
@@ -218,7 +200,15 @@ const styles = StyleSheet.create({
     width: "40 %",
   },
 
-  labelText: { color: theme.color.lightText },
-  rowsLabelText: { margin: 4 },
-  columnsLabelText: { margin: 4, width: 70, textAlign: "center" },
+  labelText: {
+    color: theme.color.lightText,
+  },
+  rowsLabelText: {
+    margin: 4,
+    width: 46,
+  },
+  columnsLabelText: {
+    marginLeft: 8,
+    width: 72,
+  },
 });

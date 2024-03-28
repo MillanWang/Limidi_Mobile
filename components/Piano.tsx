@@ -1,5 +1,8 @@
+import { Text } from "@rneui/base";
 import React from "react";
 import { StyleSheet, View } from "react-native";
+import { NOTE, getNoteKeyFromNoteNumber } from "../constants/MIDI_Notes";
+import { theme } from "../constants/theme";
 
 const naturalNoteColor = "#bbbbbb";
 const accidentalNoteColor = "#333333";
@@ -11,6 +14,8 @@ export interface PianoProps {
   noteNumber: number;
   setNoteNumber(noteNumber: number): void;
 }
+
+const accidentalNoteNumbers = [1, 3, 6, 8, 10];
 
 export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
   const topRowStyles = [
@@ -31,15 +36,22 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
   return (
     <View style={styles.keyContainer}>
       <View style={styles.keyRow}>
-        {topRowStyles.map((rowStyle, i) => (
+        {topRowStyles.map((rowStyle, currentNoteNumber) => (
           <View
-            key={`PianoTopRowNoteNumber_${i}`}
+            key={`PianoTopRowNoteNumber_${currentNoteNumber}`}
             style={{
               ...rowStyle,
-              ...(noteNumber === i && { backgroundColor: highLightedKeyColor }),
+              ...(noteNumber === currentNoteNumber && {
+                backgroundColor: highLightedKeyColor,
+              }),
             }}
-            onTouchStart={() => setNoteNumber(i)}
-          />
+            onTouchStart={() => setNoteNumber(currentNoteNumber)}
+          >
+            {accidentalNoteNumbers.includes(noteNumber) &&
+              noteNumber === currentNoteNumber && (
+                <KeyLabel noteNumber={noteNumber} />
+              )}
+          </View>
         ))}
       </View>
 
@@ -55,13 +67,33 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
                 }),
               }}
               onTouchStart={() => setNoteNumber(currentNoteNumber)}
-            />
+            >
+              {noteNumber === currentNoteNumber && (
+                <KeyLabel noteNumber={noteNumber} />
+              )}
+            </View>
           );
         })}
       </View>
     </View>
   );
 }
+
+const KeyLabel = ({ noteNumber }: { noteNumber: number }) => {
+  return (
+    <Text
+      style={{
+        marginTop: "auto",
+        marginBottom: 2,
+        color: theme.color.white,
+        textAlign: "center",
+        fontSize: 18,
+      }}
+    >
+      {Object.values(NOTE)[noteNumber % 12]}
+    </Text>
+  );
+};
 
 const styles = StyleSheet.create({
   keyContainer: {

@@ -45,7 +45,7 @@ export const GridEditMenu = () => {
 const TabIcon = ({ iconName }: { iconName: string }) => (
   <Icon
     name={iconName}
-    type="ionicon"
+    type="ionicon" // This wifi icon is different from the other one????
     color={theme.color.white}
     style={{ marginRight: 4 }}
   />

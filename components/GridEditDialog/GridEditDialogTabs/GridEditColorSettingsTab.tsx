@@ -11,7 +11,6 @@ export function GridEditStyleSettingsTab(): JSX.Element {
   return (
     <View style={styles.container}>
       <GridPreviewSizeSelector />
-
       <ColorThemeSelector />
     </View>
   );
@@ -62,9 +61,7 @@ const ColorThemeSelector = () => {
       <View style={styles.colorPresetOptions}>
         <Button
           onPress={applySelectedPresetGlobally}
-          titleStyle={{
-            color: currentPreset.pressedColor,
-          }}
+          titleStyle={{ color: currentPreset.pressedColor }}
           buttonStyle={{
             backgroundColor: currentPreset.unpressedColor,
             borderColor: currentPreset.pressedColor,
@@ -74,7 +71,7 @@ const ColorThemeSelector = () => {
           Apply Color Globally
         </Button>
 
-        <View style={{ marginTop: "auto" }}>
+        <View style={{ marginTop: 32 }}>
           <FullGridOperationButtons />
         </View>
       </View>

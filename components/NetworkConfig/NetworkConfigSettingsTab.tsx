@@ -1,6 +1,6 @@
 import { Button, Dialog } from "@rneui/themed";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
 import { AddressValidationText } from "./AddressValidationText";
 import { ConnectionCodeScanner } from "./ConnectionCodeScanner";
@@ -11,7 +11,7 @@ export default function NetworkConfigSettingsTab() {
   const [tabIndex, setTabIndex] = useState(0);
 
   return (
-    <View>
+    <ScrollView>
       <View style={{ flexDirection: "row" }}>
         <Button onPress={() => setTabIndex(0)}>Scan QR Code</Button>
         <Button onPress={() => setTabIndex(1)}>Manual Configuration</Button>
@@ -26,7 +26,7 @@ export default function NetworkConfigSettingsTab() {
       <View style={styles.saveButtonContainer}>
         <Button onPress={sendHeartbeatMessage}>Check Connection</Button>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
