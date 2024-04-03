@@ -1,11 +1,11 @@
-import React, { useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
 import { Icon, Text } from "@rneui/themed";
-import GridElementEditDialog from "./GridElementEditDialog/GridElementEditDialog";
-import { useAppSelector } from "../../redux/hooks";
-import DrumPad from "./GridElementTypes/DrumPad";
-import ControlChange from "./GridElementTypes/ControlChange";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
+import { useAppSelector } from "../../redux/hooks";
+import GridElementEditDialog from "./GridElementEditDialog/GridElementEditDialog";
+import ControlChange from "./GridElementTypes/ControlChange";
+import DrumPad from "./GridElementTypes/DrumPad";
 
 interface GridElementProps {
   index: number;
@@ -15,60 +15,83 @@ interface GridElementProps {
 }
 
 export default function GridElement({ index, isPlayMode }: GridElementProps) {
+  const { isMidiNote } = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
+  );
+
+  if (!isPlayMode) {
+    return <GridElementEditButton index={index} />;
+  }
+
+  return isMidiNote ? (
+    <DrumPad index={index} />
+  ) : (
+    <ControlChange index={index} />
+  );
+}
+
+const GridElementEditButtonIconRow = (props: {
+  isLocked: boolean;
+  isMidiNote: boolean;
+  color: string;
+}) => {
+  const { isLocked, isMidiNote, color } = props;
+  return (
+    <View style={{ flexDirection: "row" }}>
+      {isLocked && <Icon color={color} type="ionicon" name={"lock-closed"} />}
+      {isMidiNote ? (
+        <Icon color={color} type="material-community" name={"piano"} />
+      ) : (
+        <Icon color={color} type="feather" name={"sliders"} />
+      )}
+    </View>
+  );
+};
+
+const GridElementEditButton = (props: { index: number }) => {
+  const { index } = props;
+  const [dialogVisible, setDialogVisible] = useState(false);
+
   const { name, colorState, isLocked, isMidiNote } = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
 
-  const [dialogVisible, setDialogVisible] = useState(false);
-
   return (
     <>
-      {isPlayMode && isMidiNote && <DrumPad index={index} />}
-      {isPlayMode && !isMidiNote && <ControlChange index={index} />}
-
-      {/* Edit mode */}
-      {!isPlayMode && (
+      <View
+        style={[
+          styles.gridElementUnpressedView,
+          styles.gridElementEditView,
+          { backgroundColor: colorState.unpressedColor },
+        ]}
+        onTouchStart={() => setDialogVisible(true)}
+      >
         <View
           style={{
-            ...styles.gridElementUnpressedView,
-            ...styles.gridElementEditView,
-            backgroundColor: colorState.unpressedColor,
-          }}
-          onTouchStart={() => {
-            setDialogVisible(true);
+            flexDirection: "column",
+            alignSelf: "flex-start",
+            flex: 1,
           }}
         >
-          <View style={{ flexDirection: "column", alignItems: "center" }}>
-            <View style={{ flexDirection: "row" }}>
-              <Icon
-                color={colorState.pressedColor}
-                type="ionicon"
-                name={isLocked ? "lock-closed" : "lock-open"}
-              />
-              {isMidiNote ? (
-                <Icon
-                  color={colorState.pressedColor}
-                  type="material-community"
-                  name={"piano"}
-                />
-              ) : (
-                <Icon
-                  color={colorState.pressedColor}
-                  type="feather"
-                  name={"sliders"}
-                />
-              )}
-            </View>
-            <Text style={{ color: colorState.pressedColor }}>
-              Edit {name} (#{index})
-            </Text>
+          <Text style={{ color: colorState.pressedColor }}>#{index}</Text>
+          <View
+            style={{
+              flexDirection: "column",
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <GridElementEditButtonIconRow
+              color={colorState.pressedColor}
+              isLocked={isLocked}
+              isMidiNote={isMidiNote}
+            />
+            <Text style={{ color: colorState.pressedColor }}>{name}</Text>
           </View>
-
-          {/* TODO: Show lock here and also show name of element */}
         </View>
-      )}
+      </View>
 
-      {/* Edit Dialog - MIDI & Style Settings */}
       <GridElementEditDialog
         index={index}
         dialogVisible={dialogVisible}
@@ -76,7 +99,7 @@ export default function GridElement({ index, isPlayMode }: GridElementProps) {
       />
     </>
   );
-} // end of GridElement
+};
 
 const styles = StyleSheet.create({
   gridElementBasePressedView: {
