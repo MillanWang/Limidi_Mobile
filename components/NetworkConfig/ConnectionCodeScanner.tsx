@@ -2,10 +2,11 @@ import { Button, Icon, Text } from "@rneui/themed";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
+import { theme } from "../../constants/theme";
 import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
 import { useAppDispatch } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
-import { isValidIpWithPort } from "./AddressValidationText";
+import { isValidIpWithPort } from "./AddressValidationIcon";
 
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
@@ -23,7 +24,9 @@ export function ConnectionCodeScanner() {
   if (!hasPermission) {
     return (
       <View>
-        <Text>No permissions</Text>
+        <Text style={{ color: theme.color.lightText }}>
+          Enable camera permissions to scan Limidi Desktop QR code
+        </Text>
       </View>
     );
   }
@@ -40,12 +43,9 @@ export function ConnectionCodeScanner() {
   return (
     <View>
       {scanData !== undefined ? (
-        <>
-          <Icon name="qr-code-sharp" type="ionicon" />
-          <Text>Scan the QR code in Limidi Desktop</Text>
-          <Text>Scan result: {scanData}</Text>
-          <Button onPress={() => setScanData(undefined)}>Open Scanner</Button>
-        </>
+        <Button onPress={() => setScanData(undefined)}>
+          Scan <QRIcon />
+        </Button>
       ) : (
         <>
           <View style={{ height: "80%" }}>
@@ -62,14 +62,6 @@ export function ConnectionCodeScanner() {
   );
 }
 
-const styles = StyleSheet.create({
-  dialogTabSelectorContainer: {
-    flexDirection: "row",
-  },
-  dialogContentContainer: {
-    height: 500,
-  },
-  saveButtonContainer: {
-    flexDirection: "row",
-  },
-});
+const QRIcon = () => (
+  <Icon name="qr-code-sharp" type="ionicon" color={theme.color.lightText} />
+);

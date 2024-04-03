@@ -1,12 +1,13 @@
-import { Button, Dialog, Icon, Input, Text } from "@rneui/themed";
-import { BarCodeScanner } from "expo-barcode-scanner";
-import React, { useEffect, useState } from "react";
+import { Input } from "@rneui/themed";
+import React from "react";
 import { StyleSheet, View } from "react-native";
+import { theme } from "../../constants/theme";
 import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
+import { AddressValidationIcon } from "./AddressValidationIcon";
 
-export function ManualNetworkConfig() {
+export function NetworkAddressInput() {
   const dispatch = useAppDispatch();
   const { sendHeartbeatMessage } = useDesktopCommunication();
 
@@ -21,18 +22,20 @@ export function ManualNetworkConfig() {
 
   return (
     <View>
-      <Text>Enter IP address and port as shown in Limidi Desktop</Text>
       <Input
-        keyboardType="number-pad"
         defaultValue={baseAddress}
+        rightIcon={<AddressValidationIcon />}
+        style={[styles.text]}
         onChangeText={onChangeHandler}
-      />
-      <Text>Example: "192.168.0.21:4848"</Text>
+        placeholder={`Ex: 192.168.0.21:4848`}
+        placeholderTextColor={"red"}
+      ></Input>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  text: { color: theme.color.lightText },
   dialogTabSelectorContainer: {
     flexDirection: "row",
   },
