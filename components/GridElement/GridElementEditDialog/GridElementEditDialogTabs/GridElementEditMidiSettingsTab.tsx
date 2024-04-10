@@ -1,14 +1,10 @@
-import { Icon, Switch, Text } from "@rneui/themed";
+import { Switch, Text } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setGridElementIsLocked,
-  setGridElementIsMidiNote,
-} from "../../../../redux/slices/GridPresetsSlice";
+import { setGridElementIsMidiNote } from "../../../../redux/slices/GridPresetsSlice";
 import { ControlChangeSettingsPanel } from "./ControlChangeSettingsPanel";
 import { NoteSettingsPanel } from "./NoteSettingsPanel";
-import { Button } from "@rneui/themed";
 
 export interface GridElementEditMidiProps {
   index: number;
@@ -17,61 +13,39 @@ export interface GridElementEditMidiProps {
 export function GridElementEditMidiSettingsTab({
   index,
 }: GridElementEditMidiProps) {
+  const dispatch = useAppDispatch();
   const currentGridElementState = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
-  const nameState = currentGridElementState.name;
-  const lockedState = currentGridElementState.isLocked;
-  const isMidiNoteModeState = currentGridElementState.isMidiNote;
-  const noteNumberState = currentGridElementState.midiNoteState.noteNumber;
-  const velocityState = currentGridElementState.midiNoteState.velocity;
-  const dispatch = useAppDispatch();
 
-  function toggleElementMidiLock() {
-    dispatch(setGridElementIsLocked({ index, isLocked: !lockedState }));
-  }
-  function toggleElementMidiNoteMode() {
-    dispatch(
-      setGridElementIsMidiNote({ index, isMidiNote: !isMidiNoteModeState })
-    );
-  }
+  const { isMidiNote } = currentGridElementState;
 
+  const toggleElementMidiNoteMode = () => {
+    dispatch(setGridElementIsMidiNote({ index, isMidiNote: !isMidiNote }));
+  };
   return (
     <View>
-      {/* MIDI settings Lock */}
-      <View style={styles.lockSwitchView}>
-        <Text>Lock Grid Element: </Text>
-        <Button onPress={toggleElementMidiLock}>
-          <Icon
-            type="ionicon"
-            name={lockedState ? "lock-closed" : "lock-open"}
-          />
-        </Button>
-      </View>
-      <View style={styles.lockSwitchView}>
-        <Text style={{ fontWeight: isMidiNoteModeState ? "bold" : "300" }}>
+      <View style={styles.switchView}>
+        <Text style={{ fontWeight: isMidiNote ? "bold" : "300" }}>
           MIDI Note Mode
         </Text>
-        <Switch
-          value={!isMidiNoteModeState}
-          onChange={toggleElementMidiNoteMode}
-        />
-        <Text style={{ fontWeight: !isMidiNoteModeState ? "bold" : "300" }}>
+        <Switch value={!isMidiNote} onChange={toggleElementMidiNoteMode} />
+        <Text style={{ fontWeight: !isMidiNote ? "bold" : "300" }}>
           Control Change Mode
         </Text>
       </View>
 
-      {isMidiNoteModeState ? (
+      {isMidiNote ? (
         <NoteSettingsPanel index={index} />
       ) : (
         <ControlChangeSettingsPanel index={index} />
       )}
     </View>
   );
-} // end GridElementEditMidiOptionsTab
+}
 
 const styles = StyleSheet.create({
-  lockSwitchView: {
+  switchView: {
     flexDirection: "row",
     alignItems: "center",
   },

@@ -45,8 +45,10 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
               const isCurrentElementHighlighted =
                 highlightAllElements || index === currentElementIndex;
 
-              const { unpressedColor, pressedColor } =
-                gridElements[currentElementIndex].colorState;
+              const {
+                isLocked,
+                colorState: { pressedColor, unpressedColor },
+              } = gridElements[currentElementIndex];
 
               return (
                 <View
@@ -57,18 +59,27 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
                       ? pressedColor
                       : unpressedColor,
                     borderWidth: 1,
-                    borderColor: "#000000",
+                    borderColor: theme.color.black,
                   }}
                 >
-                  {isCurrentElementHighlighted && (
-                    <View
-                      style={{
-                        margin: 2, // To show the pressedColor of the parent view
-                        flex: 1,
-                        backgroundColor: unpressedColor,
-                      }}
-                    ></View>
-                  )}
+                  <View
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      margin: 2,
+                      flex: 1,
+                      backgroundColor: unpressedColor,
+                    }}
+                  >
+                    {isLocked && (
+                      <Icon
+                        size={10}
+                        type="ionicon"
+                        name={"lock-closed"}
+                        color={pressedColor}
+                      />
+                    )}
+                  </View>
                 </View>
               );
             })}
@@ -79,34 +90,6 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
   );
 };
 
-export const RIP = () => {
-  const dispatch = useAppDispatch();
-  return (
-    <View>
-      <Button onPress={() => dispatch(unlockAllGridElements(null))}>
-        <Icon
-          name={"lock-open"}
-          type="ionicon"
-          color={theme.color.white}
-          style={{ marginRight: 4 }}
-        />
-        Unlock All
-      </Button>
-      <Button
-        // TODO - This needs a confirmation modal
-        onPress={() => dispatch(restoreCurrentPresetToDefault(null))}
-      >
-        <Icon
-          name={"sync"}
-          type="ionicon"
-          color={theme.color.white}
-          style={{ marginRight: 4 }}
-        />
-        Reset All
-      </Button>
-    </View>
-  );
-};
 export const GridPreviewSizeSelector = () => {
   const dispatch = useAppDispatch();
   const { columnCount, rowCount } = useAppSelector(
@@ -158,57 +141,20 @@ export const GridPreviewSizeSelector = () => {
 };
 
 export const styles = StyleSheet.create({
-  container: {
-    paddingTop: 30,
-  },
-  gridSizeEditButtonStyle: {
-    borderRadius: 1000,
-    borderWidth: 1,
-    height: 30,
-    width: 30,
-    padding: 0,
-  },
-  gridSizeEditButtonDisabledStyle: {
-    borderColor: "grey",
-  },
-  xyCentered: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  scaleManagementView: {
-    flexDirection: "row",
-    paddingTop: 20,
-  },
-  scaleSelector: {
-    height: 180,
-    flexDirection: "column",
-    width: "60%",
-  },
-  scaleSelectorScrollView: {
-    width: "100 %",
-  },
+  container: { paddingTop: 30 },
+  xyCentered: { alignItems: "center", justifyContent: "center" },
+  scaleManagementView: { flexDirection: "row", paddingTop: 20 },
+  scaleSelector: { height: 180, flexDirection: "column", width: "60%" },
+  scaleSelectorScrollView: { width: "100 %" },
   scaleItem: {
     borderWidth: 1,
     height: 30,
     flexDirection: "row",
     backgroundColor: "#bbbbbb",
   },
-  scaleItemText: {
-    alignSelf: "center",
-  },
-  applyScaleView: {
-    width: "40 %",
-  },
-
-  labelText: {
-    color: theme.color.lightText,
-  },
-  rowsLabelText: {
-    margin: 4,
-    width: 46,
-  },
-  columnsLabelText: {
-    marginLeft: 8,
-    width: 72,
-  },
+  scaleItemText: { alignSelf: "center" },
+  applyScaleView: { width: "40 %" },
+  labelText: { color: theme.color.lightText },
+  rowsLabelText: { margin: 4, width: 46 },
+  columnsLabelText: { marginLeft: 8, width: 72 },
 });

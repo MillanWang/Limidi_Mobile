@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Button, Dialog, Text } from "@rneui/themed";
+import { Button, Dialog, Icon, Text } from "@rneui/themed";
 
 import {
   GridElementEditMidiProps,
@@ -11,6 +11,8 @@ import {
   GridElementEditStyleSettingsTab,
 } from "./GridElementEditDialogTabs/GridElementEditStyleSettingsTab";
 import { GridPreview } from "../../GridPreview";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
 
 interface GridElementEditDialogProps
   extends GridElementEditMidiProps,
@@ -25,10 +27,30 @@ export default function GridElementEditDialog({
   setDialogVisible,
 }: GridElementEditDialogProps) {
   const [tabIndex, setTabIndex] = React.useState(0);
+  const dispatch = useAppDispatch();
+
+  const currentGridElementState = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
+  );
+  const { isLocked } = currentGridElementState;
+
+  const toggleElementMidiLock = () =>
+    dispatch(setGridElementIsLocked({ index, isLocked: !isLocked }));
 
   return (
     <Dialog isVisible={dialogVisible} style={{}}>
       <View style={styles.dialogTabSelectorContainer}>
+        <View
+        //  style={          styles.lockSwitchView}
+        >
+          <Button onPress={toggleElementMidiLock}>
+            <Icon
+              type="ionicon"
+              name={isLocked ? "lock-closed" : "lock-open"}
+            />
+          </Button>
+        </View>
+
         <Button onPress={() => setTabIndex(0)}>MIDI Settings</Button>
         <Button onPress={() => setTabIndex(1)}>Style Settings</Button>
         <Button onPress={() => setDialogVisible(false)}>SAVE</Button>
@@ -55,8 +77,5 @@ const styles = StyleSheet.create({
   dialogTabSelectorContainer: {
     flexDirection: "row",
   },
-  dialogContentContainer: {
-    // height: "80%",
-    // height: 500,
-  },
+  dialogContentContainer: {},
 });

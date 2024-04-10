@@ -1,6 +1,7 @@
 import { Button } from "@rneui/base";
 import React from "react";
-import { styles } from "./GridPreview";
+import { StyleSheet } from "react-native";
+import { theme } from "../constants/theme";
 
 export const IncrementorButton = (props: {
   onPress: () => void;
@@ -20,3 +21,16 @@ export const IncrementorButton = (props: {
     </Button>
   );
 };
+
+export const styles = StyleSheet.create({
+  gridSizeEditButtonStyle: {
+    borderRadius: 1000,
+    borderWidth: 1,
+    height: 30,
+    width: 30,
+    padding: 0,
+  },
+  gridSizeEditButtonDisabledStyle: {
+    borderColor: "grey",
+  },
+});

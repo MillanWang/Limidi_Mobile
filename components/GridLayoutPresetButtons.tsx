@@ -1,10 +1,8 @@
-import React from "react";
-import { View } from "react-native";
-
 import { Icon } from "@rneui/themed";
-import { useAppSelector, useAppDispatch } from "../redux/hooks";
-import { setPresetIndex } from "../redux/slices/GridPresetsSlice";
+import React from "react";
 import { theme } from "../constants/theme";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { setPresetIndex } from "../redux/slices/GridPresetsSlice";
 
 // List of the preset icons. They only exist up to 6, which feels like a reasonable amount of presets
 const PRESET_ICON_NAMES = ["one", "two", "3", "4", "5", "6"];
