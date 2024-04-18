@@ -1,40 +1,35 @@
-import { Button, Icon, Slider } from "@rneui/themed";
+import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { NOTE } from "../../../constants/MIDI_Notes";
+import { NOTE, getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
 import { Scale } from "../../../constants/Scales";
-import { Piano } from "../../Piano";
-import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
+import { theme } from "../../../constants/theme";
+import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
-  setStartingNote,
   setScale,
+  setStartingNote,
   setStartingOctave,
 } from "../../../redux/slices/GridPresetsSlice";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
-import { theme } from "../../../constants/theme";
-import { IncrementorButton } from "../../IncrementorButton";
+import { NoteSelector } from "./NoteSelector";
 
 export function GridEditScaleSettings() {
   return (
     <View style={styles.container}>
-      <RootNoteSelector />
+      <ScaleRootNoteSelector />
       <ScaleSelector />
     </View>
   );
 }
 
-export function RootNoteSelector() {
+export function ScaleRootNoteSelector() {
   const dispatch = useAppDispatch();
-  const gridState = useAppSelector(
+  const { startingNoteNumber, scale } = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset
   );
-  const startingNoteNumberState = gridState.startingNoteNumber;
-  const scaleState = gridState.scale;
-  const rootNote = `Root Note: ${
-    Object.values(NOTE)[startingNoteNumberState % 12]
-  }${Math.floor(startingNoteNumberState / 12)}`;
 
-  const currentOctave = Math.floor(startingNoteNumberState / 12);
+  const rootNote = `Root Note: ${getNoteKeyFromNoteNumber(startingNoteNumber)}`;
+  const currentOctave = Math.floor(startingNoteNumber / 12);
 
   const updateOctave = (isIncreasing: boolean) => () => {
     const desiredOctave = currentOctave + (isIncreasing ? 1 : -1);
@@ -42,43 +37,24 @@ export function RootNoteSelector() {
     dispatch(setStartingOctave(desiredOctave));
   };
 
-  return (
+  const noteSelectorHeader = (
     <View style={{}}>
-      <View style={{ flexDirection: "row" }}>
-        <View style={{}}>
-          <Text style={{ color: theme.color.white }}>Scale : {scaleState}</Text>
-          <Text style={{ color: theme.color.white }}>{rootNote}</Text>
-        </View>
-
-        <View
-          style={{
-            marginLeft: "auto",
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <IncrementorButton
-            onPress={updateOctave(false)}
-            disabled={currentOctave === 0}
-          />
-          <Text style={{ color: theme.color.white, width: 64, marginLeft: 8 }}>
-            Octave: {currentOctave}
-          </Text>
-          <IncrementorButton
-            onPress={updateOctave(true)}
-            isPlus
-            disabled={currentOctave === 10}
-          />
-        </View>
-      </View>
-
-      <Piano
-        noteNumber={startingNoteNumberState % 12}
-        setNoteNumber={(value) => dispatch(setStartingNote(value))}
-      />
+      <Text style={{ color: theme.color.white }}>Scale : {scale}</Text>
+      <Text style={{ color: theme.color.white }}>{rootNote}</Text>
     </View>
   );
+
+  return (
+    <NoteSelector
+      noteNumber={startingNoteNumber}
+      setNoteNumber={(value) => dispatch(setStartingNote(value))}
+      increaseOctave={updateOctave(true)}
+      decreaseOctave={updateOctave(false)}
+      header={noteSelectorHeader}
+    />
+  );
 }
+
 export function ScaleSelector() {
   const dispatch = useAppDispatch();
   const gridState = useAppSelector(

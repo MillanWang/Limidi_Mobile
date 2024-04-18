@@ -1,125 +1,112 @@
-import { Input, Slider, Switch, Text } from "@rneui/themed";
+import { Slider, Switch, Text } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { NOTE } from "../../../../constants/MIDI_Notes";
+import { getNoteKeyFromNoteNumber } from "../../../../constants/MIDI_Notes";
+import { theme } from "../../../../constants/theme";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
-  setGridElementIsLocked,
-  setGridElementIsMidiNote,
-  setGridElementName,
   setGridElementNote,
   setGridElementOctave,
   setGridElementVelocityCeiling,
   setGridElementVelocityFloor,
   setGridElementVelocityIsVertical,
 } from "../../../../redux/slices/GridPresetsSlice";
-import { Piano } from "../../../Piano";
+import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSelector";
 
 export interface NoteSettingsPanelProps {
   index: number;
 }
 
 export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
+  const { noteNumber, velocity } = useAppSelector(
+    (state) =>
+      state.gridPresetsReducer.currentGridPreset.gridElements[index]
+        .midiNoteState
   );
-  const nameState = currentGridElementState.name;
-  const lockedState = currentGridElementState.isLocked;
-  const isMidiNoteModeState = currentGridElementState.isMidiNote;
-  const noteNumberState = currentGridElementState.midiNoteState.noteNumber;
-  const velocityState = currentGridElementState.midiNoteState.velocity;
+
   const dispatch = useAppDispatch();
 
-  function toggleElementMidiLock() {
-    dispatch(setGridElementIsLocked({ index, isLocked: !lockedState }));
-  }
-  function toggleElementMidiNoteMode() {
+  const currentOctave = Math.floor(noteNumber / 12);
+  const noteKey = `Note: ${getNoteKeyFromNoteNumber(noteNumber)}`;
+
+  const updateOctave = (isIncreasing: boolean) => () => {
+    const desiredOctave = currentOctave + (isIncreasing ? 1 : -1);
+    if (desiredOctave < 0 || desiredOctave > 10) return;
+    dispatch(setGridElementOctave({ index, newNoteOctave: desiredOctave }));
+  };
+
+  const setNoteNumber = (noteNumber: number) =>
+    dispatch(setGridElementNote({ index, newNoteNumber: noteNumber }));
+
+  const toggleVelocityDirection = () => {
     dispatch(
-      setGridElementIsMidiNote({ index, isMidiNote: !isMidiNoteModeState })
+      setGridElementVelocityIsVertical({
+        index,
+        isVertical: !velocity.isVertical,
+      })
     );
-  }
+  };
+  const setVelocityFloor = (velocity: number) =>
+    dispatch(setGridElementVelocityFloor({ index: index, floor: velocity }));
+  const setVelocityCeiling = (velocity: number) =>
+    dispatch(
+      setGridElementVelocityCeiling({ index: index, ceiling: velocity })
+    );
 
   return (
     <View>
-      <View>
-        <Text>Name:</Text>
-        <Input
-          value={nameState}
-          onChangeText={(value) =>
-            dispatch(setGridElementName({ index, name: value }))
-          }
-        />
-      </View>
-
-      <View>
-        <Text>Note: {Object.values(NOTE)[noteNumberState % 12]}</Text>
-        <Piano
-          noteNumber={noteNumberState % 12}
-          setNoteNumber={(noteNumber) =>
-            dispatch(setGridElementNote({ index, newNoteNumber: noteNumber }))
-          }
-        />
-      </View>
-
-      <View>
-        <Text>Octave: {Math.floor(noteNumberState / 12)}</Text>
-        <Slider
-          maximumValue={10}
-          minimumValue={0}
-          step={1}
-          value={Math.floor(noteNumberState / 12)}
-          onValueChange={(value) =>
-            dispatch(setGridElementOctave({ index, newNoteOctave: value }))
-          }
-        />
-      </View>
+      <NoteSelector
+        increaseOctave={updateOctave(true)}
+        decreaseOctave={updateOctave(false)}
+        noteNumber={noteNumber}
+        setNoteNumber={setNoteNumber}
+        header={
+          <View>
+            <Text style={{ color: theme.color.black }}>{noteKey}</Text>
+          </View>
+        }
+      />
 
       <View>
         <Text>
-          Velocity Direction:{" "}
-          {velocityState.isVertical ? "Vertical" : "Horizontal"}
+          Velocity Direction: {velocity.isVertical ? "Vertical" : "Horizontal"}
         </Text>
         <Switch
-          value={velocityState.isVertical}
-          onChange={() => {
-            dispatch(
-              setGridElementVelocityIsVertical({
-                index,
-                isVertical: !velocityState.isVertical,
-              })
-            );
-          }}
+          value={velocity.isVertical}
+          onChange={toggleVelocityDirection}
         />
 
-        <Text>Velocity Floor: {velocityState.floor}</Text>
-        <Slider
-          maximumValue={127}
-          minimumValue={0}
-          step={1}
-          value={velocityState.floor}
-          onValueChange={(value) =>
-            dispatch(
-              setGridElementVelocityFloor({ index: index, floor: value })
-            )
-          }
+        <Text>Velocity Floor: {velocity.floor}</Text>
+        <VelocityAdjustSlider
+          velocity={velocity.floor}
+          setVelocity={setVelocityFloor}
         />
 
-        <Text>Velocity Ceiling: {velocityState.ceiling}</Text>
-        <Slider
-          maximumValue={127}
-          minimumValue={0}
-          step={1}
-          value={velocityState.ceiling}
-          onValueChange={(value) =>
-            dispatch(
-              setGridElementVelocityCeiling({ index: index, ceiling: value })
-            )
-          }
+        <Text>Velocity Ceiling: {velocity.ceiling}</Text>
+        <VelocityAdjustSlider
+          velocity={velocity.ceiling}
+          setVelocity={setVelocityCeiling}
         />
       </View>
     </View>
   );
-} // end GridElementEditMidiOptionsTab
+}
+
+const VelocityAdjustSlider = (props: {
+  velocity: number;
+  setVelocity: (velocity: number) => void;
+}) => {
+  const { velocity, setVelocity } = props;
+  return (
+    <Slider
+      maximumValue={127}
+      minimumValue={0}
+      step={1}
+      value={velocity}
+      onValueChange={setVelocity}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   lockSwitchView: {
