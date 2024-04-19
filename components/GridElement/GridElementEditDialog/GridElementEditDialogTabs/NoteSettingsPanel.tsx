@@ -1,6 +1,6 @@
 import { Slider, Switch, Text } from "@rneui/themed";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { getNoteKeyFromNoteNumber } from "../../../../constants/MIDI_Notes";
 import { theme } from "../../../../constants/theme";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
@@ -107,10 +107,3 @@ const VelocityAdjustSlider = (props: {
     />
   );
 };
-
-const styles = StyleSheet.create({
-  lockSwitchView: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});

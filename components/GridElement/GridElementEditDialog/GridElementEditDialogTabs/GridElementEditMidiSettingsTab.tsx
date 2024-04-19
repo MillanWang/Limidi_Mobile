@@ -1,49 +1,36 @@
-import { Input, Switch, Text } from "@rneui/themed";
+import { Input, Text } from "@rneui/themed";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setGridElementIsMidiNote,
-  setGridElementName,
-} from "../../../../redux/slices/GridPresetsSlice";
+import { setGridElementName } from "../../../../redux/slices/GridPresetsSlice";
 import { ControlChangeSettingsPanel } from "./ControlChangeSettingsPanel";
+import { MidiNoteControlChangeSelector } from "./MidiNoteControlChangeSelector";
 import { NoteSettingsPanel } from "./NoteSettingsPanel";
 
 export interface GridElementEditMidiProps {
   index: number;
 }
 
-export function GridElementEditMidiSettingsTab({
-  index,
-}: GridElementEditMidiProps) {
+export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
   const dispatch = useAppDispatch();
   const { isMidiNote, name } = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
 
-  const toggleElementMidiNoteMode = () => {
-    dispatch(setGridElementIsMidiNote({ index, isMidiNote: !isMidiNote }));
-  };
   return (
     <View>
-      <View>
-        <Text>Name:</Text>
+      <View style={{ flexDirection: "row", flex: 1 }}>
         <Input
+          containerStyle={{ flex: 1 }}
+          label={<Text style={{}}>Name:</Text>}
+          maxLength={10}
           value={name}
           onChangeText={(value) =>
             dispatch(setGridElementName({ index, name: value }))
           }
         />
-      </View>
 
-      <View style={styles.switchView}>
-        <Text style={{ fontWeight: isMidiNote ? "bold" : "300" }}>
-          MIDI Note
-        </Text>
-        <Switch value={!isMidiNote} onChange={toggleElementMidiNoteMode} />
-        <Text style={{ fontWeight: !isMidiNote ? "bold" : "300" }}>
-          Control Change
-        </Text>
+        <MidiNoteControlChangeSelector index={index} />
       </View>
 
       {isMidiNote ? (
@@ -54,10 +41,3 @@ export function GridElementEditMidiSettingsTab({
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  switchView: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});
