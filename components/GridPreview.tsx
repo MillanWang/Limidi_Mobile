@@ -155,6 +155,6 @@ export const styles = StyleSheet.create({
   scaleItemText: { alignSelf: "center" },
   applyScaleView: { width: "40 %" },
   labelText: { color: theme.color.lightText },
-  rowsLabelText: { margin: 4, width: 46 },
+  rowsLabelText: { margin: 4, width: 48 },
   columnsLabelText: { marginLeft: 8, width: 72 },
 });

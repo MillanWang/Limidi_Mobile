@@ -17,6 +17,10 @@ export function getNoteKeyFromNoteNumber(noteNumber: number): string {
   return `${Object.keys(NOTE)[noteNumber % 12]}${Math.floor(noteNumber / 12)}`;
 }
 
+export function isNoteLabelStandard(noteNumber: number, label: string) {
+  return label === getNoteKeyFromNoteNumber(noteNumber);
+}
+
 export interface MidiNoteProps {
   noteNumber: number; // 0-120
   velocity: number; // 0-127

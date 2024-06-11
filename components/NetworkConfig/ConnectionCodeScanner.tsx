@@ -1,5 +1,5 @@
 import { Button, Icon, Text } from "@rneui/themed";
-import { BarCodeScanner } from "expo-barcode-scanner";
+import { Camera, CameraView } from "expo-camera";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
@@ -16,8 +16,12 @@ export function ConnectionCodeScanner() {
 
   useEffect(() => {
     (async () => {
-      const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === "granted");
+      const getCameraPermissions = async () => {
+        const { status } = await Camera.requestCameraPermissionsAsync();
+        setHasPermission(status === "granted");
+      };
+
+      getCameraPermissions();
     })();
   }, []);
 
@@ -49,11 +53,12 @@ export function ConnectionCodeScanner() {
       ) : (
         <>
           <View style={{ height: "80%" }}>
-            <BarCodeScanner
-              type="back"
-              onBarCodeScanned={scanData ? undefined : handleBarCodeScanned}
+            <CameraView
+              onBarcodeScanned={scanData ? undefined : handleBarCodeScanned}
               style={{ ...StyleSheet.absoluteFillObject }}
-              barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
+              barcodeScannerSettings={{
+                barcodeTypes: ["qr", "pdf417"],
+              }}
             />
           </View>
         </>

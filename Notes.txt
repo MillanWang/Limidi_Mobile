@@ -1,0 +1,4 @@
+npm start //Starts the expo server
+
+
+ICONS = https://oblador.github.io/react-native-vector-icons/
