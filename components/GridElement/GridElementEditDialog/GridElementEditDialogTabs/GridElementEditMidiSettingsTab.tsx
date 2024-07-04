@@ -1,6 +1,6 @@
 import { Input, Text } from "@rneui/themed";
 import React from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setGridElementName } from "../../../../redux/slices/GridPresetsSlice";
 import { ControlChangeSettingsPanel } from "./ControlChangeSettingsPanel";
@@ -27,34 +27,36 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
     (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
 
+  const resetElementName = () =>
+    dispatch(
+      setGridElementName({ index, name: getNoteKeyFromNoteNumber(noteNumber) })
+    );
+
+  // TODO - Add tis button when with a standard name so that there can be a blank no clutter element
+  const clearElementName = () =>
+    dispatch(setGridElementName({ index, name: "" }));
+
+  const rightIcon = isNoteLabelStandard(noteNumber, name) ? (
+    false
+  ) : (
+    <Icon
+      onPress={resetElementName}
+      name="refresh-outline"
+      type="ionicon"
+      color={theme.color.white}
+    />
+  );
+
   return (
-    <View>
-      <View style={{ flexDirection: "row", flex: 1 }}>
+    <View style={{ flex: 1 }}>
+      <View style={{ flexDirection: "row", marginTop: 12 }}>
         <Input
           containerStyle={{ flex: 1 }}
           label={<Text style={{ color: theme.color.white }}>Name</Text>}
           inputStyle={{ color: theme.color.white }}
           maxLength={10}
           rightIconContainerStyle={{ height: 24 }}
-          rightIcon={
-            isNoteLabelStandard(noteNumber, name) ? (
-              false
-            ) : (
-              <Icon
-                onPress={() =>
-                  dispatch(
-                    setGridElementName({
-                      index,
-                      name: getNoteKeyFromNoteNumber(noteNumber),
-                    })
-                  )
-                }
-                name="refresh-outline"
-                type="ionicon"
-                color={theme.color.white}
-              />
-            )
-          }
+          rightIcon={rightIcon}
           value={name}
           onChangeText={(value) =>
             dispatch(setGridElementName({ index, name: value }))
@@ -63,12 +65,13 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
 
         <MidiNoteControlChangeSelector index={index} />
       </View>
-
-      {isMidiNote ? (
-        <NoteSettingsPanel index={index} />
-      ) : (
-        <ControlChangeSettingsPanel index={index} />
-      )}
+      <ScrollView>
+        {isMidiNote ? (
+          <NoteSettingsPanel index={index} />
+        ) : (
+          <ControlChangeSettingsPanel index={index} />
+        )}
+      </ScrollView>
     </View>
   );
 }

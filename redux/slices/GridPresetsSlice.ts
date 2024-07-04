@@ -10,6 +10,10 @@ import {
 import { GridPresetsState } from "../interfaces/GridPresetsState";
 import { GridState } from "../interfaces/GridState";
 import { rescaleGridElements } from "../functions/rescaleGridElements";
+import {
+  getNoteKeyFromNoteNumber,
+  isNoteLabelStandard,
+} from "../../constants/MIDI_Notes";
 
 const defaultPresets: GridState[] = [
   defaultPreset1,
@@ -179,11 +183,19 @@ export const GridPresetsSlice = createSlice({
         state.gridPresets[state.currentPresetIndex],
       ];
       for (let grid of grids) {
-        const originalOctaveOffset =
-          Math.floor(grid.gridElements[index].midiNoteState.noteNumber / 12) *
-          12;
-        grid.gridElements[index].midiNoteState.noteNumber =
-          newNoteNumber + originalOctaveOffset;
+        const originalNoteNumber =
+          grid.gridElements[index].midiNoteState.noteNumber;
+
+        const originalNoteName = grid.gridElements[index].name;
+        const originalOctaveOffset = Math.floor(originalNoteNumber / 12) * 12;
+        const finalNoteNumber = newNoteNumber + originalOctaveOffset;
+
+        if (isNoteLabelStandard(originalNoteNumber, originalNoteName)) {
+          grid.gridElements[index].name =
+            getNoteKeyFromNoteNumber(finalNoteNumber);
+        }
+
+        grid.gridElements[index].midiNoteState.noteNumber = finalNoteNumber;
       }
     },
     setGridElementOctave: (state, action) => {
@@ -194,9 +206,21 @@ export const GridPresetsSlice = createSlice({
       ];
 
       for (let grid of grids) {
-        grid.gridElements[index].midiNoteState.noteNumber =
-          grid.gridElements[index].midiNoteState.noteNumber % 12; //Keep original note
-        grid.gridElements[index].midiNoteState.noteNumber += newNoteOctave * 12; //Add octave offset
+        const originalNoteNumber =
+          grid.gridElements[index].midiNoteState.noteNumber;
+
+        const originalNoteName = grid.gridElements[index].name;
+
+        const newNoteNumber =
+          (originalNoteNumber % 12) + //Keep original note
+          newNoteOctave * 12; //Add octave offset
+
+        if (isNoteLabelStandard(originalNoteNumber, originalNoteName)) {
+          grid.gridElements[index].name =
+            getNoteKeyFromNoteNumber(newNoteNumber);
+        }
+
+        grid.gridElements[index].midiNoteState.noteNumber = newNoteNumber;
       }
     },
     setGridElementVelocityCeiling: (state, action) => {

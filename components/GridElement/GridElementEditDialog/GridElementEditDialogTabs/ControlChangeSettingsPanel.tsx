@@ -176,71 +176,33 @@ export function ControlChangeSettingsPanel({
     {
       text: "Horizontal",
       enum: ControlChangeDirection.horizontal,
+      iconName: "swap-horizontal",
       onPress: horizontalModeOnPress,
     },
     {
       text: "Vertical",
       enum: ControlChangeDirection.vertical,
+      iconName: "swap-vertical",
       onPress: verticalModeOnPress,
     },
     {
       text: "XY Bidirectional",
       enum: ControlChangeDirection.xy,
+      iconName: "move",
       onPress: xyModeOnPress,
     },
   ];
+
+  const isXY = ccDirection === ControlChangeDirection.xy;
+  const showVerticalControlChangeIndexSelector =
+    ccDirection === ControlChangeDirection.vertical || isXY;
+
+  const showHorizontalControlChangeIndexSelector =
+    ccDirection === ControlChangeDirection.horizontal || isXY;
   return (
     <View>
-      <View>
-        <Text>Control Change Orientation</Text>
-        <View style={{ flexDirection: "row" }}>
-          {modeButtonList.map((element, i) => (
-            <Button
-              buttonStyle={{
-                backgroundColor:
-                  ccDirection === element.enum ? "black" : "blue",
-              }}
-              onPress={element.onPress}
-              title={element.text}
-              key={`button_${element.text}_${i}`}
-            />
-          ))}
-        </View>
-      </View>
-
-      {(ccDirection === ControlChangeDirection.horizontal ||
-        ccDirection === ControlChangeDirection.xy) && (
-        <View>
-          <Text>Horizontal Control Change Index</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Button title="-" onPress={horizontalCcIndexMinusOnPress} />
-            <Text>{`${xAxisControlIndexState}`}</Text>
-            <Button title="+" onPress={horizontalCcIndexPlusOnPress} />
-            <Button
-              title="Test"
-              onPress={sendTestInput(xAxisControlIndexState)}
-            />
-          </View>
-        </View>
-      )}
-      {(ccDirection === ControlChangeDirection.vertical ||
-        ccDirection === ControlChangeDirection.xy) && (
-        <View>
-          <Text>Vertical Control Change Index</Text>
-          <View style={{ flexDirection: "row" }}>
-            <Button title="-" onPress={verticalCcIndexMinusOnPress} />
-            <Text>{`${yAxisControlIndexState}`}</Text>
-            <Button title="+" onPress={verticalCcIndexPlusOnPress} />
-            <Button
-              title="Test"
-              onPress={sendTestInput(yAxisControlIndexState)}
-            />
-          </View>
-        </View>
-      )}
-
-      <View>
-        <Text>Icon</Text>
+      <View style={{ marginBottom: 12 }}>
+        <Text style={{ color: theme.color.white }}>Icon</Text>
         <View style={{ flexDirection: "row" }}>
           <IconWithTitle
             name={iconNameState}
@@ -255,6 +217,63 @@ export function ControlChangeSettingsPanel({
           />
         </View>
       </View>
+
+      <View style={{ marginBottom: 12 }}>
+        <Text style={{ color: theme.color.white }}>Orientation</Text>
+        <View style={{ flexDirection: "row", gap: 12 }}>
+          {modeButtonList.map((element, i) => (
+            <Button
+              buttonStyle={{
+                backgroundColor:
+                  ccDirection === element.enum ? "black" : "blue",
+              }}
+              onPress={element.onPress}
+              title={element.text}
+              key={`button_${element.text}_${i}`}
+            >
+              <Icon name={element.iconName} type="ionicon" />
+            </Button>
+          ))}
+        </View>
+      </View>
+
+      {showHorizontalControlChangeIndexSelector && (
+        <View>
+          <Text style={{ color: theme.color.white }}>
+            {isXY ? "Horizontal" : ""} Control Change (CC) Index
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Button title="-" onPress={horizontalCcIndexMinusOnPress} />
+            <Text
+              style={{ color: theme.color.white }}
+            >{`${xAxisControlIndexState}`}</Text>
+            <Button title="+" onPress={horizontalCcIndexPlusOnPress} />
+            <Button
+              title="Test"
+              onPress={sendTestInput(xAxisControlIndexState)}
+            />
+          </View>
+        </View>
+      )}
+
+      {showVerticalControlChangeIndexSelector && (
+        <View>
+          <Text style={{ color: theme.color.white }}>
+            {isXY ? "Vertical" : ""} Control Change (CC) Index
+          </Text>
+          <View style={{ flexDirection: "row" }}>
+            <Button title="-" onPress={verticalCcIndexMinusOnPress} />
+            <Text
+              style={{ color: theme.color.white }}
+            >{`${yAxisControlIndexState}`}</Text>
+            <Button title="+" onPress={verticalCcIndexPlusOnPress} />
+            <Button
+              title="Test"
+              onPress={sendTestInput(yAxisControlIndexState)}
+            />
+          </View>
+        </View>
+      )}
     </View>
   );
 } // end GridElementEditMidiOptionsTab

@@ -1,7 +1,11 @@
-import { Icon, Text } from "@rneui/themed";
+import { Button, Icon, Text } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { PRESET_COLOR_LIST } from "../../../../constants/ColorPresets";
+import {
+  ColorPreset,
+  DEFAULT,
+  PRESET_COLOR_LIST,
+} from "../../../../constants/ColorPresets";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import {
   setGridElementPressedColor,
@@ -28,34 +32,37 @@ export function GridElementEditStyleSettingsTab({
   const colorState = currentGridElementState.colorState;
 
   const dispatch = useAppDispatch();
+  const [currentPreset, setCurrentPreset] = useState(colorState);
 
-  const [currentPreset, setCurrentPreset] = useState("Default"); //Possibly not needed?????
-
-  function setColors(unpressedColor: string, pressedColor: string): void {
+  function setColors(colorPreset: {
+    unpressedColor: string;
+    pressedColor: string;
+  }): void {
+    const { unpressedColor, pressedColor } = colorPreset;
     dispatch(setGridElementUnpressedColor({ index, unpressedColor }));
     dispatch(setGridElementPressedColor({ index, pressedColor }));
   }
 
   return (
-    <View style={styles.styleSettingsContainer}>
-      <View style={styles.colorSelectorContainers}></View>
-
-      {/* Color Presets */}
+    <View style={{ ...styles.styleSettingsContainer }}>
       <View style={styles.colorPresetContainer}>
-        {/* Load preset */}
-        <ScrollView style={styles.colorPresetSelector}>
+        <ScrollView>
           {PRESET_COLOR_LIST.map((preset) => {
+            const isSelected =
+              currentPreset.pressedColor === preset.pressedColor &&
+              currentPreset.unpressedColor === preset.unpressedColor;
             return (
-              <View
-                style={{
+              <Button
+                buttonStyle={{
                   backgroundColor: preset.unpressedColor,
-                  ...styles.colorPreset,
+                  borderColor:
+                    currentPreset === preset
+                      ? preset.pressedColor
+                      : preset.unpressedColor,
+                  ...styles.colorPresetButton,
                 }}
                 key={`ColorPreset_${preset.name}`}
-                onTouchEndCapture={() => {
-                  setColors(preset.unpressedColor, preset.pressedColor);
-                  setCurrentPreset(preset.name);
-                }}
+                onPress={() => setCurrentPreset(preset)}
               >
                 <Text
                   style={{
@@ -65,16 +72,32 @@ export function GridElementEditStyleSettingsTab({
                 >
                   {preset.name}
                 </Text>
-                {currentPreset === preset.name && (
-                  <Icon name="done" color={preset.pressedColor} />
+                {isSelected && (
+                  <View style={styles.selectedCheckmarkIcon}>
+                    <Icon name="done" color={preset.pressedColor} />
+                  </View>
                 )}
-              </View>
+              </Button>
             );
           })}
         </ScrollView>
 
-        <View style={{ width: "40 %" }}>
-          <Text>Current Preset : {currentPreset}</Text>
+        <View
+          style={{
+            marginTop: 12,
+          }}
+        >
+          <Button
+            onPress={() => setColors(currentPreset)}
+            titleStyle={{ color: currentPreset.pressedColor }}
+            buttonStyle={{
+              backgroundColor: currentPreset.unpressedColor,
+              borderColor: currentPreset.pressedColor,
+              borderWidth: 2,
+            }}
+          >
+            Apply Color
+          </Button>
         </View>
       </View>
     </View>
@@ -82,7 +105,11 @@ export function GridElementEditStyleSettingsTab({
 }
 
 const styles = StyleSheet.create({
+  selectedCheckmarkIcon: {
+    marginLeft: "auto",
+  },
   styleSettingsContainer: {
+    marginTop: 20,
     flex: 1,
     flexDirection: "column",
   },
@@ -95,13 +122,18 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-evenly",
   },
-  colorPresetContainer: {
-    height: 150,
+  colorPresetButton: {
+    borderWidth: 2,
+    height: 40,
     flexDirection: "row",
+    justifyContent: "flex-start",
   },
-  colorPresetSelector: {
-    width: "60 %",
+  colorPresetContainer: {
+    flex: 1,
+    flexGrow: 1,
+    flexDirection: "column",
   },
+
   colorPreset: {
     borderWidth: 1,
     height: 30,

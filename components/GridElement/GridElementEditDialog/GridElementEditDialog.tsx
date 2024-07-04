@@ -71,19 +71,15 @@ export default function GridElementEditDialog({
         <GridPreview index={index} />
       </View>
 
-      <ScrollView style={{ overflow: "scroll" }}>
-        <View style={styles.dialogContentContainer}>
-          {tabIndex === 0 && <GridElementEditMidiSettingsTab index={index} />}
-          {tabIndex === 1 && <GridElementEditStyleSettingsTab index={index} />}
-        </View>
-      </ScrollView>
+      <View style={styles.dialogContentContainer}>
+        {tabIndex === 0 && <GridElementEditMidiSettingsTab index={index} />}
+        {tabIndex === 1 && <GridElementEditStyleSettingsTab index={index} />}
+      </View>
     </Dialog>
   );
 }
 
 const styles = StyleSheet.create({
-  dialogTabSelectorContainer: {
-    flexDirection: "row",
-  },
-  dialogContentContainer: {},
+  dialogTabSelectorContainer: { flexDirection: "row" },
+  dialogContentContainer: { flex: 1 },
 });

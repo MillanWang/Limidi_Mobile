@@ -16,7 +16,7 @@
     - Based on buttons with full touch events instead of just first touch during scroll
 - GRID
   - Grid edit mode - Element info indication.
-    - CC/Note - Piano vs Knob icon
+    - CC icon shown in the edit area preview
     - isLocked Icons
 - CONTROL CHANGE
   - Debouncing/throttling of api calls

@@ -5,8 +5,8 @@ import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setGridElementIsMidiNote } from "../../../../redux/slices/GridPresetsSlice";
 import { theme } from "../../../../constants/theme";
 
-const enabledColor = theme.color.black;
-const disabledColor = theme.color.lightText;
+const enabledColor = theme.color.lightText;
+const disabledColor = theme.color.black;
 export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();
   const { isMidiNote } = useAppSelector(
@@ -19,7 +19,9 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   return (
     <View style={{ alignItems: "center" }}>
       <View>
-        <Text style={{ fontWeight: "bold" }}>{"Mode: "}</Text>
+        <Text style={{ fontWeight: "bold", color: theme.color.white }}>
+          {"Mode: "}
+        </Text>
         <View style={styles.switchView}>
           <Icon
             color={isMidiNote ? enabledColor : disabledColor}
@@ -39,7 +41,13 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
             name={"sliders"}
           />
         </View>
-        <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            textAlign: "center",
+            color: theme.color.white,
+          }}
+        >
           {isMidiNote ? "MIDI Note" : "Control Change"}
         </Text>
       </View>

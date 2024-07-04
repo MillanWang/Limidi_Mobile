@@ -62,13 +62,13 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
         setNoteNumber={setNoteNumber}
         header={
           <View>
-            <Text style={{ color: theme.color.black }}>{noteKey}</Text>
+            <Text style={{ color: theme.color.white }}>{noteKey}</Text>
           </View>
         }
       />
 
       <View>
-        <Text>
+        <Text style={{ color: theme.color.white }}>
           Velocity Direction: {velocity.isVertical ? "Vertical" : "Horizontal"}
         </Text>
         <Switch
@@ -76,13 +76,17 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
           onChange={toggleVelocityDirection}
         />
 
-        <Text>Velocity Floor: {velocity.floor}</Text>
+        <Text style={{ color: theme.color.white }}>
+          Velocity Floor: {velocity.floor}
+        </Text>
         <VelocityAdjustSlider
           velocity={velocity.floor}
           setVelocity={setVelocityFloor}
         />
 
-        <Text>Velocity Ceiling: {velocity.ceiling}</Text>
+        <Text style={{ color: theme.color.white }}>
+          Velocity Ceiling: {velocity.ceiling}
+        </Text>
         <VelocityAdjustSlider
           velocity={velocity.ceiling}
           setVelocity={setVelocityCeiling}

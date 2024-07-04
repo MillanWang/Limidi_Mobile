@@ -1,7 +1,7 @@
 import { Text } from "@rneui/base";
 import React from "react";
-import { StyleSheet, View } from "react-native";
-import { NOTE, getNoteKeyFromNoteNumber } from "../constants/MIDI_Notes";
+import { Pressable, StyleSheet, View } from "react-native";
+import { NOTE } from "../constants/MIDI_Notes";
 import { theme } from "../constants/theme";
 
 const naturalNoteColor = "#bbbbbb";
@@ -37,7 +37,7 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
     <View style={styles.keyContainer}>
       <View style={styles.keyRow}>
         {topRowStyles.map((rowStyle, currentNoteNumber) => (
-          <View
+          <Pressable
             key={`PianoTopRowNoteNumber_${currentNoteNumber}`}
             style={{
               ...rowStyle,
@@ -45,20 +45,20 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
                 backgroundColor: highLightedKeyColor,
               }),
             }}
-            onTouchStart={() => setNoteNumber(currentNoteNumber)}
+            onPress={() => setNoteNumber(currentNoteNumber)}
           >
             {accidentalNoteNumbers.includes(noteNumber) &&
               noteNumber === currentNoteNumber && (
                 <KeyLabel noteNumber={noteNumber} />
               )}
-          </View>
+          </Pressable>
         ))}
       </View>
 
       <View style={styles.keyRow}>
         {naturalNoteNumbers.map((currentNoteNumber) => {
           return (
-            <View
+            <Pressable
               key={`PianoBottomRowNoteNumber_${currentNoteNumber}`}
               style={{
                 ...styles.naturalKey,
@@ -66,12 +66,12 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
                   backgroundColor: highLightedKeyColor,
                 }),
               }}
-              onTouchStart={() => setNoteNumber(currentNoteNumber)}
+              onPress={() => setNoteNumber(currentNoteNumber)}
             >
               {noteNumber === currentNoteNumber && (
                 <KeyLabel noteNumber={noteNumber} />
               )}
-            </View>
+            </Pressable>
           );
         })}
       </View>
