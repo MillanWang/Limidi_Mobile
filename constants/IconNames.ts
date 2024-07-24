@@ -1,4 +1,4 @@
-import { ControlChangeDirection } from "../components/GridElement/GridElementEditDialog/GridElementEditDialogTabs/ControlChangeSettingsPanel";
+import { ControlChangeDirection } from "../components/GridElement/GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
 export const horizontalIconNamesIonicon = [
   "swap-horizontal",

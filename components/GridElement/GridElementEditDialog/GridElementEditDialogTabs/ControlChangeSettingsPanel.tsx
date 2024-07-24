@@ -1,211 +1,70 @@
-import { Button, Dialog, Icon, Text } from "@rneui/themed";
-import React, { useState } from "react";
+import { Button, Dialog, Icon, Input, Text } from "@rneui/themed";
+import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import {
   iconNames,
   ioniconIconNameAliases,
   ioniconValidIconNames,
 } from "../../../../constants/IconNames";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
-import {
-  setGridElementControlChangeIconString,
-  setGridElementControlChangeXIndex,
-  setGridElementControlChangeYIndex,
-} from "../../../../redux/slices/GridPresetsSlice";
-import { useDesktopCommunication } from "../../../../hooks/useDesktopCommunication";
-import { createMidiControlChange } from "../../../../constants/MIDI_Notes";
 import { theme } from "../../../../constants/theme";
+import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { setGridElementControlChangeIconString } from "../../../../redux/slices/GridPresetsSlice";
+import {
+  ControlChangeDirection,
+  getControlChangeDirection,
+  useControlChangeIndexController,
+} from "./useControlChangeIndexController";
 
 export interface ControlChangeSettingsPanelProps {
   index: number;
 }
 
-export enum ControlChangeDirection {
-  horizontal = "horizontal",
-  vertical = "vertical",
-  xy = "xy",
-}
-
-export function getControlChangeDirection(
-  xAxisControlIndexState: number,
-  yAxisControlIndexState: number
-) {
-  return xAxisControlIndexState > 0 && yAxisControlIndexState > 0
-    ? ControlChangeDirection.xy
-    : xAxisControlIndexState > 0
-    ? ControlChangeDirection.horizontal
-    : ControlChangeDirection.vertical;
-}
-
 export function ControlChangeSettingsPanel({
   index,
 }: ControlChangeSettingsPanelProps) {
-  const dispatch = useAppDispatch();
   const currentGridElementState = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
-  const isMidiNoteModeState = currentGridElementState.isMidiNote;
 
-  const nameState = currentGridElementState.name;
   const colorState = currentGridElementState.colorState;
 
-  const iconNameState = currentGridElementState.controlChangeState.iconName;
-  const xAxisControlIndexState =
-    currentGridElementState.controlChangeState.xAxisControlIndex;
-  const yAxisControlIndexState =
-    currentGridElementState.controlChangeState.yAxisControlIndex;
-
-  const { sendMidiControlChange } = useDesktopCommunication();
+  const { mode, icon } = useControlChangeIndexController({ index });
   const [iconDialogOpen, setIconDialogOpen] = React.useState(false);
-  const [ccDirection, setCcDirection] = useState(
-    getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)
-  );
-
-  function horizontalModeOnPress() {
-    setCcDirection(ControlChangeDirection.horizontal);
-    dispatch(
-      setGridElementControlChangeXIndex({
-        index,
-        xAxisControlIndex: Math.abs(xAxisControlIndexState),
-      })
-    );
-    dispatch(
-      setGridElementControlChangeYIndex({
-        index,
-        yAxisControlIndex: -1 * yAxisControlIndexState,
-      })
-    );
-    if (!ioniconValidIconNames.includes(iconNameState)) {
-      // Default directional name
-      dispatch(
-        setGridElementControlChangeIconString({
-          index,
-          iconString: "swap-horizontal",
-        })
-      );
-    }
-  }
-  function verticalModeOnPress() {
-    setCcDirection(ControlChangeDirection.vertical);
-    dispatch(
-      setGridElementControlChangeYIndex({
-        index,
-        yAxisControlIndex: Math.abs(yAxisControlIndexState),
-      })
-    );
-    dispatch(
-      setGridElementControlChangeXIndex({
-        index,
-        xAxisControlIndex: -1 * xAxisControlIndexState,
-      })
-    );
-    if (!ioniconValidIconNames.includes(iconNameState)) {
-      // Default directional name
-      dispatch(
-        setGridElementControlChangeIconString({
-          index,
-          iconString: "swap-vertical",
-        })
-      );
-    }
-  }
-  function xyModeOnPress() {
-    setCcDirection(ControlChangeDirection.xy);
-    dispatch(
-      setGridElementControlChangeXIndex({
-        index,
-        xAxisControlIndex: Math.abs(xAxisControlIndexState),
-      })
-    );
-    dispatch(
-      setGridElementControlChangeYIndex({
-        index,
-        yAxisControlIndex: Math.abs(yAxisControlIndexState),
-      })
-    );
-    if (!ioniconValidIconNames.includes(iconNameState)) {
-      // Default directional name
-      dispatch(
-        setGridElementControlChangeIconString({ index, iconString: "move" })
-      );
-    }
-  }
-
-  function horizontalCcIndexMinusOnPress() {
-    if (Math.abs(xAxisControlIndexState) - 1 < 0) return;
-    dispatch(
-      setGridElementControlChangeXIndex({
-        index,
-        xAxisControlIndex: Math.abs(xAxisControlIndexState) - 1,
-      })
-    );
-  }
-  function horizontalCcIndexPlusOnPress() {
-    if (Math.abs(xAxisControlIndexState) + 1 > 127) return;
-    dispatch(
-      setGridElementControlChangeXIndex({
-        index,
-        xAxisControlIndex: Math.abs(xAxisControlIndexState) + 1,
-      })
-    );
-  }
-  function verticalCcIndexMinusOnPress() {
-    if (Math.abs(yAxisControlIndexState) - 1 < 0) return;
-    dispatch(
-      setGridElementControlChangeYIndex({
-        index,
-        yAxisControlIndex: Math.abs(yAxisControlIndexState) - 1,
-      })
-    );
-  }
-  function verticalCcIndexPlusOnPress() {
-    if (Math.abs(yAxisControlIndexState) + 1 > 127) return;
-    dispatch(
-      setGridElementControlChangeYIndex({
-        index,
-        yAxisControlIndex: Math.abs(yAxisControlIndexState) + 1,
-      })
-    );
-  }
-
-  function sendTestInput(inputIndex: number) {
-    return () => sendMidiControlChange(createMidiControlChange(inputIndex, 0));
-  }
 
   const modeButtonList = [
     {
       text: "Horizontal",
       enum: ControlChangeDirection.horizontal,
       iconName: "swap-horizontal",
-      onPress: horizontalModeOnPress,
+      onPress: mode.setHorizontal,
     },
     {
       text: "Vertical",
       enum: ControlChangeDirection.vertical,
       iconName: "swap-vertical",
-      onPress: verticalModeOnPress,
+      onPress: mode.setVertical,
     },
     {
       text: "XY Bidirectional",
       enum: ControlChangeDirection.xy,
       iconName: "move",
-      onPress: xyModeOnPress,
+      onPress: mode.setXY,
     },
   ];
 
-  const isXY = ccDirection === ControlChangeDirection.xy;
+  const isXY = mode.current === ControlChangeDirection.xy;
   const showVerticalControlChangeIndexSelector =
-    ccDirection === ControlChangeDirection.vertical || isXY;
-
+    mode.current === ControlChangeDirection.vertical || isXY;
   const showHorizontalControlChangeIndexSelector =
-    ccDirection === ControlChangeDirection.horizontal || isXY;
+    mode.current === ControlChangeDirection.horizontal || isXY;
+
   return (
     <View>
       <View style={{ marginBottom: 12 }}>
         <Text style={{ color: theme.color.white }}>Icon</Text>
         <View style={{ flexDirection: "row" }}>
           <IconWithTitle
-            name={iconNameState}
+            name={icon.name}
             backgroundColor={colorState.pressedColor}
             iconColor={colorState.unpressedColor}
           />
@@ -225,7 +84,7 @@ export function ControlChangeSettingsPanel({
             <Button
               buttonStyle={{
                 backgroundColor:
-                  ccDirection === element.enum ? "black" : "blue",
+                  mode.current === element.enum ? "black" : "blue",
               }}
               onPress={element.onPress}
               title={element.text}
@@ -242,41 +101,61 @@ export function ControlChangeSettingsPanel({
           <Text style={{ color: theme.color.white }}>
             {isXY ? "Horizontal" : ""} Control Change (CC) Index
           </Text>
-          <View style={{ flexDirection: "row" }}>
-            <Button title="-" onPress={horizontalCcIndexMinusOnPress} />
-            <Text
-              style={{ color: theme.color.white }}
-            >{`${xAxisControlIndexState}`}</Text>
-            <Button title="+" onPress={horizontalCcIndexPlusOnPress} />
-            <Button
-              title="Test"
-              onPress={sendTestInput(xAxisControlIndexState)}
-            />
-          </View>
+          <ControlChangeIndexSelector index={index} isVertical={false} />
         </View>
       )}
-
       {showVerticalControlChangeIndexSelector && (
         <View>
           <Text style={{ color: theme.color.white }}>
             {isXY ? "Vertical" : ""} Control Change (CC) Index
           </Text>
-          <View style={{ flexDirection: "row" }}>
-            <Button title="-" onPress={verticalCcIndexMinusOnPress} />
-            <Text
-              style={{ color: theme.color.white }}
-            >{`${yAxisControlIndexState}`}</Text>
-            <Button title="+" onPress={verticalCcIndexPlusOnPress} />
-            <Button
-              title="Test"
-              onPress={sendTestInput(yAxisControlIndexState)}
-            />
-          </View>
+          <ControlChangeIndexSelector index={index} isVertical />
         </View>
       )}
     </View>
   );
 } // end GridElementEditMidiOptionsTab
+
+const ControlChangeIndexSelector = (props: {
+  index: number;
+  isVertical: boolean;
+}) => {
+  const { index, isVertical } = props;
+  const { horizontalIndex, verticalIndex } = useControlChangeIndexController({
+    index,
+  });
+
+  const indexController = isVertical ? verticalIndex : horizontalIndex;
+
+  return (
+    <View style={{ flexDirection: "row" }}>
+      <Input
+        leftIcon={<Button title="-" onPress={indexController.decrement} />}
+        keyboardType="numeric"
+        value={`${indexController.value}`}
+        style={{ color: theme.color.lightText }}
+        onChange={(e) => {
+          const value = e.nativeEvent.text;
+          if (isIntegerBetween0And127(value)) {
+            indexController.set(Number(value));
+          } else if (value === "") {
+            indexController.set(1);
+          }
+        }}
+        rightIcon={<Button title="+" onPress={indexController.increment} />}
+      />
+    </View>
+  );
+};
+
+function isIntegerBetween0And127(input: string): boolean {
+  // Check if the input string is a valid integer and not a decimal
+  const num = Number(input);
+  const isInteger = /^\d+$/.test(input);
+
+  // Ensure the conversion to number is valid, within the specified range, and not a decimal
+  return isInteger && Number.isInteger(num) && num >= 0 && num <= 127;
+}
 
 interface IconSelectDialogProps {
   index: number;

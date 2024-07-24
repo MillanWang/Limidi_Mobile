@@ -10,7 +10,7 @@ import { createMidiControlChange } from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
 import { useAppSelector } from "../../../redux/hooks";
-import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/ControlChangeSettingsPanel";
+import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
 interface ControlChangeProps {
   index: number;
