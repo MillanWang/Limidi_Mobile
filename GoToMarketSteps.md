@@ -17,6 +17,7 @@
 - GRID
   - Grid edit mode - Element info indication.
     - CC icon shown in the edit area preview
+    - CC XY control icons need to have a spread level that depnds on the size of the element. Currently not obvious enough when on iphone 2x2
     - isLocked Icons
 - CONTROL CHANGE
   - Debouncing/throttling of api calls

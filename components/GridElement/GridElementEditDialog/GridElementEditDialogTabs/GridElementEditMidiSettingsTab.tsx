@@ -3,7 +3,7 @@ import React from "react";
 import { ScrollView, View } from "react-native";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setGridElementName } from "../../../../redux/slices/GridPresetsSlice";
-import { ControlChangeSettingsPanel } from "./ControlChangeSettingsPanel";
+import { ControlChangeSettingsPanel } from "./ccSettings/ControlChangeSettingsPanel";
 import { MidiNoteControlChangeSelector } from "./MidiNoteControlChangeSelector";
 import { NoteSettingsPanel } from "./NoteSettingsPanel";
 import { theme } from "../../../../constants/theme";

@@ -59,8 +59,8 @@ export const ioniconValidIconNames = [
   "flash-off",
   "key",
   "mic",
-  "ios-beer",
-  "ios-grid",
+  "beer",
+  "grid",
   "aperture",
   "bug",
   "code-slash",
@@ -91,7 +91,7 @@ export const ioniconIconNameAliases: Record<string, string> = {
   "swap-vertical": "Vertical",
   "musical-note": "Note",
   "musical-notes": "Notes",
-};
+} as const;
 
 export const iconNames: Record<ControlChangeDirection, string[]> = {
   horizontal: horizontalIconNamesIonicon,
