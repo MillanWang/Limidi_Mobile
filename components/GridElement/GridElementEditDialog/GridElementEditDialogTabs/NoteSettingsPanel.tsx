@@ -18,10 +18,11 @@ export interface NoteSettingsPanelProps {
 }
 
 export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
-  const { noteNumber, velocity } = useAppSelector(
-    (state) =>
-      state.gridPresetsReducer.currentGridPreset.gridElements[index]
-        .midiNoteState
+  const {
+    midiNoteState: { noteNumber, velocity },
+    colorState: { unpressedColor, pressedColor },
+  } = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
 
   const dispatch = useAppDispatch();
@@ -80,6 +81,8 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
           Velocity Floor: {velocity.floor}
         </Text>
         <VelocityAdjustSlider
+          backgroundColor={unpressedColor}
+          textColor={pressedColor}
           velocity={velocity.floor}
           setVelocity={setVelocityFloor}
         />
@@ -88,6 +91,8 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
           Velocity Ceiling: {velocity.ceiling}
         </Text>
         <VelocityAdjustSlider
+          backgroundColor={unpressedColor}
+          textColor={pressedColor}
           velocity={velocity.ceiling}
           setVelocity={setVelocityCeiling}
         />
@@ -99,8 +104,10 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
 const VelocityAdjustSlider = (props: {
   velocity: number;
   setVelocity: (velocity: number) => void;
+  backgroundColor?: string;
+  textColor?: string;
 }) => {
-  const { velocity, setVelocity } = props;
+  const { velocity, setVelocity, backgroundColor, textColor } = props;
   return (
     <Slider
       maximumValue={127}
@@ -108,6 +115,22 @@ const VelocityAdjustSlider = (props: {
       step={1}
       value={velocity}
       onValueChange={setVelocity}
+      maximumTrackTintColor={backgroundColor}
+      minimumTrackTintColor={textColor}
+      thumbStyle={{ backgroundColor, borderWidth: 1, borderColor: textColor }}
+      thumbProps={{
+        children: (
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <Text style={{ color: textColor }}>{velocity}</Text>
+          </View>
+        ),
+      }}
     />
   );
 };

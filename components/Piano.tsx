@@ -87,7 +87,8 @@ const KeyLabel = ({ noteNumber }: { noteNumber: number }) => {
         marginBottom: 2,
         color: theme.color.white,
         textAlign: "center",
-        fontSize: 18,
+        fontSize: 16,
+        fontFamily: "monospace", // Added monospaced font
       }}
     >
       {Object.values(NOTE)[noteNumber % 12]}

@@ -16,6 +16,7 @@ export const IncrementorButton = (props: {
       onPress={onPress}
       buttonStyle={styles.gridSizeEditButtonStyle}
       disabledStyle={styles.gridSizeEditButtonDisabledStyle}
+      titleStyle={styles.titleStyle}
     >
       {isPlus ? "+" : "-"}
     </Button>
@@ -29,6 +30,13 @@ export const styles = StyleSheet.create({
     height: 30,
     width: 30,
     padding: 0,
+
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleStyle: {
+    fontSize: 12,
+    fontFamily: "monospace",
   },
   gridSizeEditButtonDisabledStyle: {
     borderColor: "grey",

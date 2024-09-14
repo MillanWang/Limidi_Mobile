@@ -1,3 +1,5 @@
+import { placeholderElementName } from "../redux/functions/createDefaultGridPresets";
+
 export enum NOTE {
   C = "C",
   Db = "Db",
@@ -18,7 +20,10 @@ export function getNoteKeyFromNoteNumber(noteNumber: number): string {
 }
 
 export function isNoteLabelStandard(noteNumber: number, label: string) {
-  return label === getNoteKeyFromNoteNumber(noteNumber);
+  return (
+    label === getNoteKeyFromNoteNumber(noteNumber) ||
+    label === placeholderElementName
+  );
 }
 
 export interface MidiNoteProps {

@@ -3,12 +3,12 @@ import { GridElementMidiControlState } from "./GridElementMidiControlChangeState
 import { GridElementMidiNoteState } from "./GridElementMidiNoteState";
 
 export interface GridElementState {
-    name: string,
-    
-    midiNoteState: GridElementMidiNoteState,
-    controlChangeState: GridElementMidiControlState,
-    colorState: GridElementColorState,
+  name: string;
 
-    isMidiNote:boolean,
-    isLocked: boolean,
+  midiNoteState: GridElementMidiNoteState;
+  controlChangeState: GridElementMidiControlState;
+  colorState: GridElementColorState;
+
+  isMidiNote: boolean;
+  isLocked: boolean;
 }

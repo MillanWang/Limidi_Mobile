@@ -6,11 +6,11 @@ import { PersistGate } from "redux-persist/integration/react";
 import useCachedResources from "./hooks/useCachedResources";
 import { persistor, store } from "./redux/store";
 import GridScreen from "./screens/GridScreen";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  // AsyncStorage.clear()
+  // AsyncStorage.clear();
 
   if (!isLoadingComplete) {
     return null;

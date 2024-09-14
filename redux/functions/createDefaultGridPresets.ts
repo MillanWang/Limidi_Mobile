@@ -1,87 +1,91 @@
-import { ColorPreset, DEFAULT, FROST, GRAPE, HULK, LAVA, SLIME } from "../../constants/ColorPresets";
+import {
+  ColorPreset,
+  DEFAULT,
+  FROST,
+  GRAPE,
+  HULK,
+  LAVA,
+  SLIME,
+} from "../../constants/ColorPresets";
 import { Scale } from "../../constants/Scales";
 import { GridElementState } from "../interfaces/GridElement/GridElementState";
 import { GridState } from "../interfaces/GridState";
 import { rescaleGridElements } from "./rescaleGridElements";
 
+export const placeholderElementName = "åß∂ƒ©";
+
 function createGridElements(colorPreset: ColorPreset): GridElementState[] {
+  const allGridElements: GridElementState[] = [];
 
-    const allGridElements: GridElementState[] = [];
-
-    //Make a state for all possible GridElements. 102rows*10Columns is the biggest possible grid
-    for (let i = 0; i < 10 * 10; i++) {
-
-        allGridElements.push(
-            {
-                // Name and note number don't matter because they get set during rescaling
-                name: '',
-                midiNoteState: {
-                    noteNumber: 1,
-                    velocity: { floor: 64, ceiling: 127, isVertical: true, },
-                },
-                colorState: {
-                    pressedColor: colorPreset.pressedColor,
-                    unpressedColor: colorPreset.unpressedColor,
-                },
-                controlChangeState: {
-                    iconName: "move",
-                    xAxisControlIndex: (i * 2) % 128, // 127 is max index
-                    yAxisControlIndex: (i * 2 + 1) % 128, // 127 is max index
-                },
-                isMidiNote: true,
-                isLocked: false,
-            });
-    }
-    return allGridElements;
+  //Make a state for all possible GridElements. 102rows*10Columns is the biggest possible grid
+  for (let i = 0; i < 10 * 10; i++) {
+    allGridElements.push({
+      // Name and note will be properly set during rescaling
+      name: placeholderElementName,
+      midiNoteState: {
+        noteNumber: 1,
+        velocity: { floor: 64, ceiling: 127, isVertical: true },
+      },
+      colorState: {
+        pressedColor: colorPreset.pressedColor,
+        unpressedColor: colorPreset.unpressedColor,
+      },
+      controlChangeState: {
+        iconName: "move",
+        xAxisControlIndex: (i * 2) % 128, // 127 is max index
+        yAxisControlIndex: (i * 2 + 1) % 128, // 127 is max index
+      },
+      isMidiNote: true,
+      isLocked: false,
+    });
+  }
+  return allGridElements;
 }
 
-
 export const defaultPreset1: GridState = rescaleGridElements({
-    columnCount: 4,
-    rowCount: 4,
-    startingNoteNumber: 60, //C5
-    scale: Scale.Chromatic,
-    gridElements: createGridElements(DEFAULT),
+  columnCount: 4,
+  rowCount: 4,
+  startingNoteNumber: 60, //C5
+  scale: Scale.Chromatic,
+  gridElements: createGridElements(DEFAULT),
 });
 
 export const defaultPreset2: GridState = rescaleGridElements({
-    columnCount: 5,
-    rowCount: 5,
-    startingNoteNumber: 48, //C4
-    scale: Scale.Ionian,
-    gridElements: createGridElements(FROST),
+  columnCount: 5,
+  rowCount: 5,
+  startingNoteNumber: 48, //C4
+  scale: Scale.Ionian,
+  gridElements: createGridElements(FROST),
 });
 
 export const defaultPreset3: GridState = rescaleGridElements({
-    columnCount: 6,
-    rowCount: 6,
-    startingNoteNumber: 36, //C3
-    scale: Scale.Dorian,
-    gridElements: createGridElements(GRAPE),
+  columnCount: 6,
+  rowCount: 6,
+  startingNoteNumber: 36, //C3
+  scale: Scale.Dorian,
+  gridElements: createGridElements(GRAPE),
 });
 
 export const defaultPreset4: GridState = rescaleGridElements({
-    columnCount: 7,
-    rowCount: 7,
-    startingNoteNumber: 24, //C2
-    scale: Scale.Phrygian,
-    gridElements: createGridElements(SLIME),
+  columnCount: 7,
+  rowCount: 7,
+  startingNoteNumber: 24, //C2
+  scale: Scale.Phrygian,
+  gridElements: createGridElements(SLIME),
 });
 
 export const defaultPreset5: GridState = rescaleGridElements({
-    columnCount: 2,
-    rowCount: 2,
-    startingNoteNumber: 36, //C3
-    scale: Scale.Mixolydian,
-    gridElements: createGridElements(LAVA),
+  columnCount: 2,
+  rowCount: 2,
+  startingNoteNumber: 36, //C3
+  scale: Scale.Mixolydian,
+  gridElements: createGridElements(LAVA),
 });
 
 export const defaultPreset6: GridState = rescaleGridElements({
-    columnCount: 3,
-    rowCount: 3,
-    startingNoteNumber: 60, //C5
-    scale: Scale.Aeolian,
-    gridElements: createGridElements(HULK),
+  columnCount: 3,
+  rowCount: 3,
+  startingNoteNumber: 60, //C5
+  scale: Scale.Aeolian,
+  gridElements: createGridElements(HULK),
 });
-
-
