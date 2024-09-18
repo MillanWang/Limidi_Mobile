@@ -4,6 +4,8 @@ import { StyleSheet, Text, View } from "react-native";
 import { theme } from "../constants/theme";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
+import { useAppSelector } from "../redux/hooks";
+import { Icon } from "@rneui/base";
 
 export interface GridScreenToolbarProps {
   isPlayMode: boolean;
@@ -18,6 +20,11 @@ export function GridScreenToolbar({
   isFullGridEditMode,
   setIsFullGridEditMode,
 }: GridScreenToolbarProps) {
+  const gridState = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset
+  );
+  const { gridTheme } = gridState;
+
   const togglePlayMode = () => {
     setIsPlayMode(!isPlayMode);
     setIsFullGridEditMode(false);
@@ -26,26 +33,45 @@ export function GridScreenToolbar({
   return (
     <View style={styles.headerOptions}>
       <View style={{ flexDirection: "row" }}>
-        <Button onPress={togglePlayMode}>
-          <View style={{ flexDirection: "column" }}>
-            <Text
-              style={{ ...styles.modeTextIndicator, color: theme.color.white }}
-            >
-              {!isPlayMode ? "PLAY" : "EDIT"}
-            </Text>
-          </View>
+        <Button
+          onPress={togglePlayMode}
+          style={{ borderRadius: 0 }}
+          containerStyle={{ borderRadius: 0 }}
+          buttonStyle={{
+            backgroundColor: gridTheme.unpressedColor,
+            borderColor: isPlayMode
+              ? gridTheme.unpressedColor
+              : gridTheme.pressedColor,
+            borderWidth: 1,
+            borderRadius: 0,
+          }}
+        >
+          <Icon
+            name={isPlayMode ? "construct-outline" : "play"}
+            color={gridTheme.pressedColor}
+            type="ionicon"
+          />
         </Button>
       </View>
 
       {!isPlayMode && (
-        <Button onPress={() => setIsFullGridEditMode(!isFullGridEditMode)}>
-          <View style={{ flexDirection: "column" }}>
-            <Text
-              style={{ ...styles.modeTextIndicator, color: theme.color.white }}
-            >
-              {!isFullGridEditMode ? "SETTINGS" : "GRID"}
-            </Text>
-          </View>
+        <Button
+          onPress={() => setIsFullGridEditMode(!isFullGridEditMode)}
+          style={{ borderRadius: 0 }}
+          containerStyle={{ borderRadius: 0 }}
+          buttonStyle={{
+            backgroundColor: gridTheme.unpressedColor,
+            borderColor: gridTheme.pressedColor,
+            borderWidth: 1,
+            borderRadius: 0,
+          }}
+        >
+          <Icon
+            name={isFullGridEditMode ? "grid-outline" : "settings-outline"}
+            color={gridTheme.pressedColor}
+            type="ionicon"
+          />
+          <View style={{ flexDirection: "column" }}></View>
         </Button>
       )}
 

@@ -60,30 +60,37 @@ export function ScaleSelector() {
   const gridState = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset
   );
-
-  const scaleState = gridState.scale;
+  const { scale, gridTheme } = gridState;
 
   // To choose a scale before applying it
-  const [currentScale, setCurrentScale] = useState(scaleState);
+  const [currentScale, setCurrentScale] = useState(scale);
 
   return (
     <View style={styles.scaleManagementView}>
       <View style={styles.scaleSelector}>
         <ScrollView style={styles.scaleSelectorScrollView}>
-          {Object.values(Scale).map((scale) => (
+          {Object.values(Scale).map((scalePreset) => (
             <Button
               buttonStyle={{
                 height: 40,
-                borderColor: currentScale === scale ? "red" : undefined,
+                borderColor:
+                  currentScale === scalePreset
+                    ? gridTheme.pressedColor
+                    : gridTheme.unpressedColor,
                 borderWidth: 2,
+                backgroundColor: gridTheme.unpressedColor,
               }}
-              key={`ScalePreset_${scale}`}
-              onPress={() => setCurrentScale(scale)}
+              key={`ScalePreset_${scalePreset}`}
+              onPress={() => setCurrentScale(scalePreset)}
             >
-              <Text style={{ marginRight: "auto" }}>{scale}</Text>
-              {scaleState === scale && (
+              <Text
+                style={{ marginRight: "auto", color: gridTheme.pressedColor }}
+              >
+                {scalePreset}
+              </Text>
+              {scalePreset === scale && (
                 <View style={{ marginLeft: "auto" }}>
-                  <Icon name="done" />
+                  <Icon name="done" color={gridTheme.pressedColor} />
                 </View>
               )}
             </Button>
@@ -95,7 +102,7 @@ export function ScaleSelector() {
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}
         >
-          Apply {formatScaleName(currentScale)} Scale
+          Apply {formatScaleName(currentScale)} scale
         </Button>
 
         <View style={{ marginTop: 32 }}>

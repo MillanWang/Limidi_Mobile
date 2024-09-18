@@ -1,4 +1,4 @@
 export interface GridElementColorState {
-    unpressedColor: string,
-    pressedColor: string,
+  unpressedColor: string;
+  pressedColor: string;
 }

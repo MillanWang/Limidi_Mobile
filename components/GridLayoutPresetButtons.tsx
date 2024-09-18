@@ -9,9 +9,10 @@ const PRESET_ICON_NAMES = ["one", "two", "3", "4", "5", "6"];
 
 export function GridLayoutPresetButtons() {
   const dispatch = useAppDispatch();
-  const currentPresetIndex = useAppSelector(
-    (state) => state.gridPresetsReducer.currentPresetIndex
-  );
+  const {
+    currentPresetIndex,
+    currentGridPreset: { gridTheme },
+  } = useAppSelector((state) => state.gridPresetsReducer);
 
   const setPresetIndexFunction = (presetIndex: number) => {
     return () => dispatch(setPresetIndex({ index: presetIndex }));
@@ -24,9 +25,8 @@ export function GridLayoutPresetButtons() {
           <Icon
             key={`PresetButtonIcon_${presetIndex}`}
             name={`looks-${iconNameString}`} // Defines which icon is used
-            color={
-              currentPresetIndex === presetIndex ? theme.color.white : "#888888"
-            }
+            color={gridTheme.pressedColor}
+            style={{ opacity: currentPresetIndex === presetIndex ? 1 : 0.3 }}
             onPress={setPresetIndexFunction(presetIndex)}
           />
         );

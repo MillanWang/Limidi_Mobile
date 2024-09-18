@@ -48,30 +48,34 @@ export const defaultPreset1: GridState = rescaleGridElements({
   startingNoteNumber: 60, //C5
   scale: Scale.Chromatic,
   gridElements: createGridElements(DEFAULT),
+  gridTheme: DEFAULT,
 });
 
 export const defaultPreset2: GridState = rescaleGridElements({
-  columnCount: 5,
+  columnCount: 4,
   rowCount: 5,
   startingNoteNumber: 48, //C4
   scale: Scale.Ionian,
   gridElements: createGridElements(FROST),
+  gridTheme: FROST,
 });
 
 export const defaultPreset3: GridState = rescaleGridElements({
-  columnCount: 6,
-  rowCount: 6,
+  columnCount: 5,
+  rowCount: 5,
   startingNoteNumber: 36, //C3
   scale: Scale.Dorian,
   gridElements: createGridElements(GRAPE),
+  gridTheme: GRAPE,
 });
 
 export const defaultPreset4: GridState = rescaleGridElements({
-  columnCount: 7,
-  rowCount: 7,
+  columnCount: 6,
+  rowCount: 6,
   startingNoteNumber: 24, //C2
   scale: Scale.Phrygian,
   gridElements: createGridElements(SLIME),
+  gridTheme: SLIME,
 });
 
 export const defaultPreset5: GridState = rescaleGridElements({
@@ -80,6 +84,7 @@ export const defaultPreset5: GridState = rescaleGridElements({
   startingNoteNumber: 36, //C3
   scale: Scale.Mixolydian,
   gridElements: createGridElements(LAVA),
+  gridTheme: LAVA,
 });
 
 export const defaultPreset6: GridState = rescaleGridElements({
@@ -88,4 +93,5 @@ export const defaultPreset6: GridState = rescaleGridElements({
   startingNoteNumber: 60, //C5
   scale: Scale.Aeolian,
   gridElements: createGridElements(HULK),
+  gridTheme: HULK,
 });

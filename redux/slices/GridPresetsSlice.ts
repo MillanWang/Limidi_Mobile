@@ -30,7 +30,7 @@ const defaultState: GridPresetsState = {
   gridPresets: defaultPresets,
 };
 
-export const MaxGridDimension = 8;
+export const MaxGridDimension = 6;
 
 export const GridPresetsSlice = createSlice({
   name: "GridPresets",

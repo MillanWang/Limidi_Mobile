@@ -39,8 +39,6 @@
   - Add button to restart the whole app
   - Indicator for network availability
   - Styling
-- BUGS
-  - BUG - The faulty dependencies that throw dependabot alerts
 - LAUNCH
   - Phone-sized screen testing and theme fitting
   - Free and paid version feature flag

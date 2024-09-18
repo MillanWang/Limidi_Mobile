@@ -62,7 +62,10 @@ const GridElementEditButton = (props: { index: number }) => {
         style={[
           styles.gridElementUnpressedView,
           styles.gridElementEditView,
-          { backgroundColor: colorState.unpressedColor },
+          {
+            backgroundColor: colorState.unpressedColor,
+            borderColor: colorState.pressedColor,
+          },
         ]}
         onTouchStart={() => setDialogVisible(true)}
       >
@@ -113,6 +116,5 @@ const styles = StyleSheet.create({
   },
   gridElementEditView: {
     flexDirection: "row",
-    borderColor: theme.color.white,
   },
 });
