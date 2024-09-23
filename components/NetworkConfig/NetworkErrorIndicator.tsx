@@ -1,33 +1,50 @@
-import { Icon } from "@rneui/themed";
+import { Icon, IconProps } from "@rneui/themed";
 import React from "react";
-import { View } from "react-native";
 import { theme } from "../../constants/theme";
 import { useAppSelector } from "../../redux/hooks";
 
 interface NetworkConfigButtonProps {
-  isEditMode: boolean;
+  forceVisible?: boolean;
+  useGridThemeColors?: boolean;
 }
 
 export const NetworkErrorIndicator = ({
-  isEditMode,
-}: NetworkConfigButtonProps) => {
-  const { mostRecentNetworkFailTime, mostRecentNetworkFixTime } =
-    useAppSelector((state) => state.httpCommunicationsReducer);
+  forceVisible,
+  useGridThemeColors,
+  ...iconProps
+}: NetworkConfigButtonProps & Partial<IconProps>) => {
+  const {
+    httpCommunicationsReducer: {
+      mostRecentNetworkFailTime,
+      mostRecentNetworkFixTime,
+    },
+    gridPresetsReducer: {
+      currentGridPreset: { gridTheme },
+    },
+  } = useAppSelector((state) => state);
 
+  useGridThemeColors;
   const hasRecentError = mostRecentNetworkFailTime > mostRecentNetworkFixTime;
-  const isButtonVisible = isEditMode || hasRecentError;
+  const isButtonVisible = forceVisible || hasRecentError;
+
+  if (!isButtonVisible) {
+    return null;
+  }
+
+  const color = useGridThemeColors
+    ? gridTheme.pressedColor
+    : hasRecentError
+    ? "red"
+    : theme.color.white;
 
   return (
     <>
-      {isButtonVisible && (
-        <View style={{ marginHorizontal: 16 }}>
-          <Icon
-            size={24}
-            name={hasRecentError ? "wifi-off" : "wifi"}
-            color={hasRecentError ? "red" : theme.color.white}
-          />
-        </View>
-      )}
+      <Icon
+        size={24}
+        name={hasRecentError ? "wifi-off" : "wifi"}
+        color={color}
+        {...iconProps}
+      />
     </>
   );
 };

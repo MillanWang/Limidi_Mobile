@@ -97,12 +97,12 @@ export const GridPresetsSlice = createSlice({
     },
     setStartingNote: (state, action) => {
       const newNoteNumber = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         // Floor divide then multiply To maintain original octave. Add the updated note number
         grid.startingNoteNumber =
           Math.floor(grid.startingNoteNumber / 12) * 12 + (newNoteNumber % 12);
@@ -111,12 +111,12 @@ export const GridPresetsSlice = createSlice({
     },
     setStartingOctave: (state, action) => {
       const newNoteNumber = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.startingNoteNumber =
           state.currentGridPreset.startingNoteNumber % 12; //Keep the original note
         grid.startingNoteNumber += newNoteNumber * 12; // Add the octave offset
@@ -126,12 +126,14 @@ export const GridPresetsSlice = createSlice({
     // Grid color operations
     setGridColorPresetGlobally: (state, action) => {
       const { unpressedColor, pressedColor } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
+        grid.gridTheme.unpressedColor = unpressedColor;
+        grid.gridTheme.pressedColor = pressedColor;
         for (let gridElementStyle of grid.gridElements) {
           if (!gridElementStyle.isLocked) {
             gridElementStyle.colorState.unpressedColor = unpressedColor;
@@ -144,45 +146,45 @@ export const GridPresetsSlice = createSlice({
     // Grid element operations
     setGridElementName: (state, action) => {
       const { index, name } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].name = name;
       }
     },
     setGridElementIsLocked: (state, action) => {
       const { index, isLocked } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].isLocked = isLocked;
       }
     },
     setGridElementIsMidiNote: (state, action) => {
       const { index, isMidiNote } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].isMidiNote = isMidiNote;
       }
     },
     //Grid element MIDI note operations
     setGridElementNote: (state, action) => {
       const { index, newNoteNumber } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         const originalNoteNumber =
           grid.gridElements[index].midiNoteState.noteNumber;
 
@@ -200,12 +202,12 @@ export const GridPresetsSlice = createSlice({
     },
     setGridElementOctave: (state, action) => {
       const { index, newNoteOctave } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         const originalNoteNumber =
           grid.gridElements[index].midiNoteState.noteNumber;
 
@@ -225,12 +227,12 @@ export const GridPresetsSlice = createSlice({
     },
     setGridElementVelocityCeiling: (state, action) => {
       const { index, ceiling } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].midiNoteState.velocity.ceiling = ceiling;
         if (
           grid.gridElements[index].midiNoteState.velocity.ceiling <
@@ -242,12 +244,12 @@ export const GridPresetsSlice = createSlice({
     },
     setGridElementVelocityFloor: (state, action) => {
       const { index, floor } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].midiNoteState.velocity.floor = floor;
         if (
           grid.gridElements[index].midiNoteState.velocity.floor >
@@ -259,71 +261,71 @@ export const GridPresetsSlice = createSlice({
     },
     setGridElementVelocityIsVertical: (state, action) => {
       const { index, isVertical } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].midiNoteState.velocity.isVertical = isVertical;
       }
     },
     // Grid element control change operations
     setGridElementControlChangeXIndex: (state, action) => {
       const { index, xAxisControlIndex } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].controlChangeState.xAxisControlIndex =
           xAxisControlIndex;
       }
     },
     setGridElementControlChangeYIndex: (state, action) => {
       const { index, yAxisControlIndex } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].controlChangeState.yAxisControlIndex =
           yAxisControlIndex;
       }
     },
     setGridElementControlChangeIconString: (state, action) => {
       const { index, iconString } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].controlChangeState.iconName = iconString;
       }
     },
     // Grid element color operations
     setGridElementUnpressedColor: (state, action) => {
       const { index, unpressedColor } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].colorState.unpressedColor = unpressedColor;
       }
     },
     setGridElementPressedColor: (state, action) => {
       const { index, pressedColor } = action.payload;
-      const grids = [
+      const gridsToUpdate = [
         state.currentGridPreset,
         state.gridPresets[state.currentPresetIndex],
       ];
 
-      for (let grid of grids) {
+      for (let grid of gridsToUpdate) {
         grid.gridElements[index].colorState.pressedColor = pressedColor;
       }
     },

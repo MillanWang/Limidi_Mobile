@@ -4,9 +4,11 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
 import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
-import { useAppDispatch } from "../../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { isValidIpWithPort } from "./AddressValidationIcon";
+import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
+import { CheckConnectionButton } from "./CheckConnectionButton";
 
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
@@ -47,9 +49,13 @@ export function ConnectionCodeScanner() {
   return (
     <View>
       {scanData !== undefined ? (
-        <Button onPress={() => setScanData(undefined)}>
-          Scan <QRIcon />
-        </Button>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <GridThemedButton onPress={() => setScanData(undefined)}>
+            <QRIcon />
+            Scan
+          </GridThemedButton>
+          <CheckConnectionButton />
+        </View>
       ) : (
         <>
           <View style={{ height: "80%" }}>
@@ -60,6 +66,11 @@ export function ConnectionCodeScanner() {
                 barcodeTypes: ["qr", "pdf417"],
               }}
             />
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <GridThemedButton onPress={() => setScanData("")}>
+                <BackIcon /> Cancel
+              </GridThemedButton>
+            </View>
           </View>
         </>
       )}
@@ -67,6 +78,18 @@ export function ConnectionCodeScanner() {
   );
 }
 
-const QRIcon = () => (
-  <Icon name="qr-code-sharp" type="ionicon" color={theme.color.lightText} />
-);
+const QRIcon = () => <StyledIcon name="qr-code-sharp" />;
+const BackIcon = () => <StyledIcon name="arrow-back-outline" />;
+const StyledIcon = ({ name }: { name: string }) => {
+  const { gridTheme } = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset
+  );
+  return (
+    <Icon
+      name={name}
+      type="ionicon"
+      color={gridTheme.pressedColor}
+      style={{ marginRight: 8 }}
+    />
+  );
+};

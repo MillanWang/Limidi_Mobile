@@ -4,6 +4,7 @@
 
 - DATA
   - Datastore getting more efficient. Separating out the slices for notes, color, and CC
+    - Make react hook and util functions for referencing the current preset instead of using the dupe state
   - Emergency backing-store reset upon load failure
 - MENU
   - Shrinking down maximum grid size. Choosing maximums

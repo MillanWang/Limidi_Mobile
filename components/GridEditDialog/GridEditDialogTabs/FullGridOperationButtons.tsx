@@ -6,32 +6,33 @@ import {
   restoreCurrentPresetToDefault,
   unlockAllGridElements,
 } from "../../../redux/slices/GridPresetsSlice";
+import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
+import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
+import { View } from "react-native";
 
 export const FullGridOperationButtons = () => {
   const dispatch = useAppDispatch();
   return (
-    <>
-      <Button onPress={() => dispatch(unlockAllGridElements(null))}>
-        <Icon
+    <View style={{ gap: 4 }}>
+      <GridThemedButton onPress={() => dispatch(unlockAllGridElements(null))}>
+        <GridThemedIcon
           name={"lock-open"}
           type="ionicon"
-          color={theme.color.white}
           style={{ marginRight: 4 }}
         />
         Unlock All
-      </Button>
-      <Button
+      </GridThemedButton>
+      <GridThemedButton
         // TODO - This needs a confirmation modal
         onPress={() => dispatch(restoreCurrentPresetToDefault(null))}
       >
-        <Icon
+        <GridThemedIcon
           name={"sync"}
-          type="ionicon"
-          color={theme.color.white}
+          type={"ionicon"}
           style={{ marginRight: 4 }}
         />
         Reset All
-      </Button>
-    </>
+      </GridThemedButton>
+    </View>
   );
 };

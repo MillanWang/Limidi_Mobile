@@ -1,27 +1,26 @@
-import { Button, Dialog, Icon, Text } from "@rneui/themed";
-import React, { useState } from "react";
+import { Text } from "@rneui/themed";
+import React from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
-import { AddressValidationIcon } from "./AddressValidationIcon";
+import { theme } from "../../constants/theme";
+import { useAppSelector } from "../../redux/hooks";
+import { CheckConnectionButton } from "./CheckConnectionButton";
 import { ConnectionCodeScanner } from "./ConnectionCodeScanner";
 import { NetworkAddressInput } from "./NetworkAddressInput";
-import { theme } from "../../constants/theme";
 
 export default function NetworkConfigSettingsTab() {
-  const { sendHeartbeatMessage } = useDesktopCommunication();
+  const { gridTheme } = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset
+  );
 
   return (
     <ScrollView>
-      <View style={{ flexDirection: "row" }}>
-        <Button onPress={sendHeartbeatMessage}>Check Connection</Button>
-      </View>
+      <View style={{ flexDirection: "row" }}></View>
       <Text style={[styles.text]}>Limidi Desktop IP Address</Text>
       <View style={styles.dialogContentContainer}>
         <NetworkAddressInput />
         <ConnectionCodeScanner />
+        {/* <CheckConnectionButton /> */}
       </View>
-
-      <View style={styles.saveButtonContainer}></View>
     </ScrollView>
   );
 }

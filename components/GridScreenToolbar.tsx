@@ -76,7 +76,7 @@ export function GridScreenToolbar({
       )}
 
       <View style={styles.rightSideIconsContainer}>
-        <NetworkErrorIndicator isEditMode={!isPlayMode} />
+        <NetworkErrorIndicator style={{ marginRight: 16 }} />
         <GridLayoutPresetButtons />
       </View>
     </View>

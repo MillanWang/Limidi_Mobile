@@ -71,9 +71,7 @@ const ColorThemeSelector = () => {
           Apply Color Globally
         </Button>
 
-        <View style={{ marginTop: 32 }}>
-          <FullGridOperationButtons />
-        </View>
+        <FullGridOperationButtons />
       </View>
     </View>
   );
@@ -103,5 +101,6 @@ const styles = StyleSheet.create({
   },
   colorPresetOptions: {
     width: "40 %",
+    gap: 4,
   },
 });

@@ -1,7 +1,7 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { NOTE, getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
+import { getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
 import { Scale } from "../../../constants/Scales";
 import { theme } from "../../../constants/theme";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
@@ -10,6 +10,7 @@ import {
   setStartingNote,
   setStartingOctave,
 } from "../../../redux/slices/GridPresetsSlice";
+import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
 import { NoteSelector } from "./NoteSelector";
 
@@ -98,16 +99,14 @@ export function ScaleSelector() {
         </ScrollView>
       </View>
       <View style={styles.applyScaleView}>
-        <Button
+        <GridThemedButton
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}
         >
           Apply {formatScaleName(currentScale)} scale
-        </Button>
+        </GridThemedButton>
 
-        <View style={{ marginTop: 32 }}>
-          <FullGridOperationButtons />
-        </View>
+        <FullGridOperationButtons />
       </View>
     </View>
   );
@@ -147,5 +146,7 @@ const styles = StyleSheet.create({
   },
   applyScaleView: {
     width: "40 %",
+    marginLeft: 4,
+    gap: 4,
   },
 });

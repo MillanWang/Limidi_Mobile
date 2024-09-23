@@ -6,30 +6,53 @@ import NetworkConfigSettingsTab from "../NetworkConfig/NetworkConfigSettingsTab"
 import { GridEditStyleSettingsTab } from "./GridEditDialogTabs/GridEditColorSettingsTab";
 import { GridEditGridSettingsTab } from "./GridEditDialogTabs/GridEditGridSettingsTab";
 import { Icon } from "@rneui/base";
+import { useAppSelector } from "../../redux/hooks";
+import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
+import { NetworkErrorIndicator } from "../NetworkConfig/NetworkErrorIndicator";
 
 const settingsTabs = [
-  { name: "Scale", iconName: "musical-notes" },
-  { name: "Color", iconName: "color-palette" },
-  { name: "Network", iconName: "wifi" },
+  { name: "Scale", iconName: "musical-notes", type: "ionicon" },
+  { name: "Color", iconName: "color-palette", type: "ionicon" },
+  { name: "Network", iconName: "network", isNetwork: true },
 ];
 
 export const GridEditMenu = () => {
+  const { gridTheme } = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset
+  );
   const [tabIndex, setTabIndex] = React.useState(0);
   return (
     <>
       <View style={styles.dialogTabSelectorContainer}>
         {settingsTabs.map((tab, i) => (
-          <Button
+          <GridThemedButton
             onPress={() => setTabIndex(i)}
             key={`settingsTab-${i}`}
-            containerStyle={{ flex: 1 }}
+            containerStyle={{ flex: 1, borderRadius: 0 }}
             buttonStyle={{
-              backgroundColor: tabIndex === i ? "red" : undefined,
+              borderLeftColor:
+                tabIndex !== i && i === 0
+                  ? gridTheme.unpressedColor
+                  : gridTheme.pressedColor,
+              borderRightColor:
+                tabIndex !== i && i === settingsTabs.length - 1
+                  ? gridTheme.unpressedColor
+                  : gridTheme.pressedColor,
+              borderRadius: 0,
+              borderTopColor:
+                tabIndex === i
+                  ? gridTheme.pressedColor
+                  : gridTheme.unpressedColor,
+              borderBottomColor:
+                tabIndex === i
+                  ? gridTheme.pressedColor
+                  : gridTheme.unpressedColor,
+              borderWidth: 1,
             }}
           >
-            <TabIcon iconName={tab.iconName} />
+            <TabIcon {...tab} color={gridTheme.pressedColor} />
             {tab.name}
-          </Button>
+          </GridThemedButton>
         ))}
       </View>
 
@@ -42,14 +65,35 @@ export const GridEditMenu = () => {
   );
 };
 
-const TabIcon = ({ iconName }: { iconName: string }) => (
-  <Icon
-    name={iconName}
-    type="ionicon" // This wifi icon is different from the other one????
-    color={theme.color.white}
-    style={{ marginRight: 4 }}
-  />
-);
+const TabIcon = ({
+  iconName,
+  type,
+  color,
+  isNetwork,
+}: {
+  iconName: string;
+  isNetwork?: boolean;
+  type?: string;
+  color: string;
+}) => {
+  if (isNetwork) {
+    return (
+      <NetworkErrorIndicator
+        forceVisible
+        color={color}
+        style={{ marginRight: 4 }}
+      />
+    );
+  }
+  return (
+    <Icon
+      name={iconName}
+      type={type}
+      color={color}
+      style={{ marginRight: 4 }}
+    />
+  );
+};
 
 const styles = StyleSheet.create({
   dialogTabSelectorContainer: {
