@@ -1,7 +1,7 @@
 import { Button } from "@rneui/base";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { theme } from "../constants/theme";
+import { useAppSelector } from "../redux/hooks";
 
 export const IncrementorButton = (props: {
   onPress: () => void;
@@ -9,14 +9,27 @@ export const IncrementorButton = (props: {
   disabled?: boolean;
 }) => {
   const { onPress, isPlus, disabled } = props;
+  const gridTheme = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
+  );
+
+  const titleStyle = {
+    ...styles.titleStyle,
+    color: gridTheme.pressedColor,
+  };
+
   return (
     <Button
       disabled={disabled}
       type="clear"
       onPress={onPress}
-      buttonStyle={styles.gridSizeEditButtonStyle}
-      disabledStyle={styles.gridSizeEditButtonDisabledStyle}
-      titleStyle={styles.titleStyle}
+      buttonStyle={{
+        ...styles.gridSizeEditButtonStyle,
+        borderColor: gridTheme.pressedColor,
+      }}
+      disabledStyle={{ ...styles.gridSizeEditButtonDisabledStyle }}
+      titleStyle={titleStyle}
+      disabledTitleStyle={titleStyle}
     >
       {isPlus ? "+" : "-"}
     </Button>
@@ -39,6 +52,6 @@ export const styles = StyleSheet.create({
     fontFamily: "monospace",
   },
   gridSizeEditButtonDisabledStyle: {
-    borderColor: "grey",
+    opacity: 0.33,
   },
 });

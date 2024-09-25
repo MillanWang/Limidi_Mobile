@@ -32,10 +32,6 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
       setGridElementName({ index, name: getNoteKeyFromNoteNumber(noteNumber) })
     );
 
-  // TODO - Add tis button when with a standard name so that there can be a blank no clutter element
-  const clearElementName = () =>
-    dispatch(setGridElementName({ index, name: "" }));
-
   const rightIcon = isNoteLabelStandard(noteNumber, name) ? (
     false
   ) : (
@@ -65,13 +61,11 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
 
         <MidiNoteControlChangeSelector index={index} />
       </View>
-      <ScrollView>
-        {isMidiNote ? (
-          <NoteSettingsPanel index={index} />
-        ) : (
-          <ControlChangeSettingsPanel index={index} />
-        )}
-      </ScrollView>
+      {isMidiNote ? (
+        <NoteSettingsPanel index={index} />
+      ) : (
+        <ControlChangeSettingsPanel index={index} />
+      )}
     </View>
   );
 }

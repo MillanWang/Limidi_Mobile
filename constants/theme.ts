@@ -14,6 +14,7 @@ export const theme = {
     white: "#ffffff",
     black: "#000000",
     lightText: "#dddddd",
-    modalBackground: "#1d1d1d",
+    darkText: "#555555",
+    modalBackground: "#282828",
   },
 };

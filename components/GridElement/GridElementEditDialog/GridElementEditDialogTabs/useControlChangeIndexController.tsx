@@ -10,9 +10,9 @@ import {
 } from "../../../../redux/slices/GridPresetsSlice";
 
 export enum ControlChangeDirection {
-  horizontal = "horizontal",
-  vertical = "vertical",
-  xy = "xy",
+  Horizontal = "Horizontal",
+  Vertical = "Vertical",
+  XY = "XY",
 }
 
 export function getControlChangeDirection(
@@ -20,10 +20,10 @@ export function getControlChangeDirection(
   yAxisControlIndexState: number
 ) {
   return xAxisControlIndexState >= 0 && yAxisControlIndexState >= 0
-    ? ControlChangeDirection.xy
+    ? ControlChangeDirection.XY
     : xAxisControlIndexState >= 0
-    ? ControlChangeDirection.horizontal
-    : ControlChangeDirection.vertical;
+    ? ControlChangeDirection.Horizontal
+    : ControlChangeDirection.Vertical;
 }
 
 export const useControlChangeIndexController = (props: { index: number }) => {
@@ -92,12 +92,16 @@ export const useControlChangeIndexController = (props: { index: number }) => {
     set: setYAxisControlChangeIndex,
   };
 
+  const currentMode = getControlChangeDirection(
+    horizontalIndex.value,
+    verticalIndex.value
+  );
   const mode = {
-    current: getControlChangeDirection(
-      horizontalIndex.value,
-      verticalIndex.value
-    ),
+    current: currentMode,
     setHorizontal: () => {
+      if (currentMode === ControlChangeDirection.Horizontal) {
+        return;
+      }
       setXAxisControlChangeIndex(getEnabledIndexNumber(xAxisControlIndexState));
       setYAxisControlChangeIndex(
         getDisabledIndexNumber(yAxisControlIndexState)
@@ -106,6 +110,9 @@ export const useControlChangeIndexController = (props: { index: number }) => {
     },
 
     setVertical: () => {
+      if (currentMode === ControlChangeDirection.Vertical) {
+        return;
+      }
       setYAxisControlChangeIndex(getEnabledIndexNumber(yAxisControlIndexState));
       setXAxisControlChangeIndex(
         getDisabledIndexNumber(xAxisControlIndexState)

@@ -3,6 +3,7 @@ import React from "react";
 import { View } from "react-native";
 import { theme } from "../../../../../constants/theme";
 import { useControlChangeIndexController } from "../useControlChangeIndexController";
+import { IncrementorButton } from "../../../../IncrementorButton";
 
 export const ControlChangeIndexSelector = (props: {
   index: number;
@@ -18,11 +19,15 @@ export const ControlChangeIndexSelector = (props: {
   const canIncrement = indexController.value < 127;
 
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View
+      style={{
+        maxWidth: 200,
+      }}
+    >
       <Input
         leftIcon={
-          <Button
-            title="-"
+          <IncrementorButton
+            isPlus={false}
             onPress={indexController.decrement}
             disabled={!canDecrement}
           />
@@ -39,8 +44,9 @@ export const ControlChangeIndexSelector = (props: {
           }
         }}
         rightIcon={
-          <Button
-            title="+"
+          <IncrementorButton
+            // title="+"
+            isPlus
             onPress={indexController.increment}
             disabled={!canIncrement}
           />

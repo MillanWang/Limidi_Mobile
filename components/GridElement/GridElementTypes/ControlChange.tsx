@@ -51,10 +51,10 @@ export default function ControlChange({ index }: ControlChangeProps) {
 
   const currentControlChangeDirection =
     xAxisControlIndexState > 0 && yAxisControlIndexState > 0
-      ? ControlChangeDirection.xy
+      ? ControlChangeDirection.XY
       : xAxisControlIndexState > 0
-      ? ControlChangeDirection.horizontal
-      : ControlChangeDirection.vertical;
+      ? ControlChangeDirection.Horizontal
+      : ControlChangeDirection.Vertical;
 
   function onLayout(event: any) {
     setElementWidth(event.nativeEvent.layout.width);
@@ -91,8 +91,8 @@ export default function ControlChange({ index }: ControlChangeProps) {
   // TODO: Incorporate some kind of throttle or debounce system here for performance sake. No need for every pixel change
   function onSliderChange(event: GestureResponderEvent) {
     if (
-      currentControlChangeDirection === ControlChangeDirection.horizontal ||
-      currentControlChangeDirection === ControlChangeDirection.xy
+      currentControlChangeDirection === ControlChangeDirection.Horizontal ||
+      currentControlChangeDirection === ControlChangeDirection.XY
     ) {
       setXPositionAbsolute(
         Math.min(
@@ -115,8 +115,8 @@ export default function ControlChange({ index }: ControlChangeProps) {
     }
 
     if (
-      currentControlChangeDirection === ControlChangeDirection.vertical ||
-      currentControlChangeDirection === ControlChangeDirection.xy
+      currentControlChangeDirection === ControlChangeDirection.Vertical ||
+      currentControlChangeDirection === ControlChangeDirection.XY
     ) {
       setYPositionAbsolute(
         Math.min(
@@ -238,7 +238,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
               ? Math.max(
                   0.15,
                   currentControlChangeDirection ===
-                    ControlChangeDirection.horizontal
+                    ControlChangeDirection.Horizontal
                     ? 1 - xPositionAbsolute / elementWidth
                     : yPositionAbsolute / elementHeight
                 )
@@ -248,7 +248,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
           onTouchStart={playModeTouchStartHandler}
           onTouchEnd={playModeTouchEndHandler}
         >
-          {currentControlChangeDirection === ControlChangeDirection.xy &&
+          {currentControlChangeDirection === ControlChangeDirection.XY &&
             SpreadNeighboursIcon}
           {BaseIcon}
         </Animated.View>

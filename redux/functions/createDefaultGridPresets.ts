@@ -7,12 +7,11 @@ import {
   LAVA,
   SLIME,
 } from "../../constants/ColorPresets";
+import { placeholderElementName } from "../../constants/MIDI_Notes";
 import { Scale } from "../../constants/Scales";
 import { GridElementState } from "../interfaces/GridElement/GridElementState";
 import { GridState } from "../interfaces/GridState";
 import { rescaleGridElements } from "./rescaleGridElements";
-
-export const placeholderElementName = "åß∂ƒ©";
 
 function createGridElements(colorPreset: ColorPreset): GridElementState[] {
   const allGridElements: GridElementState[] = [];

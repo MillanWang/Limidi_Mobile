@@ -1,4 +1,4 @@
-import { placeholderElementName } from "../redux/functions/createDefaultGridPresets";
+export const placeholderElementName = "åß∂ƒ©";
 
 export enum NOTE {
   C = "C",

@@ -13,17 +13,13 @@ export const NetworkErrorIndicator = ({
   useGridThemeColors,
   ...iconProps
 }: NetworkConfigButtonProps & Partial<IconProps>) => {
-  const {
-    httpCommunicationsReducer: {
-      mostRecentNetworkFailTime,
-      mostRecentNetworkFixTime,
-    },
-    gridPresetsReducer: {
-      currentGridPreset: { gridTheme },
-    },
-  } = useAppSelector((state) => state);
+  const gridTheme = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
+  );
 
-  useGridThemeColors;
+  const { mostRecentNetworkFailTime, mostRecentNetworkFixTime } =
+    useAppSelector((state) => state.httpCommunicationsReducer);
+
   const hasRecentError = mostRecentNetworkFailTime > mostRecentNetworkFixTime;
   const isButtonVisible = forceVisible || hasRecentError;
 

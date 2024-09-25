@@ -1,16 +1,13 @@
-import { Button } from "@rneui/base";
-import React, { useState } from "react";
+import { Icon } from "@rneui/themed";
+import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import { theme } from "../constants/theme";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import {
   MaxGridDimension,
-  restoreCurrentPresetToDefault,
   setColumnCount,
   setRowCount,
-  unlockAllGridElements,
 } from "../redux/slices/GridPresetsSlice";
-import { theme } from "../constants/theme";
-import { Icon } from "@rneui/themed";
 import { IncrementorButton } from "./IncrementorButton";
 
 interface GridPreviewProps {

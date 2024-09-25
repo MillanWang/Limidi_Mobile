@@ -1,5 +1,5 @@
 import { Button, Icon, Text } from "@rneui/themed";
-import React from "react";
+import React, { useCallback } from "react";
 import { View } from "react-native";
 import { theme } from "../../../../../constants/theme";
 import { ControlChangeIndexSelector } from "../ccSettings/ControlChangeIndexSelector";
@@ -8,56 +8,77 @@ import {
   ControlChangeDirection,
   useControlChangeIndexController,
 } from "../useControlChangeIndexController";
+import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
+import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
+import { useAppSelector } from "../../../../../redux/hooks";
 
 export const ControlChangeIndexSettings = ({
   index,
 }: ControlChangeSettingsPanelProps) => {
   const { mode } = useControlChangeIndexController({ index });
-
+  const gridTheme = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
+  );
   const modeButtonList = [
     {
       text: "Horizontal",
-      enum: ControlChangeDirection.horizontal,
+      enum: ControlChangeDirection.Horizontal,
       iconName: "swap-horizontal",
       onPress: mode.setHorizontal,
     },
     {
       text: "Vertical",
-      enum: ControlChangeDirection.vertical,
+      enum: ControlChangeDirection.Vertical,
       iconName: "swap-vertical",
       onPress: mode.setVertical,
     },
     {
       text: "XY Bidirectional",
-      enum: ControlChangeDirection.xy,
+      enum: ControlChangeDirection.XY,
       iconName: "move",
       onPress: mode.setXY,
     },
   ];
 
-  const isXY = mode.current === ControlChangeDirection.xy;
+  const isXY = mode.current === ControlChangeDirection.XY;
   const showVerticalControlChangeIndexSelector =
-    mode.current === ControlChangeDirection.vertical || isXY;
+    mode.current === ControlChangeDirection.Vertical || isXY;
   const showHorizontalControlChangeIndexSelector =
-    mode.current === ControlChangeDirection.horizontal || isXY;
+    mode.current === ControlChangeDirection.Horizontal || isXY;
+
+  const getButtonStyle = useCallback(
+    (isEnabled: boolean, index: number) => {
+      return {
+        borderWidth: 1,
+        borderColor:
+          isEnabled || true ? gridTheme.pressedColor : gridTheme.unpressedColor,
+        opacity: isEnabled ? 1 : 0.33,
+        borderRadius: 0,
+      };
+    },
+    [gridTheme]
+  );
 
   return (
     <>
       <View style={{ marginBottom: 12 }}>
-        <Text style={{ color: theme.color.white }}>Orientation</Text>
-        <View style={{ flexDirection: "row", gap: 12 }}>
+        <Text style={{ color: theme.color.white }}>Orientation:</Text>
+        <View style={{ flexDirection: "row", marginTop: 4 }}>
           {modeButtonList.map((element, i) => (
-            <Button
-              buttonStyle={{
-                backgroundColor:
-                  mode.current === element.enum ? "black" : "blue",
-              }}
+            <GridThemedButton
+              buttonStyle={getButtonStyle(mode.current === element.enum, i)}
+              containerStyle={{ borderRadius: 0 }}
               onPress={element.onPress}
               title={element.text}
               key={`button_${element.text}_${i}`}
             >
-              <Icon name={element.iconName} type="ionicon" />
-            </Button>
+              <GridThemedIcon
+                name={element.iconName}
+                type="ionicon"
+                style={{ marginRight: 4 }}
+              />
+              {element.text}
+            </GridThemedButton>
           ))}
         </View>
       </View>

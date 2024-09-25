@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import {
   View,
   StyleSheet,
@@ -22,6 +22,8 @@ import { GridPreview } from "../../GridPreview";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
 import { theme } from "../../../constants/theme";
+import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
+import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 
 interface GridElementEditDialogProps
   extends GridElementEditMidiProps,
@@ -38,13 +40,27 @@ export default function GridElementEditDialog({
   const [tabIndex, setTabIndex] = React.useState(0);
   const dispatch = useAppDispatch();
 
-  const currentGridElementState = useAppSelector(
+  const gridTheme = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
+  );
+  const { isLocked, isMidiNote } = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
   );
-  const { isLocked } = currentGridElementState;
 
   const toggleElementMidiLock = () =>
     dispatch(setGridElementIsLocked({ index, isLocked: !isLocked }));
+
+  const getTabButtonStyle = useCallback(
+    (isPressed: boolean) => {
+      return {
+        borderWidth: 1,
+        borderColor: isPressed
+          ? gridTheme.pressedColor
+          : gridTheme.unpressedColor,
+      };
+    },
+    [gridTheme]
+  );
 
   return (
     <Dialog
@@ -55,7 +71,6 @@ export default function GridElementEditDialog({
         padding: 12,
         height: "90%",
         backgroundColor: theme.color.modalBackground,
-        marginTop: "10%",
         borderRadius: 16,
       }}
     >
@@ -67,33 +82,47 @@ export default function GridElementEditDialog({
         <TouchableWithoutFeedback onPressIn={Keyboard.dismiss}>
           <>
             <View style={styles.dialogTabSelectorContainer}>
-              <View style={{ flexDirection: "row", marginRight: "auto" }}>
-                <Button onPress={toggleElementMidiLock}>
-                  <Icon
-                    type="ionicon"
-                    name={isLocked ? "lock-closed" : "lock-open"}
-                  />
-                </Button>
-
-                <Button onPress={() => setTabIndex(0)}>MIDI</Button>
-                <Button onPress={() => setTabIndex(1)}>Color</Button>
+              <View
+                style={{ flexDirection: "row", marginRight: "auto", gap: 8 }}
+              >
+                <GridThemedButton
+                  onPress={() => setTabIndex(0)}
+                  buttonStyle={getTabButtonStyle(tabIndex === 0)}
+                >
+                  <MidiTypeIcon isMidiNote={isMidiNote} /> MIDI
+                </GridThemedButton>
+                <GridThemedButton
+                  onPress={() => setTabIndex(1)}
+                  buttonStyle={getTabButtonStyle(tabIndex === 1)}
+                >
+                  <ColorIcon /> Color
+                </GridThemedButton>
               </View>
-              <Button onPress={() => setDialogVisible(false)}>SAVE</Button>
+              <GridThemedButton onPress={toggleElementMidiLock}>
+                <LockIcon isLocked={isLocked} />
+              </GridThemedButton>
+              <GridThemedButton onPress={() => setDialogVisible(false)}>
+                <SaveIcon /> SAVE
+              </GridThemedButton>
             </View>
 
-            <View style={{ alignItems: "center", marginTop: 8 }}>
-              <Text style={{ color: theme.color.white }}>Element #{index}</Text>
-              <GridPreview index={index} />
-            </View>
-
-            <View style={styles.dialogContentContainer}>
-              {tabIndex === 0 && (
-                <GridElementEditMidiSettingsTab index={index} />
-              )}
-              {tabIndex === 1 && (
-                <GridElementEditStyleSettingsTab index={index} />
-              )}
-            </View>
+            <Divider />
+            <ScrollView>
+              <View style={{ alignItems: "center", marginTop: 8 }}>
+                <Text style={{ color: theme.color.white }}>
+                  Element #{index}
+                </Text>
+                <GridPreview index={index} />
+              </View>
+              <View style={styles.dialogContentContainer}>
+                {tabIndex === 0 && (
+                  <GridElementEditMidiSettingsTab index={index} />
+                )}
+                {tabIndex === 1 && (
+                  <GridElementEditStyleSettingsTab index={index} />
+                )}
+              </View>
+            </ScrollView>
           </>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
@@ -102,6 +131,55 @@ export default function GridElementEditDialog({
 }
 
 const styles = StyleSheet.create({
-  dialogTabSelectorContainer: { flexDirection: "row" },
+  dialogTabSelectorContainer: { flexDirection: "row", gap: 8 },
   dialogContentContainer: { flex: 1 },
 });
+
+const MidiTypeIcon = ({ isMidiNote }: { isMidiNote: boolean }) => {
+  return (
+    <GridThemedIcon
+      style={{ marginRight: 4 }}
+      type={isMidiNote ? "material-community" : "feather"}
+      name={isMidiNote ? "piano" : "sliders"}
+    />
+  );
+};
+
+const ColorIcon = () => {
+  return (
+    <GridThemedIcon
+      style={{ marginRight: 4 }}
+      type="ionicon"
+      name={"color-palette"}
+    />
+  );
+};
+
+const LockIcon = ({ isLocked }: { isLocked: boolean }) => {
+  return (
+    <GridThemedIcon
+      type="ionicon"
+      name={isLocked ? "lock-closed" : "lock-open"}
+    />
+  );
+};
+
+const SaveIcon = () => {
+  return (
+    <GridThemedIcon
+      style={{ marginRight: 4 }}
+      type="ionicon"
+      name={"save-outline"}
+    />
+  );
+};
+
+const Divider = () => (
+  <View
+    style={{
+      height: 1,
+      marginTop: 8,
+      backgroundColor: theme.color.darkText,
+    }}
+  />
+);

@@ -3,8 +3,8 @@ import React from "react";
 import { useAppSelector } from "../../redux/hooks";
 
 export const GridThemedButton = (props: ButtonProps) => {
-  const { gridTheme } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
+  const gridTheme = useAppSelector(
+    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
   );
 
   return (

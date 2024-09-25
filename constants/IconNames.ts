@@ -94,7 +94,7 @@ export const ioniconIconNameAliases: Record<string, string> = {
 } as const;
 
 export const iconNames: Record<ControlChangeDirection, string[]> = {
-  horizontal: horizontalIconNamesIonicon,
-  vertical: verticalIconNamesIonicon,
-  xy: xyIconNamesIonicon,
+  Horizontal: horizontalIconNamesIonicon,
+  Vertical: verticalIconNamesIonicon,
+  XY: xyIconNamesIonicon,
 };
