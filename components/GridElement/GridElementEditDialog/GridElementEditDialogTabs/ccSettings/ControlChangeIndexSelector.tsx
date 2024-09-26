@@ -21,10 +21,11 @@ export const ControlChangeIndexSelector = (props: {
   return (
     <View
       style={{
-        maxWidth: 200,
+        maxWidth: 180,
       }}
     >
       <Input
+        containerStyle={{ paddingLeft: 4 }}
         leftIcon={
           <IncrementorButton
             isPlus={false}
@@ -32,9 +33,9 @@ export const ControlChangeIndexSelector = (props: {
             disabled={!canDecrement}
           />
         }
+        inputStyle={{ color: theme.color.lightText, marginLeft: 8 }}
         keyboardType="numeric"
         value={`${indexController.value}`}
-        style={{ color: theme.color.lightText }}
         onChange={(e) => {
           const value = e.nativeEvent.text;
           if (isIntegerBetween0And127(value)) {
@@ -45,7 +46,6 @@ export const ControlChangeIndexSelector = (props: {
         }}
         rightIcon={
           <IncrementorButton
-            // title="+"
             isPlus
             onPress={indexController.increment}
             disabled={!canIncrement}

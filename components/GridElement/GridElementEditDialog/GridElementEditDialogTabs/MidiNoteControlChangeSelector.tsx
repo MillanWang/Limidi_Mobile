@@ -1,9 +1,9 @@
-import { Icon, Switch, Text } from "@rneui/themed";
+import { Icon, Text } from "@rneui/themed";
 import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
+import { theme } from "../../../../constants/theme";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setGridElementIsMidiNote } from "../../../../redux/slices/GridPresetsSlice";
-import { theme } from "../../../../constants/theme";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 
 export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
@@ -25,8 +25,10 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   const getButtonStyle = useCallback(
     (isEnabled: boolean) => {
       return {
+        flex: 1,
         borderWidth: 1,
-        borderColor: isEnabled ? pressedColor : unpressedColor,
+        borderColor: pressedColor,
+        borderRadius: 0,
         opacity: isEnabled ? 1 : 0.5,
       };
     },
@@ -34,36 +36,34 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   );
 
   return (
-    <View style={{ alignItems: "center" }}>
+    <View>
       <View>
         <Text style={{ color: theme.color.white }}>{"Mode: "}</Text>
         <View style={styles.switchView}>
-          <View style={{ flexDirection: "row" }}>
-            <GridThemedButton
-              onPress={setElementToMidiNote}
-              style={getButtonStyle(isMidiNote)}
-            >
-              <Icon
-                color={pressedColor}
-                type="material-community"
-                name={"piano"}
-                style={{ marginRight: 4 }}
-              />
-              MIDI Note
-            </GridThemedButton>
-            <GridThemedButton
-              onPress={setElementToControlChange}
-              style={getButtonStyle(!isMidiNote)}
-            >
-              <Icon
-                color={pressedColor}
-                type="feather"
-                name={"sliders"}
-                style={{ marginRight: 4 }}
-              />
-              Control Change
-            </GridThemedButton>
-          </View>
+          <GridThemedButton
+            onPress={setElementToMidiNote}
+            containerStyle={getButtonStyle(isMidiNote)}
+          >
+            <Icon
+              color={pressedColor}
+              type="material-community"
+              name={"piano"}
+              style={{ marginRight: 4 }}
+            />
+            MIDI Note
+          </GridThemedButton>
+          <GridThemedButton
+            onPress={setElementToControlChange}
+            containerStyle={getButtonStyle(!isMidiNote)}
+          >
+            <Icon
+              color={pressedColor}
+              type="feather"
+              name={"sliders"}
+              style={{ marginRight: 4 }}
+            />
+            Control Change
+          </GridThemedButton>
         </View>
       </View>
     </View>
@@ -72,7 +72,8 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
 const styles = StyleSheet.create({
   switchView: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
+    width: "100%",
+    justifyContent: "space-between",
+    flex: 1,
   },
 });

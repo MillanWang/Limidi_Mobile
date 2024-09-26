@@ -19,7 +19,7 @@ export const ControlChangeIndexSettings = ({
   const gridTheme = useAppSelector(
     (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
   );
-  const modeButtonList = [
+  const unidirectionalButtonList = [
     {
       text: "Horizontal",
       enum: ControlChangeDirection.Horizontal,
@@ -33,7 +33,7 @@ export const ControlChangeIndexSettings = ({
       onPress: mode.setVertical,
     },
     {
-      text: "XY Bidirectional",
+      text: "XY ",
       enum: ControlChangeDirection.XY,
       iconName: "move",
       onPress: mode.setXY,
@@ -63,11 +63,20 @@ export const ControlChangeIndexSettings = ({
     <>
       <View style={{ marginBottom: 12 }}>
         <Text style={{ color: theme.color.white }}>Orientation:</Text>
-        <View style={{ flexDirection: "row", marginTop: 4 }}>
-          {modeButtonList.map((element, i) => (
+        <View
+          style={{
+            flexDirection: "row",
+            marginTop: 4,
+            width: "100%",
+            justifyContent: "space-between",
+            flex: 1,
+          }}
+        >
+          {unidirectionalButtonList.map((element, i) => (
             <GridThemedButton
               buttonStyle={getButtonStyle(mode.current === element.enum, i)}
-              containerStyle={{ borderRadius: 0 }}
+              containerStyle={{ borderRadius: 0, flex: 1 }}
+              titleStyle={{ fontSize: 16 }}
               onPress={element.onPress}
               title={element.text}
               key={`button_${element.text}_${i}`}

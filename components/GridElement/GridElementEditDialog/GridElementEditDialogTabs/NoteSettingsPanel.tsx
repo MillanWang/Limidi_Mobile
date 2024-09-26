@@ -1,4 +1,4 @@
-import { Slider, Switch, Text } from "@rneui/themed";
+import { Text } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
 import { getNoteKeyFromNoteNumber } from "../../../../constants/MIDI_Notes";
@@ -9,9 +9,11 @@ import {
   setGridElementOctave,
   setGridElementVelocityCeiling,
   setGridElementVelocityFloor,
-  setGridElementVelocityIsVertical,
 } from "../../../../redux/slices/GridPresetsSlice";
 import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSelector";
+import { GridElementNameInput } from "./GridElementNameInput";
+import { VelocityAdjustSlider } from "./velocitySettings/VelocityAdjustSlider";
+import { VelocityDirectionSelector } from "./velocitySettings/VelocityDirectionSelector";
 
 export interface NoteSettingsPanelProps {
   index: number;
@@ -39,14 +41,6 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
   const setNoteNumber = (noteNumber: number) =>
     dispatch(setGridElementNote({ index, newNoteNumber: noteNumber }));
 
-  const toggleVelocityDirection = () => {
-    dispatch(
-      setGridElementVelocityIsVertical({
-        index,
-        isVertical: !velocity.isVertical,
-      })
-    );
-  };
   const setVelocityFloor = (velocity: number) =>
     dispatch(setGridElementVelocityFloor({ index: index, floor: velocity }));
   const setVelocityCeiling = (velocity: number) =>
@@ -56,6 +50,8 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
 
   return (
     <View>
+      <GridElementNameInput index={index} />
+
       <NoteSelector
         increaseOctave={updateOctave(true)}
         decreaseOctave={updateOctave(false)}
@@ -69,13 +65,8 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
       />
 
       <View>
-        <Text style={{ color: theme.color.white }}>
-          Velocity Direction: {velocity.isVertical ? "Vertical" : "Horizontal"}
-        </Text>
-        <Switch
-          value={velocity.isVertical}
-          onChange={toggleVelocityDirection}
-        />
+        <Text style={{ color: theme.color.white }}>Velocity Direction:</Text>
+        <VelocityDirectionSelector index={index} />
 
         <Text style={{ color: theme.color.white }}>
           Velocity Floor: {velocity.floor}
@@ -100,37 +91,3 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
     </View>
   );
 }
-
-const VelocityAdjustSlider = (props: {
-  velocity: number;
-  setVelocity: (velocity: number) => void;
-  backgroundColor?: string;
-  textColor?: string;
-}) => {
-  const { velocity, setVelocity, backgroundColor, textColor } = props;
-  return (
-    <Slider
-      maximumValue={127}
-      minimumValue={0}
-      step={1}
-      value={velocity}
-      onValueChange={setVelocity}
-      maximumTrackTintColor={backgroundColor}
-      minimumTrackTintColor={textColor}
-      thumbStyle={{ backgroundColor, borderWidth: 1, borderColor: textColor }}
-      thumbProps={{
-        children: (
-          <View
-            style={{
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
-            <Text style={{ color: textColor }}>{velocity}</Text>
-          </View>
-        ),
-      }}
-    />
-  );
-};
