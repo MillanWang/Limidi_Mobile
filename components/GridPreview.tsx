@@ -9,15 +9,14 @@ import {
   setRowCount,
 } from "../redux/slices/GridPresetsSlice";
 import { IncrementorButton } from "./IncrementorButton";
+import { useCurrentGridPreset } from "../hooks/useCurrentGridPreset";
 
 interface GridPreviewProps {
   index?: number;
 }
 
 export const GridPreview = ({ index }: GridPreviewProps) => {
-  const currentGridPreset = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+  const currentGridPreset = useCurrentGridPreset();
   const { columnCount, rowCount, gridElements } = currentGridPreset;
 
   const highlightAllElements = !index && index !== 0;
@@ -89,9 +88,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
 
 export const GridPreviewSizeSelector = () => {
   const dispatch = useAppDispatch();
-  const { columnCount, rowCount } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+  const { columnCount, rowCount } = useCurrentGridPreset();
 
   const rowCountSelector = (
     <View style={{ ...styles.xyCentered, marginLeft: 4 }}>

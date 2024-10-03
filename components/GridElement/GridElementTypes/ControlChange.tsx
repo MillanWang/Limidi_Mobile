@@ -8,8 +8,11 @@ import {
 } from "react-native";
 import { createMidiControlChange } from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
+import {
+  useCurrentGridPreset,
+  useGridElementAtIndex,
+} from "../../../hooks/useCurrentGridPreset";
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
-import { useAppSelector } from "../../../redux/hooks";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
 interface ControlChangeProps {
@@ -25,14 +28,9 @@ const DEGREE_LIST_LIST = [
   [225, 180, 135],
 ];
 export default function ControlChange({ index }: ControlChangeProps) {
-  const currentGridState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
-  const { rowCount, columnCount } = currentGridState;
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
-  const nameState = currentGridElementState.name;
+  const { rowCount, columnCount } = useCurrentGridPreset();
+  const currentGridElementState = useGridElementAtIndex(index);
+
   const colorState = currentGridElementState.colorState;
 
   const xAxisControlIndexState =

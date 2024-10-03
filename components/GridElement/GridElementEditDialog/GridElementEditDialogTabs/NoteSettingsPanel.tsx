@@ -14,6 +14,7 @@ import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSel
 import { GridElementNameInput } from "./GridElementNameInput";
 import { VelocityAdjustSlider } from "./velocitySettings/VelocityAdjustSlider";
 import { VelocityDirectionSelector } from "./velocitySettings/VelocityDirectionSelector";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 
 export interface NoteSettingsPanelProps {
   index: number;
@@ -23,9 +24,7 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
   const {
     midiNoteState: { noteNumber, velocity },
     colorState: { unpressedColor, pressedColor },
-  } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  } = useGridElementAtIndex(index);
 
   const dispatch = useAppDispatch();
 

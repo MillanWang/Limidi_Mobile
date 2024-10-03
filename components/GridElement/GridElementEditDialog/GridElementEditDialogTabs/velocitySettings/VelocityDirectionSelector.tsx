@@ -1,21 +1,17 @@
 import React from "react";
 import { View } from "react-native";
-import { useAppDispatch, useAppSelector } from "../../../../../redux/hooks";
+import { useGridElementAtIndex } from "../../../../../hooks/useCurrentGridPreset";
+import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPresetColors";
+import { useAppDispatch } from "../../../../../redux/hooks";
 import { setGridElementVelocityIsVertical } from "../../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 
 export const VelocityDirectionSelector = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();
-  const isVertical = useAppSelector(
-    (state) =>
-      state.gridPresetsReducer.currentGridPreset.gridElements[index]
-        .midiNoteState.velocity.isVertical
-  );
+  const isVertical = useGridElementAtIndex(index);
+  const gridTheme = useCurrentGridPresetColors();
 
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
   const setVelocityVertical = () => {
     dispatch(setGridElementVelocityIsVertical({ index, isVertical: true }));
   };

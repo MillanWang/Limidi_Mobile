@@ -9,6 +9,7 @@ import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { isValidIpWithPort } from "./AddressValidationIcon";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import { CheckConnectionButton } from "./CheckConnectionButton";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
 
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
@@ -81,9 +82,7 @@ export function ConnectionCodeScanner() {
 const QRIcon = () => <StyledIcon name="qr-code-sharp" />;
 const BackIcon = () => <StyledIcon name="arrow-back-outline" />;
 const StyledIcon = ({ name }: { name: string }) => {
-  const { gridTheme } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+  const gridTheme = useCurrentGridPresetColors();
   return (
     <Icon
       name={name}

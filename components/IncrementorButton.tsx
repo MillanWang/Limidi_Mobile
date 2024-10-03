@@ -1,7 +1,7 @@
 import { Button } from "@rneui/base";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { useAppSelector } from "../redux/hooks";
+import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPresetColors";
 
 export const IncrementorButton = (props: {
   onPress: () => void;
@@ -9,9 +9,7 @@ export const IncrementorButton = (props: {
   disabled?: boolean;
 }) => {
   const { onPress, isPlus, disabled } = props;
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
+  const gridTheme = useCurrentGridPresetColors();
 
   const titleStyle = {
     ...styles.titleStyle,

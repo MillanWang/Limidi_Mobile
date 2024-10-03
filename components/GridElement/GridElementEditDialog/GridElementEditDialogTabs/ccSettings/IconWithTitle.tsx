@@ -1,21 +1,20 @@
-import { Icon, Text } from "@rneui/themed";
+import { Text } from "@rneui/themed";
 import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { ioniconIconNameAliases } from "../../../../../constants/IconNames";
 import { theme } from "../../../../../constants/theme";
+import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPresetColors";
+import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 
+const iconContainerSize = 50;
 interface IconWithTitleProps {
   name: string;
-  backgroundColor: string;
-  iconColor: string;
   width?: number;
 }
-export const IconWithTitle = ({
-  name,
-  width,
-  backgroundColor,
-  iconColor,
-}: IconWithTitleProps) => {
+
+export const IconWithTitle = ({ name, width }: IconWithTitleProps) => {
+  const backgroundColor = useCurrentGridPresetColors().pressedColor;
+
   const formattedName = useMemo(() => {
     const noPrefixname =
       ioniconIconNameAliases[name] ??
@@ -23,8 +22,6 @@ export const IconWithTitle = ({
 
     return noPrefixname.charAt(0).toUpperCase() + noPrefixname.slice(1);
   }, [name]);
-
-  const iconContainerSize = 50;
 
   return (
     <View style={{ alignItems: "center", width }}>
@@ -37,7 +34,7 @@ export const IconWithTitle = ({
           borderRadius: 100, //Big enough to be a circle
         }}
       >
-        <Icon name={name} type="ionicon" color={iconColor} />
+        <GridThemedIcon name={name} type="ionicon" invert={true} />
       </View>
       <Text style={{ color: theme.color.lightText }}>{formattedName}</Text>
     </View>

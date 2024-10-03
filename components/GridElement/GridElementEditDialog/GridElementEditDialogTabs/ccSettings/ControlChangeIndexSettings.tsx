@@ -1,24 +1,23 @@
-import { Button, Icon, Text } from "@rneui/themed";
+import { Text } from "@rneui/themed";
 import React, { useCallback } from "react";
 import { View } from "react-native";
 import { theme } from "../../../../../constants/theme";
+import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPresetColors";
+import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
+import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeIndexSelector } from "../ccSettings/ControlChangeIndexSelector";
-import { ControlChangeSettingsPanelProps } from "./ControlChangeSettingsPanel";
 import {
   ControlChangeDirection,
   useControlChangeIndexController,
 } from "../useControlChangeIndexController";
-import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
-import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
-import { useAppSelector } from "../../../../../redux/hooks";
+import { ControlChangeSettingsPanelProps } from "./ControlChangeSettingsPanel";
 
 export const ControlChangeIndexSettings = ({
   index,
 }: ControlChangeSettingsPanelProps) => {
   const { mode } = useControlChangeIndexController({ index });
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
+  const gridTheme = useCurrentGridPresetColors();
+
   const unidirectionalButtonList = [
     {
       text: "Horizontal",

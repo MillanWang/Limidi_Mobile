@@ -1,11 +1,13 @@
 import { Icon, IconProps } from "@rneui/themed";
 import React from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
 
-export const GridThemedIcon = (props: IconProps & { type?: string }) => {
-  const { gridTheme } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+export const GridThemedIcon = (props: IconProps & { invert?: boolean }) => {
+  const gridTheme = useCurrentGridPresetColors();
 
-  return <Icon color={gridTheme.pressedColor} {...props} />;
+  const color = props.invert
+    ? gridTheme.unpressedColor
+    : gridTheme.pressedColor;
+
+  return <Icon color={color} {...props} />;
 };

@@ -1,11 +1,11 @@
+import { Icon } from "@rneui/base";
 import { Button } from "@rneui/themed";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { theme } from "../constants/theme";
+import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPresetColors";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
-import { useAppSelector } from "../redux/hooks";
-import { Icon } from "@rneui/base";
 
 export interface GridScreenToolbarProps {
   isPlayMode: boolean;
@@ -20,10 +20,7 @@ export function GridScreenToolbar({
   isFullGridEditMode,
   setIsFullGridEditMode,
 }: GridScreenToolbarProps) {
-  const gridState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
-  const { gridTheme } = gridState;
+  const gridTheme = useCurrentGridPresetColors();
 
   const togglePlayMode = () => {
     setIsPlayMode(!isPlayMode);

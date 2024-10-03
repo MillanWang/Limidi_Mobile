@@ -1,14 +1,13 @@
-import { Button } from "@rneui/themed";
+import { Icon } from "@rneui/base";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
+import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import NetworkConfigSettingsTab from "../NetworkConfig/NetworkConfigSettingsTab";
+import { NetworkErrorIndicator } from "../NetworkConfig/NetworkErrorIndicator";
 import { GridEditStyleSettingsTab } from "./GridEditDialogTabs/GridEditColorSettingsTab";
 import { GridEditGridSettingsTab } from "./GridEditDialogTabs/GridEditGridSettingsTab";
-import { Icon } from "@rneui/base";
-import { useAppSelector } from "../../redux/hooks";
-import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
-import { NetworkErrorIndicator } from "../NetworkConfig/NetworkErrorIndicator";
 
 const settingsTabs = [
   { name: "Scale", iconName: "musical-notes", type: "ionicon" },
@@ -17,9 +16,7 @@ const settingsTabs = [
 ];
 
 export const GridEditMenu = () => {
-  const { gridTheme } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+  const gridTheme = useCurrentGridPresetColors();
   const [tabIndex, setTabIndex] = React.useState(0);
   return (
     <>

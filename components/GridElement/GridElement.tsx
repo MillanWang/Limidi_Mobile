@@ -1,7 +1,10 @@
 import { Icon, Text } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { theme } from "../../constants/theme";
+import {
+  useCurrentGridPreset,
+  useGridElementAtIndex,
+} from "../../hooks/useCurrentGridPreset";
 import { useAppSelector } from "../../redux/hooks";
 import GridElementEditDialog from "./GridElementEditDialog/GridElementEditDialog";
 import ControlChange from "./GridElementTypes/ControlChange";
@@ -15,9 +18,7 @@ interface GridElementProps {
 }
 
 export default function GridElement({ index, isPlayMode }: GridElementProps) {
-  const { isMidiNote } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const { isMidiNote } = useCurrentGridPreset().gridElements[index];
 
   if (!isPlayMode) {
     return <GridElementEditButton index={index} />;
@@ -51,10 +52,8 @@ const GridElementEditButtonIconRow = (props: {
 const GridElementEditButton = (props: { index: number }) => {
   const { index } = props;
   const [dialogVisible, setDialogVisible] = useState(false);
-
-  const { name, colorState, isLocked, isMidiNote } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const { name, colorState, isLocked, isMidiNote } =
+    useGridElementAtIndex(index);
 
   return (
     <>

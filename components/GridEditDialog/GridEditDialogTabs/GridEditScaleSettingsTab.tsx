@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
 import { Scale } from "../../../constants/Scales";
 import { theme } from "../../../constants/theme";
+import { useCurrentGridPreset } from "../../../hooks/useCurrentGridPreset";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   setScale,
@@ -25,9 +26,7 @@ export function GridEditScaleSettings() {
 
 export function ScaleRootNoteSelector() {
   const dispatch = useAppDispatch();
-  const { startingNoteNumber, scale } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+  const { startingNoteNumber, scale } = useCurrentGridPreset();
 
   const rootNote = `Root Note: ${getNoteKeyFromNoteNumber(startingNoteNumber)}`;
   const currentOctave = Math.floor(startingNoteNumber / 12);
@@ -58,10 +57,7 @@ export function ScaleRootNoteSelector() {
 
 export function ScaleSelector() {
   const dispatch = useAppDispatch();
-  const gridState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
-  const { scale, gridTheme } = gridState;
+  const { scale, gridTheme } = useCurrentGridPreset();
 
   // To choose a scale before applying it
   const [currentScale, setCurrentScale] = useState(scale);

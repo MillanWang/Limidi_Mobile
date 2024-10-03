@@ -22,7 +22,7 @@
     "@reduxjs/toolkit": "^1.8.5",
     "@rneui/base": "^4.0.0-rc.5",
     "@rneui/themed": "^4.0.0-rc.5",
-    "expo": "^51.0.34",
+    "expo": "^51.0.36",
     "expo-asset": "~10.0.10",
     "expo-barcode-scanner": "~13.0.1",
     "expo-camera": "~15.0.16",

@@ -2,18 +2,16 @@ import { Icon, Text } from "@rneui/themed";
 import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../../../constants/theme";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
+import { useCurrentGridPresetColors } from "../../../../hooks/useCurrentGridPresetColors";
+import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementIsMidiNote } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 
 export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();
-  const { isMidiNote } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
+  const { isMidiNote } = useGridElementAtIndex(index);
+  const gridTheme = useCurrentGridPresetColors();
 
   const { pressedColor, unpressedColor } = gridTheme;
 

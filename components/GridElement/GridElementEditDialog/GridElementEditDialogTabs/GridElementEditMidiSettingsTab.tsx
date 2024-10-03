@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import { useAppSelector } from "../../../../redux/hooks";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { ControlChangeSettingsPanel } from "./ccSettings/ControlChangeSettingsPanel";
 import { MidiNoteControlChangeSelector } from "./MidiNoteControlChangeSelector";
 import { NoteSettingsPanel } from "./NoteSettingsPanel";
@@ -10,9 +10,7 @@ export interface GridElementEditMidiProps {
 }
 
 export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
-  const { isMidiNote } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const { isMidiNote } = useGridElementAtIndex(index);
 
   return (
     <View style={{ flex: 1 }}>

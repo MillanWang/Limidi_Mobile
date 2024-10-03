@@ -1,12 +1,9 @@
 import { Button, Icon, Text } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import {
-  ColorPreset,
-  DEFAULT,
-  PRESET_COLOR_LIST,
-} from "../../../../constants/ColorPresets";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { PRESET_COLOR_LIST } from "../../../../constants/ColorPresets";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
+import { useAppDispatch } from "../../../../redux/hooks";
 import {
   setGridElementPressedColor,
   setGridElementUnpressedColor,
@@ -26,9 +23,7 @@ export interface GridElementEditStyleProps {
 export function GridElementEditStyleSettingsTab({
   index,
 }: GridElementEditStyleProps) {
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const currentGridElementState = useGridElementAtIndex(index);
   const colorState = currentGridElementState.colorState;
 
   const dispatch = useAppDispatch();

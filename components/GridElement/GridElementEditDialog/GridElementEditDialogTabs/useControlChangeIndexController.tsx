@@ -8,6 +8,7 @@ import {
   setGridElementControlChangeYIndex,
   setGridElementControlChangeIconString,
 } from "../../../../redux/slices/GridPresetsSlice";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 
 export enum ControlChangeDirection {
   Horizontal = "Horizontal",
@@ -31,9 +32,7 @@ export const useControlChangeIndexController = (props: { index: number }) => {
   const dispatch = useAppDispatch();
 
   const { sendMidiControlChange } = useDesktopCommunication();
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const currentGridElementState = useGridElementAtIndex(index);
 
   const iconNameState = currentGridElementState.controlChangeState.iconName;
   const xAxisControlIndexState =

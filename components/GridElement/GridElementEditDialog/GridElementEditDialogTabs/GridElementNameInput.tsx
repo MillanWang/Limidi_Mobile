@@ -6,7 +6,8 @@ import {
   isNoteLabelStandard,
 } from "../../../../constants/MIDI_Notes";
 import { theme } from "../../../../constants/theme";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
+import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementName } from "../../../../redux/slices/GridPresetsSlice";
 
 export const GridElementNameInput = ({ index }: { index: number }) => {
@@ -14,9 +15,7 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
   const {
     name,
     midiNoteState: { noteNumber },
-  } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  } = useGridElementAtIndex(index);
 
   const resetElementName = () =>
     dispatch(

@@ -6,10 +6,12 @@ import {
   ioniconValidIconNames,
 } from "../../../../constants/IconNames";
 import { theme } from "../../../../constants/theme";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
 import { setGridElementControlChangeIconString } from "../../../../redux/slices/GridPresetsSlice";
-import { IconWithTitle } from "./ccSettings/IconWithTitle";
+import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 import { ControlChangeSettingsPanelProps } from "./ccSettings/ControlChangeSettingsPanel";
+import { IconWithTitle } from "./ccSettings/IconWithTitle";
 import {
   getControlChangeDirection,
   useControlChangeIndexController,
@@ -18,9 +20,7 @@ import {
 export const ControlChangeIconSettings = ({
   index,
 }: ControlChangeSettingsPanelProps) => {
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const currentGridElementState = useGridElementAtIndex(index);
 
   const colorState = currentGridElementState.colorState;
 
@@ -31,16 +31,15 @@ export const ControlChangeIconSettings = ({
     <View style={{ marginBottom: 12 }}>
       <Text style={{ color: theme.color.white }}>Icon</Text>
       <View style={{ flexDirection: "row" }}>
-        <Button
+        <GridThemedButton
           onPress={() => setIconDialogOpen(true)}
-          buttonStyle={{ borderWidth: 1, backgroundColor: "transparent" }}
+          buttonStyle={{
+            borderWidth: 1,
+            backgroundColor: "transparent",
+          }}
         >
-          <IconWithTitle
-            name={icon.name}
-            backgroundColor={colorState.pressedColor}
-            iconColor={colorState.unpressedColor}
-          />
-        </Button>
+          <IconWithTitle name={icon.name} />
+        </GridThemedButton>
         <IconSelectDialog
           dialogVisible={iconDialogOpen}
           setDialogVisible={setIconDialogOpen}
@@ -63,13 +62,7 @@ const IconSelectDialog = ({
   setDialogVisible,
 }: IconSelectDialogProps) => {
   const dispatch = useAppDispatch();
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
-  const isMidiNoteModeState = currentGridElementState.isMidiNote;
-
-  const nameState = currentGridElementState.name;
-  const colorState = currentGridElementState.colorState;
+  const currentGridElementState = useGridElementAtIndex(index);
 
   const iconNameState = currentGridElementState.controlChangeState.iconName;
   const xAxisControlIndexState =
@@ -110,11 +103,7 @@ const IconSelectDialog = ({
                 }}
                 key={`directional_icon-${i}`}
               >
-                <IconWithTitle
-                  name={iconName}
-                  backgroundColor={colorState.pressedColor}
-                  iconColor={colorState.unpressedColor}
-                />
+                <IconWithTitle name={iconName} />
               </Button>
             );
           })}
@@ -138,11 +127,7 @@ const IconSelectDialog = ({
                     }}
                     key={`icon_row-${i}_elem-${j}_name-${iconName}`}
                   >
-                    <IconWithTitle
-                      name={iconName}
-                      backgroundColor={colorState.pressedColor}
-                      iconColor={colorState.unpressedColor}
-                    />
+                    <IconWithTitle name={iconName} />
                   </Button>
                 ))}
               </View>

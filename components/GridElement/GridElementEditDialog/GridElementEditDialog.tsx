@@ -1,15 +1,23 @@
+import { Dialog, Text } from "@rneui/themed";
 import React, { useCallback } from "react";
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  KeyboardAvoidingView,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
   TouchableWithoutFeedback,
+  View,
 } from "react-native";
-import { Button, Dialog, Icon, Text, darkColors } from "@rneui/themed";
 
+import { theme } from "../../../constants/theme";
+import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
+import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPresetColors";
+import { useAppDispatch } from "../../../redux/hooks";
+import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
+import { GridPreview } from "../../GridPreview";
+import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
+import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import {
   GridElementEditMidiProps,
   GridElementEditMidiSettingsTab,
@@ -18,12 +26,6 @@ import {
   GridElementEditStyleProps,
   GridElementEditStyleSettingsTab,
 } from "./GridElementEditDialogTabs/GridElementEditStyleSettingsTab";
-import { GridPreview } from "../../GridPreview";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
-import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
-import { theme } from "../../../constants/theme";
-import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
-import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 
 interface GridElementEditDialogProps
   extends GridElementEditMidiProps,
@@ -40,12 +42,8 @@ export default function GridElementEditDialog({
   const [tabIndex, setTabIndex] = React.useState(0);
   const dispatch = useAppDispatch();
 
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
-  const { isLocked, isMidiNote } = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const gridTheme = useCurrentGridPresetColors();
+  const { isLocked, isMidiNote } = useGridElementAtIndex(index);
 
   const toggleElementMidiLock = () =>
     dispatch(setGridElementIsLocked({ index, isLocked: !isLocked }));

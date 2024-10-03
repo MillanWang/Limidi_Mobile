@@ -1,11 +1,9 @@
 import { Button, ButtonProps } from "@rneui/themed";
 import React from "react";
-import { useAppSelector } from "../../redux/hooks";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
 
 export const GridThemedButton = (props: ButtonProps) => {
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
+  const gridTheme = useCurrentGridPresetColors();
 
   return (
     <Button

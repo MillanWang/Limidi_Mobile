@@ -2,10 +2,9 @@ import { Text } from "@rneui/themed";
 import React, { useRef, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
 import { createMidiNote } from "../../../constants/MIDI_Notes";
-import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
-
 import { theme } from "../../../constants/theme";
-import { useAppSelector } from "../../../redux/hooks";
+import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
+import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
 
 const NOTE_ON = true;
 const NOTE_OFF = false;
@@ -16,9 +15,7 @@ interface DrumPadProps {
 
 export default function DrumPad({ index }: DrumPadProps) {
   // Redux states
-  const currentGridElementState = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridElements[index]
-  );
+  const currentGridElementState = useGridElementAtIndex(index);
   const nameState = currentGridElementState.name;
   const noteNumberState = currentGridElementState.midiNoteState.noteNumber;
   const velocityState = currentGridElementState.midiNoteState.velocity;

@@ -1,6 +1,7 @@
 import { Icon, IconProps } from "@rneui/themed";
 import React from "react";
 import { theme } from "../../constants/theme";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
 import { useAppSelector } from "../../redux/hooks";
 
 interface NetworkConfigButtonProps {
@@ -13,9 +14,7 @@ export const NetworkErrorIndicator = ({
   useGridThemeColors,
   ...iconProps
 }: NetworkConfigButtonProps & Partial<IconProps>) => {
-  const gridTheme = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset.gridTheme
-  );
+  const gridTheme = useCurrentGridPresetColors();
 
   const { mostRecentNetworkFailTime, mostRecentNetworkFixTime } =
     useAppSelector((state) => state.httpCommunicationsReducer);
