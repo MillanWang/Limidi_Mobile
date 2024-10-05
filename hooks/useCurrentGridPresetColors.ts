@@ -1,8 +1,6 @@
-import { useAppSelector } from "../redux/hooks";
+import { useCurrentGridPreset } from "./useCurrentGridPreset";
 
 export const useCurrentGridPresetColors = () => {
-  const currentGridPreset = useAppSelector(
-    (state) => state.gridPresetsReducer.currentGridPreset
-  );
+  const currentGridPreset = useCurrentGridPreset();
   return currentGridPreset.gridTheme;
 };

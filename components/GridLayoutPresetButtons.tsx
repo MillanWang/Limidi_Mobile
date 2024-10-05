@@ -1,6 +1,6 @@
 import { Icon } from "@rneui/themed";
 import React from "react";
-import { theme } from "../constants/theme";
+import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPresetColors";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setPresetIndex } from "../redux/slices/GridPresetsSlice";
 
@@ -9,10 +9,11 @@ const PRESET_ICON_NAMES = ["one", "two", "3", "4", "5", "6"];
 
 export function GridLayoutPresetButtons() {
   const dispatch = useAppDispatch();
-  const {
-    currentPresetIndex,
-    currentGridPreset: { gridTheme },
-  } = useAppSelector((state) => state.gridPresetsReducer);
+  const { currentPresetIndex } = useAppSelector(
+    (state) => state.gridPresetsReducer
+  );
+
+  const gridTheme = useCurrentGridPresetColors();
 
   const setPresetIndexFunction = (presetIndex: number) => {
     return () => dispatch(setPresetIndex({ index: presetIndex }));
