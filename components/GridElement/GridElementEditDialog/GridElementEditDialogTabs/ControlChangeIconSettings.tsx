@@ -7,7 +7,7 @@ import {
 } from "../../../../constants/IconNames";
 import { theme } from "../../../../constants/theme";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementControlChangeIconString } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 import { ControlChangeSettingsPanelProps } from "./ccSettings/ControlChangeSettingsPanel";
@@ -16,12 +16,12 @@ import {
   getControlChangeDirection,
   useControlChangeIndexController,
 } from "./useControlChangeIndexController";
+import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
 
 export const ControlChangeIconSettings = ({
   index,
 }: ControlChangeSettingsPanelProps) => {
   const currentGridElementState = useGridElementAtIndex(index);
-
   const colorState = currentGridElementState.colorState;
 
   const { icon } = useControlChangeIndexController({ index });
@@ -35,10 +35,11 @@ export const ControlChangeIconSettings = ({
           onPress={() => setIconDialogOpen(true)}
           buttonStyle={{
             borderWidth: 1,
-            backgroundColor: "transparent",
+            backgroundColor: colorState.unpressedColor,
+            borderColor: colorState.pressedColor,
           }}
         >
-          <IconWithTitle name={icon.name} />
+          <IconWithTitle name={icon.name} index={index} />
         </GridThemedButton>
         <IconSelectDialog
           dialogVisible={iconDialogOpen}
@@ -85,7 +86,18 @@ const IconSelectDialog = ({
   const generalIconRows = getGeneralIconNameRows(iconsPerRow);
 
   return (
-    <Dialog isVisible={dialogVisible}>
+    <Dialog
+      isVisible={dialogVisible}
+      overlayStyle={{
+        width: "60%",
+        padding: 12,
+        height: "80%",
+        backgroundColor: theme.color.modalBackground,
+        borderRadius: 16,
+      }}
+    >
+      <SaveButton onPress={() => setDialogVisible(false)} />
+
       <ScrollView style={{ height: 300 }}>
         <Text>Directional Icons</Text>
         <View style={{ flexDirection: "row" }}>
@@ -103,7 +115,7 @@ const IconSelectDialog = ({
                 }}
                 key={`directional_icon-${i}`}
               >
-                <IconWithTitle name={iconName} />
+                <IconWithTitle name={iconName} index={index} />
               </Button>
             );
           })}
@@ -127,7 +139,7 @@ const IconSelectDialog = ({
                     }}
                     key={`icon_row-${i}_elem-${j}_name-${iconName}`}
                   >
-                    <IconWithTitle name={iconName} />
+                    <IconWithTitle name={iconName} index={index} />
                   </Button>
                 ))}
               </View>
@@ -135,11 +147,24 @@ const IconSelectDialog = ({
           })}
         </View>
       </ScrollView>
-      <Button title={"Save"} onPress={() => setDialogVisible(false)} />
     </Dialog>
   );
 };
 
+const SaveButton = ({ onPress }: { onPress: () => void }) => {
+  return (
+    <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+      <GridThemedButton onPress={onPress}>
+        <GridThemedIcon
+          style={{ marginRight: 4 }}
+          type="ionicon"
+          name={"save-outline"}
+        />
+        {" SAVE"}
+      </GridThemedButton>
+    </View>
+  );
+};
 function getGeneralIconNameRows(iconsPerRow: number) {
   const listOfRows = [];
   for (let i = 0; i < ioniconValidIconNames.length; i++) {

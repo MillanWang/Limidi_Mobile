@@ -2,7 +2,7 @@ import { Icon } from "@rneui/base";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
-import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import NetworkConfigSettingsTab from "../NetworkConfig/NetworkConfigSettingsTab";
 import { NetworkErrorIndicator } from "../NetworkConfig/NetworkErrorIndicator";

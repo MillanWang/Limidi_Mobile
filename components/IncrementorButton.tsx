@@ -1,7 +1,7 @@
 import { Button } from "@rneui/base";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPreset";
 
 export const IncrementorButton = (props: {
   onPress: () => void;

@@ -12,7 +12,7 @@ import {
 
 import { theme } from "../../../constants/theme";
 import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
-import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
 import { GridPreview } from "../../GridPreview";

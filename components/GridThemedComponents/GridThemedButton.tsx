@@ -1,9 +1,15 @@
 import { Button, ButtonProps } from "@rneui/themed";
 import React from "react";
-import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
+import {
+  useCurrentGridElementPresetColors,
+  useCurrentGridPresetColors,
+} from "../../hooks/useCurrentGridPreset";
 
-export const GridThemedButton = (props: ButtonProps) => {
-  const gridTheme = useCurrentGridPresetColors();
+export const GridThemedButton = (props: ButtonProps & { index?: number }) => {
+  const gridTheme =
+    props.index !== undefined
+      ? useCurrentGridElementPresetColors(props.index)
+      : useCurrentGridPresetColors();
 
   return (
     <Button

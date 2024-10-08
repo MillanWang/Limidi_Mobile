@@ -3,7 +3,7 @@ import { Button } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../constants/theme";
-import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPreset";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
 

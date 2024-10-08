@@ -1,6 +1,6 @@
 import { Icon } from "@rneui/themed";
 import React from "react";
-import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPreset";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { setPresetIndex } from "../redux/slices/GridPresetsSlice";
 

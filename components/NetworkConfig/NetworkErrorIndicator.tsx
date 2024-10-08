@@ -1,7 +1,7 @@
 import { Icon, IconProps } from "@rneui/themed";
 import React from "react";
 import { theme } from "../../constants/theme";
-import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
 import { useAppSelector } from "../../redux/hooks";
 
 interface NetworkConfigButtonProps {

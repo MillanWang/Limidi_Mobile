@@ -2,7 +2,7 @@ import { Text } from "@rneui/themed";
 import React, { useCallback } from "react";
 import { View } from "react-native";
 import { theme } from "../../../../../constants/theme";
-import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPreset";
 import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeIndexSelector } from "../ccSettings/ControlChangeIndexSelector";

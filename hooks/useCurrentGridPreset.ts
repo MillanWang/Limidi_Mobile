@@ -9,7 +9,17 @@ export const useCurrentGridPreset = () => {
   return currentGridPreset;
 };
 
+export const useCurrentGridPresetColors = () => {
+  const currentGridPreset = useCurrentGridPreset();
+  return currentGridPreset.gridTheme;
+};
+
 export const useGridElementAtIndex = (index: number) => {
   const currentGridPreset = useCurrentGridPreset();
   return currentGridPreset.gridElements[index];
+};
+
+export const useCurrentGridElementPresetColors = (index: number) => {
+  const currentGridElement = useGridElementAtIndex(index);
+  return currentGridElement.colorState;
 };

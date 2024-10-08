@@ -3,17 +3,31 @@ import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { ioniconIconNameAliases } from "../../../../../constants/IconNames";
 import { theme } from "../../../../../constants/theme";
-import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPresetColors";
+import {
+  useCurrentGridElementPresetColors,
+  useCurrentGridPresetColors,
+} from "../../../../../hooks/useCurrentGridPreset";
 import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 
 const iconContainerSize = 50;
 interface IconWithTitleProps {
   name: string;
   width?: number;
+
+  index?: number;
 }
 
-export const IconWithTitle = ({ name, width }: IconWithTitleProps) => {
-  const backgroundColor = useCurrentGridPresetColors().pressedColor;
+/*
+In the middle of adding custom color overrides here so that they can be thened to a specific elements color config
+
+*/
+
+export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
+  const backgroundColor =
+    // backgroundColor ??
+    index !== undefined
+      ? useCurrentGridElementPresetColors(index).pressedColor
+      : useCurrentGridPresetColors().pressedColor;
 
   const formattedName = useMemo(() => {
     const noPrefixname =
@@ -34,9 +48,16 @@ export const IconWithTitle = ({ name, width }: IconWithTitleProps) => {
           borderRadius: 100, //Big enough to be a circle
         }}
       >
-        <GridThemedIcon name={name} type="ionicon" invert={true} />
+        <GridThemedIcon
+          name={name}
+          type="ionicon"
+          invert={true}
+          index={index}
+        />
       </View>
-      <Text style={{ color: theme.color.lightText }}>{formattedName}</Text>
+      <Text style={{ color: backgroundColor ?? theme.color.lightText }}>
+        {formattedName}
+      </Text>
     </View>
   );
 };

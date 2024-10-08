@@ -9,7 +9,7 @@ import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { isValidIpWithPort } from "./AddressValidationIcon";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import { CheckConnectionButton } from "./CheckConnectionButton";
-import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPresetColors";
+import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
 
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
