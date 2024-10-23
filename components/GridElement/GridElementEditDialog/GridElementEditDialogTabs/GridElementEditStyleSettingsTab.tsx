@@ -13,13 +13,6 @@ export interface GridElementEditStyleProps {
   index: number;
 }
 
-// This whole tab is gonna need a lot of review
-/* 
--Lock should be moved up to the tab selection area
--Should only have selection for pressed and unpressed color here
--Option to apply a color 
- */
-
 export function GridElementEditStyleSettingsTab({
   index,
 }: GridElementEditStyleProps) {
@@ -43,6 +36,9 @@ export function GridElementEditStyleSettingsTab({
       <View style={styles.colorPresetContainer}>
         <ScrollView>
           {PRESET_COLOR_LIST.map((preset) => {
+            const isSet =
+              colorState.pressedColor === preset.pressedColor &&
+              colorState.unpressedColor === preset.unpressedColor;
             const isSelected =
               currentPreset.pressedColor === preset.pressedColor &&
               currentPreset.unpressedColor === preset.unpressedColor;
@@ -50,10 +46,9 @@ export function GridElementEditStyleSettingsTab({
               <Button
                 buttonStyle={{
                   backgroundColor: preset.unpressedColor,
-                  borderColor:
-                    currentPreset === preset
-                      ? preset.pressedColor
-                      : preset.unpressedColor,
+                  borderColor: isSelected
+                    ? preset.pressedColor
+                    : preset.unpressedColor,
                   ...styles.colorPresetButton,
                 }}
                 key={`ColorPreset_${preset.name}`}
@@ -67,7 +62,7 @@ export function GridElementEditStyleSettingsTab({
                 >
                   {preset.name}
                 </Text>
-                {isSelected && (
+                {isSet && (
                   <View style={styles.selectedCheckmarkIcon}>
                     <Icon name="done" color={preset.pressedColor} />
                   </View>

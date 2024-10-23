@@ -9,7 +9,7 @@ import {
 } from "../../../../../hooks/useCurrentGridPreset";
 import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 
-const iconContainerSize = 50;
+const iconContainerSize = 45;
 interface IconWithTitleProps {
   name: string;
   width?: number;
@@ -24,18 +24,12 @@ In the middle of adding custom color overrides here so that they can be thened t
 
 export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
   const backgroundColor =
-    // backgroundColor ??
     index !== undefined
       ? useCurrentGridElementPresetColors(index).pressedColor
       : useCurrentGridPresetColors().pressedColor;
 
-  const formattedName = useMemo(() => {
-    const noPrefixname =
-      ioniconIconNameAliases[name] ??
-      name.replaceAll("logo-", "").replaceAll("ios-", "").replaceAll("-", " ");
-
-    return noPrefixname.charAt(0).toUpperCase() + noPrefixname.slice(1);
-  }, [name]);
+  const getFormattedIconName = useGetFormattedIconName();
+  const formattedName = useMemo(() => getFormattedIconName(name), [name]);
 
   return (
     <View style={{ alignItems: "center", width }}>
@@ -60,6 +54,14 @@ export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
       </Text>
     </View>
   );
+};
+
+export const useGetFormattedIconName = () => (name: string) => {
+  const noPrefixname =
+    ioniconIconNameAliases[name] ??
+    name.replaceAll("logo-", "").replaceAll("ios-", "").replaceAll("-", " ");
+
+  return noPrefixname.charAt(0).toUpperCase() + noPrefixname.slice(1);
 };
 
 const styles = StyleSheet.create({

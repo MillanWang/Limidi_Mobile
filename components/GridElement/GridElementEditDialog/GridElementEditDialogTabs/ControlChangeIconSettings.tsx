@@ -6,12 +6,18 @@ import {
   ioniconValidIconNames,
 } from "../../../../constants/IconNames";
 import { theme } from "../../../../constants/theme";
-import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
+import {
+  useCurrentGridElementPresetColors,
+  useGridElementAtIndex,
+} from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementControlChangeIconString } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 import { ControlChangeSettingsPanelProps } from "./ccSettings/ControlChangeSettingsPanel";
-import { IconWithTitle } from "./ccSettings/IconWithTitle";
+import {
+  IconWithTitle,
+  useGetFormattedIconName,
+} from "./ccSettings/IconWithTitle";
 import {
   getControlChangeDirection,
   useControlChangeIndexController,
@@ -51,6 +57,8 @@ export const ControlChangeIconSettings = ({
   );
 };
 
+const iconsPerRow = 3;
+
 interface IconSelectDialogProps {
   index: number;
   dialogVisible: boolean;
@@ -62,7 +70,6 @@ const IconSelectDialog = ({
   dialogVisible,
   setDialogVisible,
 }: IconSelectDialogProps) => {
-  const dispatch = useAppDispatch();
   const currentGridElementState = useGridElementAtIndex(index);
 
   const iconNameState = currentGridElementState.controlChangeState.iconName;
@@ -71,108 +78,181 @@ const IconSelectDialog = ({
   const yAxisControlIndexState =
     currentGridElementState.controlChangeState.yAxisControlIndex;
 
-  const directionalIcons: string[] =
+  const allDirectionalIcons: string[] =
     iconNames[
       getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)
     ];
-
-  const iconTouchHandler = (name: string) => () => {
-    dispatch(
-      setGridElementControlChangeIconString({ index, iconString: name })
-    );
-  };
-
-  const iconsPerRow = 3;
+  const directionalIconRows = getIconNameRows(iconsPerRow, allDirectionalIcons);
   const generalIconRows = getGeneralIconNameRows(iconsPerRow);
 
   return (
     <Dialog
       isVisible={dialogVisible}
       overlayStyle={{
-        width: "60%",
+        width: "80%",
         padding: 12,
         height: "80%",
         backgroundColor: theme.color.modalBackground,
         borderRadius: 16,
       }}
     >
-      <SaveButton onPress={() => setDialogVisible(false)} />
+      <DialogHeaderRow
+        saveOnPress={() => setDialogVisible(false)}
+        selectedIconName={iconNameState}
+        index={index}
+      />
 
-      <ScrollView style={{ height: 300 }}>
-        <Text>Directional Icons</Text>
-        <View style={{ flexDirection: "row" }}>
-          {directionalIcons.map((iconName, i) => {
-            return (
-              <Button
-                onPress={iconTouchHandler(iconName)}
-                color={theme.color.white}
-                buttonStyle={{
-                  borderWidth: 3,
-                  borderColor:
-                    iconName === iconNameState
-                      ? theme.color.black
-                      : theme.color.white,
-                }}
-                key={`directional_icon-${i}`}
-              >
-                <IconWithTitle name={iconName} index={index} />
-              </Button>
-            );
-          })}
+      <ScrollView
+        style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}
+      >
+        <Text style={{ color: theme.color.white }}>Directional Icons</Text>
+        <View style={{ flexDirection: "column" }}>
+          {directionalIconRows.map((row, i) => (
+            <View
+              style={{ flexDirection: "row", flex: 1 }}
+              key={`icon_row-${i}`}
+            >
+              {row.map((iconName, j) => (
+                <SelectableIconButton
+                  index={index}
+                  iconName={iconName}
+                  isSelected={iconName === iconNameState}
+                  key={`directionalicon_row-${i}_elem-${j}_name-${iconName}`}
+                />
+              ))}
+            </View>
+          ))}
         </View>
 
-        <Text>General Icons</Text>
+        <Text style={{ color: theme.color.white }}>General Icons</Text>
         <View style={{ flexDirection: "column" }}>
-          {generalIconRows.map((row, i) => {
-            return (
-              <View style={{ flexDirection: "row" }} key={`icon_row-${i}`}>
-                {row.map((iconName, j) => (
-                  <Button
-                    onPress={iconTouchHandler(iconName)}
-                    color={theme.color.white}
-                    buttonStyle={{
-                      borderWidth: 3,
-                      borderColor:
-                        iconName === iconNameState
-                          ? theme.color.black
-                          : theme.color.white,
-                    }}
-                    key={`icon_row-${i}_elem-${j}_name-${iconName}`}
-                  >
-                    <IconWithTitle name={iconName} index={index} />
-                  </Button>
-                ))}
-              </View>
-            );
-          })}
+          {generalIconRows.map((row, i) => (
+            <View
+              style={{ flexDirection: "row", flex: 1 }}
+              key={`icon_row-${i}`}
+            >
+              {row.map((iconName, j) => (
+                <SelectableIconButton
+                  index={index}
+                  iconName={iconName}
+                  isSelected={iconName === iconNameState}
+                  key={`icon_row-${i}_elem-${j}_name-${iconName}`}
+                />
+              ))}
+            </View>
+          ))}
         </View>
       </ScrollView>
     </Dialog>
   );
 };
 
-const SaveButton = ({ onPress }: { onPress: () => void }) => {
+const DialogHeaderRow = ({
+  saveOnPress,
+  selectedIconName,
+  index,
+}: {
+  saveOnPress: () => void;
+  selectedIconName: string;
+  index: number;
+}) => {
+  const mainColor = useCurrentGridElementPresetColors(index).pressedColor;
+  const getFormattedIconName = useGetFormattedIconName();
   return (
-    <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-      <GridThemedButton onPress={onPress}>
-        <GridThemedIcon
-          style={{ marginRight: 4 }}
-          type="ionicon"
-          name={"save-outline"}
-        />
-        {" SAVE"}
-      </GridThemedButton>
+    <View
+      style={{
+        flexDirection: "row",
+        paddingBottom: 8,
+
+        borderColor: mainColor,
+        borderBottomWidth: 1,
+      }}
+    >
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ flexDirection: "column" }}>
+          <Text style={{ color: theme.color.white }}>{`Selected:  `}</Text>
+          <Text style={{ color: mainColor }}>
+            {getFormattedIconName(selectedIconName)}
+          </Text>
+        </View>
+        <View
+          style={{
+            backgroundColor: mainColor,
+            borderRadius: 100,
+            width: 40,
+            height: 40,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <GridThemedIcon
+            name={selectedIconName}
+            type="ionicon"
+            invert={true}
+            index={index}
+          />
+        </View>
+      </View>
+      <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+        <GridThemedButton onPress={saveOnPress}>
+          <GridThemedIcon
+            style={{ marginRight: 4 }}
+            type="ionicon"
+            name={"save-outline"}
+          />
+          {" SAVE"}
+        </GridThemedButton>
+      </View>
     </View>
   );
 };
-function getGeneralIconNameRows(iconsPerRow: number) {
-  const listOfRows = [];
-  for (let i = 0; i < ioniconValidIconNames.length; i++) {
-    if (i % iconsPerRow === 0) {
-      listOfRows.push([ioniconValidIconNames[i]]);
-    } else {
-      listOfRows[Math.floor(i / iconsPerRow)].push(ioniconValidIconNames[i]);
-    }
+
+const SelectableIconButton = ({
+  index,
+  iconName,
+  isSelected,
+}: {
+  index: number;
+  iconName: string;
+  isSelected: boolean;
+}) => {
+  const dispatch = useAppDispatch();
+  const borderColor = useCurrentGridElementPresetColors(index).pressedColor;
+  const iconTouchHandler = (name: string) => () => {
+    dispatch(
+      setGridElementControlChangeIconString({ index, iconString: name })
+    );
+  };
+
+  if (!iconName) {
+    return <Button color={"transparent"} containerStyle={{ flex: 1 }} />;
+  }
+
+  return (
+    <Button
+      onPress={iconTouchHandler(iconName)}
+      color={"transparent"}
+      containerStyle={{ flex: 1, borderRadius: 0 }}
+      buttonStyle={{
+        borderWidth: 2,
+        borderColor: isSelected ? borderColor : "transparent",
+      }}
+    >
+      <IconWithTitle name={iconName} index={index} />
+    </Button>
+  );
+};
+
+const getGeneralIconNameRows = (iconsPerRow: number) => {
+  return getIconNameRows(iconsPerRow, ioniconValidIconNames);
+};
+
+const getIconNameRows = (iconsPerRow: number, iconNames: string[]) => {
+  const listOfRows: string[][] = [];
+  for (let i = 0; i < iconNames.length; i += iconsPerRow) {
+    const currentRow = iconNames.slice(i, i + iconsPerRow);
+    while (currentRow.length < iconsPerRow) currentRow.push("");
+    listOfRows.push(currentRow);
   }
   return listOfRows;
-}
+};
