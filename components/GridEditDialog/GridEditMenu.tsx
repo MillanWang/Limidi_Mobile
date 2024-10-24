@@ -27,23 +27,9 @@ export const GridEditMenu = () => {
             key={`settingsTab-${i}`}
             containerStyle={{ flex: 1, borderRadius: 0 }}
             buttonStyle={{
-              borderLeftColor:
-                tabIndex !== i && i === 0
-                  ? gridTheme.unpressedColor
-                  : gridTheme.pressedColor,
-              borderRightColor:
-                tabIndex !== i && i === settingsTabs.length - 1
-                  ? gridTheme.unpressedColor
-                  : gridTheme.pressedColor,
+              borderColor: gridTheme.pressedColor,
               borderRadius: 0,
-              borderTopColor:
-                tabIndex === i
-                  ? gridTheme.pressedColor
-                  : gridTheme.unpressedColor,
-              borderBottomColor:
-                tabIndex === i
-                  ? gridTheme.pressedColor
-                  : gridTheme.unpressedColor,
+              opacity: tabIndex === i ? 1 : 0.5,
               borderWidth: 1,
             }}
           >

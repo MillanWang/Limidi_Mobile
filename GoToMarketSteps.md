@@ -3,8 +3,6 @@
 ## TODO
 
 - DATA
-  - Datastore getting more efficient. Separating out the slices for notes, color, and CC
-    - Make react hook and util functions for referencing the current preset instead of using the dupe state
   - Emergency backing-store reset upon load failure
 - MENU
   - Shrinking down maximum grid size. Choosing maximums
@@ -27,11 +25,12 @@
   - Add FL studio FPC default for 4 column
   - Improve scale selector component
   - "Dirty" indicator when user deviates away from scale default
+- PIANO
+  - Update the piano key colors to correspond to the overall grid style and individual element color themes
 - COLOR
-  - Elemental color selector
-    - Cut in favour of having more presets. Elimintate the possibility of being able to choose your way into uglyness
-  - Color preset selector
+  - Add many more color presets
   - Improve color themes for grid icons
+  - UI elements for an off-grid-theme element should match the element instead of the main theme
   - Dark mode all of the app manu areas
 - NETWORKING
   - Sanitization of networking values from QR codes

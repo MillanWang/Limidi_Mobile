@@ -11,8 +11,10 @@ import {
 } from "react-native";
 
 import { theme } from "../../../constants/theme";
-import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
-import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPreset";
+import {
+  useCurrentGridPresetColors,
+  useGridElementAtIndex,
+} from "../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
 import { GridPreview } from "../../GridPreview";
@@ -52,9 +54,9 @@ export default function GridElementEditDialog({
     (isPressed: boolean) => {
       return {
         borderWidth: 1,
-        borderColor: isPressed
-          ? gridTheme.pressedColor
-          : gridTheme.unpressedColor,
+        opacity: isPressed ? 1 : 0.5,
+        borderColor: gridTheme.pressedColor,
+        borderRadius: 0,
       };
     },
     [gridTheme]
@@ -80,31 +82,52 @@ export default function GridElementEditDialog({
         <TouchableWithoutFeedback onPressIn={Keyboard.dismiss}>
           <>
             <View style={styles.dialogTabSelectorContainer}>
-              <View
-                style={{ flexDirection: "row", marginRight: "auto", gap: 8 }}
-              >
+              <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+                <GridThemedButton
+                  onPress={toggleElementMidiLock}
+                  containerStyle={{ borderRadius: 0 }}
+                  buttonStyle={{
+                    borderColor: gridTheme.pressedColor,
+                    borderWidth: 1,
+                    borderRadius: 0,
+                    opacity: isLocked ? 0.5 : 1,
+                  }}
+                >
+                  <LockIcon isLocked={isLocked} />
+                </GridThemedButton>
+                <GridThemedButton
+                  onPress={() => setDialogVisible(false)}
+                  containerStyle={{ borderRadius: 0 }}
+                  buttonStyle={{
+                    borderColor: gridTheme.pressedColor,
+                    borderWidth: 1,
+                    borderRadius: 0,
+                  }}
+                >
+                  <SaveIcon /> SAVE
+                </GridThemedButton>
+              </View>
+              <Divider />
+              <View style={{ flexDirection: "row" }}>
                 <GridThemedButton
                   onPress={() => setTabIndex(0)}
                   buttonStyle={getTabButtonStyle(tabIndex === 0)}
+                  containerStyle={{ borderRadius: 0, flex: 1 }}
                 >
-                  <MidiTypeIcon isMidiNote={isMidiNote} /> MIDI
+                  <MidiTypeIcon isMidiNote={isMidiNote} />
+                  {" MIDI"}
                 </GridThemedButton>
                 <GridThemedButton
                   onPress={() => setTabIndex(1)}
                   buttonStyle={getTabButtonStyle(tabIndex === 1)}
+                  containerStyle={{ borderRadius: 0, flex: 1 }}
                 >
-                  <ColorIcon /> Color
+                  <ColorIcon />
+                  {" Color"}
                 </GridThemedButton>
               </View>
-              <GridThemedButton onPress={toggleElementMidiLock}>
-                <LockIcon isLocked={isLocked} />
-              </GridThemedButton>
-              <GridThemedButton onPress={() => setDialogVisible(false)}>
-                <SaveIcon /> SAVE
-              </GridThemedButton>
             </View>
 
-            <Divider />
             <ScrollView>
               <View style={{ alignItems: "center", marginTop: 8 }}>
                 <Text style={{ color: theme.color.white }}>
@@ -129,7 +152,7 @@ export default function GridElementEditDialog({
 }
 
 const styles = StyleSheet.create({
-  dialogTabSelectorContainer: { flexDirection: "row", gap: 8 },
+  dialogTabSelectorContainer: { flexDirection: "column", gap: 8 },
   dialogContentContainer: { flex: 1 },
 });
 

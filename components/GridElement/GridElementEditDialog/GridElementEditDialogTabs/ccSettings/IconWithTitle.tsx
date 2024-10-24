@@ -63,10 +63,3 @@ export const useGetFormattedIconName = () => (name: string) => {
 
   return noPrefixname.charAt(0).toUpperCase() + noPrefixname.slice(1);
 };
-
-const styles = StyleSheet.create({
-  lockSwitchView: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-});

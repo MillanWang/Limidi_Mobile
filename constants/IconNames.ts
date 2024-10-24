@@ -91,6 +91,7 @@ export const ioniconIconNameAliases: Record<string, string> = {
   "swap-vertical": "Vertical",
   "musical-note": "Note",
   "musical-notes": "Notes",
+  "attach-outline": "Paperclip",
 } as const;
 
 export const iconNames: Record<ControlChangeDirection, string[]> = {

@@ -194,7 +194,10 @@ const DialogHeaderRow = ({
         </View>
       </View>
       <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-        <GridThemedButton onPress={saveOnPress}>
+        <GridThemedButton
+          onPress={saveOnPress}
+          buttonStyle={{ borderColor: mainColor, borderWidth: 1 }}
+        >
           <GridThemedIcon
             style={{ marginRight: 4 }}
             type="ionicon"

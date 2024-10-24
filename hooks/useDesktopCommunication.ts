@@ -80,6 +80,7 @@ export function useDesktopCommunication() {
   };
 
   const fetchWithTimeout = async (url: string, timeout = 2000) => {
+    return; // TEMP WHILE TESTING
     return Promise.race([
       fetch(url, { method: "GET" }),
       new Promise((_, reject) =>
