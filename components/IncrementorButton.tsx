@@ -1,15 +1,21 @@
 import { Button } from "@rneui/base";
 import React from "react";
 import { StyleSheet } from "react-native";
-import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPreset";
+import {
+  useCurrentGridElementPresetColors,
+  useCurrentGridPresetColors,
+} from "../hooks/useCurrentGridPreset";
 
 export const IncrementorButton = (props: {
   onPress: () => void;
   isPlus?: boolean;
   disabled?: boolean;
+  index?: number;
 }) => {
-  const { onPress, isPlus, disabled } = props;
-  const gridTheme = useCurrentGridPresetColors();
+  const { onPress, isPlus, disabled, index } = props;
+  const gridTheme = index
+    ? useCurrentGridElementPresetColors(index)
+    : useCurrentGridPresetColors();
 
   const titleStyle = {
     ...styles.titleStyle,

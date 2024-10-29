@@ -3,7 +3,6 @@ import { Text, View } from "react-native";
 import { Piano } from "../../Piano";
 import { theme } from "../../../constants/theme";
 import { IncrementorButton } from "../../IncrementorButton";
-
 interface NoteSelectorProps {
   noteNumber: number;
   setNoteNumber: (noteNumber: number) => void;
@@ -11,6 +10,7 @@ interface NoteSelectorProps {
   decreaseOctave: () => void;
 
   header: React.JSX.Element;
+  index?: number;
 }
 
 export const NoteSelector = ({
@@ -20,6 +20,7 @@ export const NoteSelector = ({
   decreaseOctave,
 
   header,
+  index,
 }: NoteSelectorProps) => {
   const currentOctave = Math.floor(noteNumber / 12);
   return (
@@ -35,6 +36,7 @@ export const NoteSelector = ({
           }}
         >
           <IncrementorButton
+            index={index}
             onPress={decreaseOctave}
             disabled={currentOctave === 0}
           />
@@ -42,6 +44,7 @@ export const NoteSelector = ({
             Octave: {currentOctave}
           </Text>
           <IncrementorButton
+            index={index}
             onPress={increaseOctave}
             isPlus
             disabled={currentOctave === 10}
@@ -49,7 +52,11 @@ export const NoteSelector = ({
         </View>
       </View>
 
-      <Piano noteNumber={noteNumber % 12} setNoteNumber={setNoteNumber} />
+      <Piano
+        noteNumber={noteNumber % 12}
+        setNoteNumber={setNoteNumber}
+        index={index}
+      />
     </View>
   );
 };

@@ -37,14 +37,7 @@ export const ControlChangeIconSettings = ({
     <View style={{ marginBottom: 12 }}>
       <Text style={{ color: theme.color.white }}>Icon</Text>
       <View style={{ flexDirection: "row" }}>
-        <GridThemedButton
-          onPress={() => setIconDialogOpen(true)}
-          buttonStyle={{
-            borderWidth: 1,
-            backgroundColor: colorState.unpressedColor,
-            borderColor: colorState.pressedColor,
-          }}
-        >
+        <GridThemedButton onPress={() => setIconDialogOpen(true)} index={index}>
           <IconWithTitle name={icon.name} index={index} />
         </GridThemedButton>
         <IconSelectDialog
@@ -194,11 +187,9 @@ const DialogHeaderRow = ({
         </View>
       </View>
       <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-        <GridThemedButton
-          onPress={saveOnPress}
-          buttonStyle={{ borderColor: mainColor, borderWidth: 1 }}
-        >
+        <GridThemedButton onPress={saveOnPress} index={index}>
           <GridThemedIcon
+            index={index}
             style={{ marginRight: 4 }}
             type="ionicon"
             name={"save-outline"}

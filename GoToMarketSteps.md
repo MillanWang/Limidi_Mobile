@@ -26,7 +26,8 @@
   - Improve scale selector component
   - "Dirty" indicator when user deviates away from scale default
 - PIANO
-  - Update the piano key colors to correspond to the overall grid style and individual element color themes
+  - Make a special case system for styles that clash with the default piano key colors
+    - Default color template should not have white to indicate selected because of accidental keys
 - COLOR
   - Add many more color presets
   - Improve color themes for grid icons

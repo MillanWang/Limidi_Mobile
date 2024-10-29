@@ -52,6 +52,7 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
       <GridElementNameInput index={index} />
 
       <NoteSelector
+        index={index}
         increaseOctave={updateOctave(true)}
         decreaseOctave={updateOctave(false)}
         noteNumber={noteNumber}

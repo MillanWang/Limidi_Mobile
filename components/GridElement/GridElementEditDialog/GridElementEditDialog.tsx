@@ -83,46 +83,34 @@ export default function GridElementEditDialog({
           <>
             <View style={styles.dialogTabSelectorContainer}>
               <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-                <GridThemedButton
-                  onPress={toggleElementMidiLock}
-                  containerStyle={{ borderRadius: 0 }}
-                  buttonStyle={{
-                    borderColor: gridTheme.pressedColor,
-                    borderWidth: 1,
-                    borderRadius: 0,
-                    opacity: isLocked ? 0.5 : 1,
-                  }}
-                >
-                  <LockIcon isLocked={isLocked} />
+                <GridThemedButton onPress={toggleElementMidiLock} index={index}>
+                  <LockIcon index={index} isLocked={isLocked} />
                 </GridThemedButton>
                 <GridThemedButton
                   onPress={() => setDialogVisible(false)}
-                  containerStyle={{ borderRadius: 0 }}
-                  buttonStyle={{
-                    borderColor: gridTheme.pressedColor,
-                    borderWidth: 1,
-                    borderRadius: 0,
-                  }}
+                  index={index}
                 >
-                  <SaveIcon /> SAVE
+                  <SaveIcon index={index} /> SAVE
                 </GridThemedButton>
               </View>
               <Divider />
               <View style={{ flexDirection: "row" }}>
                 <GridThemedButton
+                  index={index}
+                  unfocused={tabIndex !== 0}
                   onPress={() => setTabIndex(0)}
-                  buttonStyle={getTabButtonStyle(tabIndex === 0)}
-                  containerStyle={{ borderRadius: 0, flex: 1 }}
+                  flex
                 >
-                  <MidiTypeIcon isMidiNote={isMidiNote} />
+                  <MidiTypeIcon index={index} isMidiNote={isMidiNote} />
                   {" MIDI"}
                 </GridThemedButton>
                 <GridThemedButton
+                  index={index}
+                  unfocused={tabIndex !== 1}
                   onPress={() => setTabIndex(1)}
-                  buttonStyle={getTabButtonStyle(tabIndex === 1)}
-                  containerStyle={{ borderRadius: 0, flex: 1 }}
+                  flex
                 >
-                  <ColorIcon />
+                  <ColorIcon index={index} />
                   {" Color"}
                 </GridThemedButton>
               </View>
@@ -156,19 +144,21 @@ const styles = StyleSheet.create({
   dialogContentContainer: { flex: 1 },
 });
 
-const MidiTypeIcon = ({ isMidiNote }: { isMidiNote: boolean }) => {
+const MidiTypeIcon = (props: { index: number; isMidiNote: boolean }) => {
   return (
     <GridThemedIcon
+      index={props.index}
       style={{ marginRight: 4 }}
-      type={isMidiNote ? "material-community" : "feather"}
-      name={isMidiNote ? "piano" : "sliders"}
+      type={props.isMidiNote ? "material-community" : "feather"}
+      name={props.isMidiNote ? "piano" : "sliders"}
     />
   );
 };
 
-const ColorIcon = () => {
+const ColorIcon = (props: { index: number }) => {
   return (
     <GridThemedIcon
+      index={props.index}
       style={{ marginRight: 4 }}
       type="ionicon"
       name={"color-palette"}
@@ -176,18 +166,20 @@ const ColorIcon = () => {
   );
 };
 
-const LockIcon = ({ isLocked }: { isLocked: boolean }) => {
+const LockIcon = (props: { index: number; isLocked: boolean }) => {
   return (
     <GridThemedIcon
+      index={props.index}
       type="ionicon"
-      name={isLocked ? "lock-closed" : "lock-open"}
+      name={props.isLocked ? "lock-closed" : "lock-open"}
     />
   );
 };
 
-const SaveIcon = () => {
+const SaveIcon = (props: { index?: number }) => {
   return (
     <GridThemedIcon
+      index={props.index}
       style={{ marginRight: 4 }}
       type="ionicon"
       name={"save-outline"}

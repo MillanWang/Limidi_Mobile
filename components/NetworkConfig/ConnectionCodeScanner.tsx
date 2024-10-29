@@ -51,7 +51,7 @@ export function ConnectionCodeScanner() {
     <View>
       {scanData !== undefined ? (
         <View style={{ flexDirection: "row", gap: 8 }}>
-          <GridThemedButton onPress={() => setScanData(undefined)}>
+          <GridThemedButton onPress={() => setScanData(undefined)} borderless>
             <QRIcon />
             Scan
           </GridThemedButton>

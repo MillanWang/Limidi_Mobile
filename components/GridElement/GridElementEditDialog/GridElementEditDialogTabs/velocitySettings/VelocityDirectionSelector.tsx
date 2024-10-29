@@ -13,7 +13,6 @@ export const VelocityDirectionSelector = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();
   const isVertical =
     useGridElementAtIndex(index).midiNoteState.velocity.isVertical;
-  const gridTheme = useCurrentGridElementPresetColors(index);
 
   const setVelocityVertical = () => {
     dispatch(setGridElementVelocityIsVertical({ index, isVertical: true }));
@@ -36,13 +35,8 @@ export const VelocityDirectionSelector = ({ index }: { index: number }) => {
         <GridThemedButton
           index={index}
           onPress={setVelocityVertical}
-          containerStyle={{
-            borderRadius: 0,
-            flex: 1,
-            borderWidth: 1,
-            borderColor: gridTheme.pressedColor,
-            opacity: isVertical ? 1 : 0.5,
-          }}
+          unfocused={!isVertical}
+          flex
         >
           <GridThemedIcon name="swap-vertical" type="ionicon" index={index} />
           {" Vertical"}
@@ -50,13 +44,8 @@ export const VelocityDirectionSelector = ({ index }: { index: number }) => {
         <GridThemedButton
           index={index}
           onPress={setVelocityHorizontal}
-          containerStyle={{
-            borderRadius: 0,
-            flex: 1,
-            borderWidth: 1,
-            borderColor: gridTheme.pressedColor,
-            opacity: !isVertical ? 1 : 0.5,
-          }}
+          unfocused={isVertical}
+          flex
         >
           <GridThemedIcon name="swap-horizontal" type="ionicon" index={index} />
           {" Horizontal"}

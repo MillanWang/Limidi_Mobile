@@ -3,21 +3,30 @@ import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { NOTE } from "../constants/MIDI_Notes";
 import { theme } from "../constants/theme";
+import {
+  useCurrentGridElementPresetColors,
+  useCurrentGridPresetColors,
+} from "../hooks/useCurrentGridPreset";
 
-const naturalNoteColor = "#bbbbbb";
+const naturalNoteColor = "#888888";
 const accidentalNoteColor = "#333333";
-const highLightedKeyColor = "red";
 
 const naturalNoteNumbers = [0, 2, 4, 5, 7, 9, 11];
 
 export interface PianoProps {
   noteNumber: number;
   setNoteNumber(noteNumber: number): void;
+  index?: number;
 }
 
 const accidentalNoteNumbers = [1, 3, 6, 8, 10];
 
-export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
+export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
+  const { pressedColor: highLightedKeyColor, unpressedColor: noteLabelColor } =
+    index
+      ? useCurrentGridElementPresetColors(index)
+      : useCurrentGridPresetColors();
+
   const topRowStyles = [
     { ...styles.c_NoteSpacer, ...styles.noteSpacer },
     { ...styles.accidentalKey },
@@ -49,7 +58,7 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
           >
             {accidentalNoteNumbers.includes(noteNumber) &&
               noteNumber === currentNoteNumber && (
-                <KeyLabel noteNumber={noteNumber} />
+                <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />
               )}
           </Pressable>
         ))}
@@ -69,7 +78,7 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
               onPress={() => setNoteNumber(currentNoteNumber)}
             >
               {noteNumber === currentNoteNumber && (
-                <KeyLabel noteNumber={noteNumber} />
+                <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />
               )}
             </Pressable>
           );
@@ -79,13 +88,14 @@ export function Piano({ noteNumber, setNoteNumber }: PianoProps) {
   );
 }
 
-const KeyLabel = ({ noteNumber }: { noteNumber: number }) => {
+const KeyLabel = (props: { noteNumber: number; color: string }) => {
+  const { noteNumber, color } = props;
   return (
     <Text
       style={{
         marginTop: "auto",
         marginBottom: 2,
-        color: theme.color.white,
+        color,
         textAlign: "center",
         fontSize: 16,
         fontFamily: "monospace", // Added monospaced font

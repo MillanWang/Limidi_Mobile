@@ -7,7 +7,7 @@ import { NetworkErrorIndicator } from "./NetworkErrorIndicator";
 export const CheckConnectionButton = (props: ButtonProps) => {
   const { sendHeartbeatMessage } = useDesktopCommunication();
   return (
-    <GridThemedButton onPress={sendHeartbeatMessage} {...props}>
+    <GridThemedButton onPress={sendHeartbeatMessage} borderless {...props}>
       <NetworkErrorIndicator style={{ marginRight: 8 }} useGridThemeColors />
       Check Connection
     </GridThemedButton>

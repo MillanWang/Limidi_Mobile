@@ -12,27 +12,10 @@ import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
 export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();
   const { isMidiNote } = useGridElementAtIndex(index);
-  const gridTheme = useCurrentGridPresetColors();
-
-  const { pressedColor, unpressedColor } = gridTheme;
-
   const setElementToMidiNote = () =>
     void dispatch(setGridElementIsMidiNote({ index, isMidiNote: true }));
   const setElementToControlChange = () =>
     void dispatch(setGridElementIsMidiNote({ index, isMidiNote: false }));
-
-  const getButtonStyle = useCallback(
-    (isEnabled: boolean) => {
-      return {
-        flex: 1,
-        borderWidth: 1,
-        borderColor: pressedColor,
-        borderRadius: 0,
-        opacity: isEnabled ? 1 : 0.5,
-      };
-    },
-    [pressedColor, unpressedColor]
-  );
 
   return (
     <View>
@@ -42,7 +25,8 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
           <GridThemedButton
             index={index}
             onPress={setElementToMidiNote}
-            containerStyle={getButtonStyle(isMidiNote)}
+            flex
+            unfocused={!isMidiNote}
           >
             <GridThemedIcon
               index={index}
@@ -55,7 +39,8 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
           <GridThemedButton
             index={index}
             onPress={setElementToControlChange}
-            containerStyle={getButtonStyle(!isMidiNote)}
+            flex
+            unfocused={isMidiNote}
           >
             <GridThemedIcon
               index={index}

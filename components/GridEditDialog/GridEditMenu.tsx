@@ -25,13 +25,8 @@ export const GridEditMenu = () => {
           <GridThemedButton
             onPress={() => setTabIndex(i)}
             key={`settingsTab-${i}`}
-            containerStyle={{ flex: 1, borderRadius: 0 }}
-            buttonStyle={{
-              borderColor: gridTheme.pressedColor,
-              borderRadius: 0,
-              opacity: tabIndex === i ? 1 : 0.5,
-              borderWidth: 1,
-            }}
+            unfocused={tabIndex !== i}
+            flex
           >
             <TabIcon {...tab} color={gridTheme.pressedColor} />
             {tab.name}

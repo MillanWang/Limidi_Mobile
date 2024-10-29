@@ -45,19 +45,6 @@ export const ControlChangeIndexSettings = ({
   const showHorizontalControlChangeIndexSelector =
     mode.current === ControlChangeDirection.Horizontal || isXY;
 
-  const getButtonStyle = useCallback(
-    (isEnabled: boolean, index: number) => {
-      return {
-        borderWidth: 1,
-        borderColor:
-          isEnabled || true ? gridTheme.pressedColor : gridTheme.unpressedColor,
-        opacity: isEnabled ? 1 : 0.33,
-        borderRadius: 0,
-      };
-    },
-    [gridTheme]
-  );
-
   return (
     <>
       <View style={{ marginBottom: 12 }}>
@@ -73,14 +60,16 @@ export const ControlChangeIndexSettings = ({
         >
           {unidirectionalButtonList.map((element, i) => (
             <GridThemedButton
-              buttonStyle={getButtonStyle(mode.current === element.enum, i)}
-              containerStyle={{ borderRadius: 0, flex: 1 }}
+              index={index}
+              unfocused={mode.current !== element.enum}
+              flex
               titleStyle={{ fontSize: 16 }}
               onPress={element.onPress}
               title={element.text}
               key={`button_${element.text}_${i}`}
             >
               <GridThemedIcon
+                index={index}
                 name={element.iconName}
                 type="ionicon"
                 style={{ marginRight: 4 }}

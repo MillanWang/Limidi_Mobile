@@ -28,6 +28,7 @@ export const ControlChangeIndexSelector = (props: {
         containerStyle={{ paddingLeft: 4 }}
         leftIcon={
           <IncrementorButton
+            index={index}
             isPlus={false}
             onPress={indexController.decrement}
             disabled={!canDecrement}
@@ -46,6 +47,7 @@ export const ControlChangeIndexSelector = (props: {
         }}
         rightIcon={
           <IncrementorButton
+            index={index}
             isPlus
             onPress={indexController.increment}
             disabled={!canIncrement}
