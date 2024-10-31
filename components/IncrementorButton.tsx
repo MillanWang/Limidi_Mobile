@@ -13,9 +13,10 @@ export const IncrementorButton = (props: {
   index?: number;
 }) => {
   const { onPress, isPlus, disabled, index } = props;
-  const gridTheme = index
-    ? useCurrentGridElementPresetColors(index)
-    : useCurrentGridPresetColors();
+  const gridTheme =
+    index !== undefined
+      ? useCurrentGridElementPresetColors(index)
+      : useCurrentGridPresetColors();
 
   const titleStyle = {
     ...styles.titleStyle,

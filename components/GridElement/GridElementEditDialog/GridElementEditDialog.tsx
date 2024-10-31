@@ -1,5 +1,5 @@
 import { Dialog, Text } from "@rneui/themed";
-import React, { useCallback } from "react";
+import React from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
@@ -50,30 +50,8 @@ export default function GridElementEditDialog({
   const toggleElementMidiLock = () =>
     dispatch(setGridElementIsLocked({ index, isLocked: !isLocked }));
 
-  const getTabButtonStyle = useCallback(
-    (isPressed: boolean) => {
-      return {
-        borderWidth: 1,
-        opacity: isPressed ? 1 : 0.5,
-        borderColor: gridTheme.pressedColor,
-        borderRadius: 0,
-      };
-    },
-    [gridTheme]
-  );
-
   return (
-    <Dialog
-      isVisible={dialogVisible}
-      style={{}}
-      overlayStyle={{
-        width: "90%",
-        padding: 12,
-        height: "90%",
-        backgroundColor: theme.color.modalBackground,
-        borderRadius: 16,
-      }}
-    >
+    <Dialog isVisible={dialogVisible} overlayStyle={styles.dialogOverlay}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={{ flex: 1 }}
@@ -139,11 +117,6 @@ export default function GridElementEditDialog({
   );
 }
 
-const styles = StyleSheet.create({
-  dialogTabSelectorContainer: { flexDirection: "column", gap: 8 },
-  dialogContentContainer: { flex: 1 },
-});
-
 const MidiTypeIcon = (props: { index: number; isMidiNote: boolean }) => {
   return (
     <GridThemedIcon
@@ -196,3 +169,20 @@ const Divider = () => (
     }}
   />
 );
+
+const styles = StyleSheet.create({
+  dialogOverlay: {
+    width: "90%",
+    maxWidth: 400,
+    padding: 12,
+    height: "90%",
+    backgroundColor: theme.color.modalBackground,
+    borderRadius: 16,
+    shadowColor: theme.color.black,
+    shadowOpacity: 0.75,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  dialogTabSelectorContainer: { flexDirection: "column", gap: 8 },
+  dialogContentContainer: { flex: 1 },
+});

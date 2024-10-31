@@ -1,8 +1,8 @@
 import { Text } from "@rneui/base";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
+import { DEFAULT, HULK } from "../constants/ColorPresets";
 import { NOTE } from "../constants/MIDI_Notes";
-import { theme } from "../constants/theme";
 import {
   useCurrentGridElementPresetColors,
   useCurrentGridPresetColors,
@@ -21,11 +21,27 @@ export interface PianoProps {
 
 const accidentalNoteNumbers = [1, 3, 6, 8, 10];
 
-export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
-  const { pressedColor: highLightedKeyColor, unpressedColor: noteLabelColor } =
-    index
+const colorsWithAlternateKeyColors = [DEFAULT.pressedColor];
+const defaultSelectedKeyColor = HULK.pressedColor;
+
+const usePianoKeyColors = (index?: number) => {
+  const gridTheme =
+    index !== undefined
       ? useCurrentGridElementPresetColors(index)
       : useCurrentGridPresetColors();
+
+  return {
+    highLightedKeyColor: colorsWithAlternateKeyColors.includes(
+      gridTheme.pressedColor
+    )
+      ? defaultSelectedKeyColor
+      : gridTheme.pressedColor,
+    noteLabelColor: gridTheme.unpressedColor,
+  };
+};
+
+export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
+  const { highLightedKeyColor, noteLabelColor } = usePianoKeyColors(index);
 
   const topRowStyles = [
     { ...styles.c_NoteSpacer, ...styles.noteSpacer },
