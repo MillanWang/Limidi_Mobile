@@ -1,59 +1,101 @@
-import { Button, Input } from "@rneui/themed";
+import { Text } from "@rneui/base";
+import { Input } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
 import { theme } from "../../../../../constants/theme";
-import { useControlChangeIndexController } from "../useControlChangeIndexController";
+import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 import { IncrementorButton } from "../../../../IncrementorButton";
+import { useControlChangeIndexController } from "../useControlChangeIndexController";
 
 export const ControlChangeIndexSelector = (props: {
   index: number;
   isVertical: boolean;
 }) => {
   const { index, isVertical } = props;
+
   const { horizontalIndex, verticalIndex } = useControlChangeIndexController({
     index,
   });
 
   const indexController = isVertical ? verticalIndex : horizontalIndex;
+  const otherIndicesWithMatchingCcIndex =
+    indexController.otherIndicesWithMatchingCcIndex;
   const canDecrement = indexController.value > 0;
   const canIncrement = indexController.value < 127;
 
+  const defaultCcIndex = index * 2 + (isVertical ? 1 : 0);
+  const currentCcIndexIsDefault = indexController.value === defaultCcIndex;
+
+  const hasIndexCollision = otherIndicesWithMatchingCcIndex.length > 0;
+  const indexCollisionWarningMessage = hasIndexCollision
+    ? `Not unique\n(${otherIndicesWithMatchingCcIndex.slice(0, 3).join(", ")}${
+        otherIndicesWithMatchingCcIndex.length > 3 ? ", ..." : ""
+      })`
+    : "";
+
   return (
-    <View
-      style={{
-        maxWidth: 180,
-      }}
-    >
-      <Input
-        containerStyle={{ paddingLeft: 4 }}
-        leftIcon={
-          <IncrementorButton
-            index={index}
-            isPlus={false}
-            onPress={indexController.decrement}
-            disabled={!canDecrement}
-          />
-        }
-        inputStyle={{ color: theme.color.lightText, marginLeft: 8 }}
-        keyboardType="numeric"
-        value={`${indexController.value}`}
-        onChange={(e) => {
-          const value = e.nativeEvent.text;
-          if (isIntegerBetween0And127(value)) {
-            indexController.set(Number(value));
-          } else if (value === "") {
-            indexController.set(0);
+    <View style={{ flexDirection: "row" }}>
+      <View style={{ maxWidth: 180, flex: 1 }}>
+        <Input
+          containerStyle={{ paddingLeft: 4, marginBottom: 0 }}
+          leftIcon={
+            <IncrementorButton
+              index={index}
+              isPlus={false}
+              onPress={indexController.decrement}
+              disabled={!canDecrement}
+            />
           }
+          inputStyle={{ color: theme.color.lightText, marginLeft: 8 }}
+          keyboardType="numeric"
+          value={`${indexController.value}`}
+          onChange={(e) => {
+            const value = e.nativeEvent.text;
+            if (isIntegerBetween0And127(value)) {
+              indexController.set(Number(value));
+            } else if (value === "") {
+              indexController.set(0);
+            }
+          }}
+          rightIcon={
+            <IncrementorButton
+              index={index}
+              isPlus
+              onPress={indexController.increment}
+              disabled={!canIncrement}
+            />
+          }
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          marginTop: -28,
+          alignItems: "center",
         }}
-        rightIcon={
-          <IncrementorButton
-            index={index}
-            isPlus
-            onPress={indexController.increment}
-            disabled={!canIncrement}
-          />
-        }
-      />
+      >
+        <GridThemedIcon
+          style={{ opacity: currentCcIndexIsDefault ? 0 : 1, marginRight: 8 }}
+          index={index}
+          onPress={() => {
+            if (!currentCcIndexIsDefault) {
+              indexController.set(defaultCcIndex);
+            }
+          }}
+          name={"refresh-outline"}
+          type="ionicon"
+        />
+        <GridThemedIcon
+          style={{ opacity: hasIndexCollision ? 1 : 0, marginRight: 8 }}
+          name={"warning-outline"}
+          color={theme.color.warningText}
+          type="ionicon"
+        />
+
+        <Text style={{ color: theme.color.warningText }}>
+          {indexCollisionWarningMessage}
+        </Text>
+      </View>
     </View>
   );
 };

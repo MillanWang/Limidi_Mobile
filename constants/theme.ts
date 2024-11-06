@@ -15,6 +15,7 @@ export const theme = {
     black: "#000000",
     lightText: "#dddddd",
     darkText: "#555555",
+    warningText: "#eed202",
     modalBackground: "#282828",
   },
 };

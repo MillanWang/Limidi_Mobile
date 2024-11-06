@@ -1,4 +1,3 @@
-import { Icon } from "@rneui/base";
 import { Input, Text } from "@rneui/themed";
 import React from "react";
 import {
@@ -9,6 +8,7 @@ import { theme } from "../../../../constants/theme";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementName } from "../../../../redux/slices/GridPresetsSlice";
+import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
 
 export const GridElementNameInput = ({ index }: { index: number }) => {
   const dispatch = useAppDispatch();
@@ -25,11 +25,11 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
   const rightIcon = isNoteLabelStandard(noteNumber, name) ? (
     false
   ) : (
-    <Icon
+    <GridThemedIcon
       onPress={resetElementName}
       name="refresh-outline"
       type="ionicon"
-      color={theme.color.white}
+      index={index}
     />
   );
   return (

@@ -1,14 +1,15 @@
 import { useMemo } from "react";
 import { ioniconValidIconNames } from "../../../../constants/IconNames";
 import { createMidiControlChange } from "../../../../constants/MIDI_Notes";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { useDesktopCommunication } from "../../../../hooks/useDesktopCommunication";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useAppDispatch } from "../../../../redux/hooks";
 import {
+  setGridElementControlChangeIconString,
   setGridElementControlChangeXIndex,
   setGridElementControlChangeYIndex,
-  setGridElementControlChangeIconString,
 } from "../../../../redux/slices/GridPresetsSlice";
-import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
+import { useCheckCcIndexUniqueness } from "./ccSettings/useCheckCcIndexUniqueness";
 
 export enum ControlChangeDirection {
   Horizontal = "Horizontal",
@@ -33,6 +34,8 @@ export const useControlChangeIndexController = (props: { index: number }) => {
 
   const { sendMidiControlChange } = useDesktopCommunication();
   const currentGridElementState = useGridElementAtIndex(index);
+  const { getOtherElementIndexesWithMatchingCcIndex } =
+    useCheckCcIndexUniqueness();
 
   const iconNameState = currentGridElementState.controlChangeState.iconName;
   const xAxisControlIndexState =
@@ -63,6 +66,10 @@ export const useControlChangeIndexController = (props: { index: number }) => {
 
   const horizontalIndex = {
     value: xAxisControlIndexState,
+    otherIndicesWithMatchingCcIndex: getOtherElementIndexesWithMatchingCcIndex(
+      index,
+      xAxisControlIndexState
+    ),
     decrement: () => {
       const candidateNumber = Math.abs(xAxisControlIndexState) - 1;
       if (candidateNumber < 0) return;
@@ -78,6 +85,10 @@ export const useControlChangeIndexController = (props: { index: number }) => {
 
   const verticalIndex = {
     value: yAxisControlIndexState,
+    otherIndicesWithMatchingCcIndex: getOtherElementIndexesWithMatchingCcIndex(
+      index,
+      yAxisControlIndexState
+    ),
     decrement: () => {
       const candidateNumber = Math.abs(yAxisControlIndexState) - 1;
       if (candidateNumber < 0) return;
