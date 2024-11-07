@@ -18,7 +18,6 @@
     - isLocked Icons
 - CONTROL CHANGE
   - Debouncing/throttling of api calls
-  - CC port uniqueness warning
   - Limits on the total number of CC components. Probably gonna be a performance bottleneck with all those API calls
 - SCALES
   - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.

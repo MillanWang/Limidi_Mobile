@@ -1,5 +1,5 @@
 import { Icon } from "@rneui/themed";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Animated,
   GestureResponderEvent,
@@ -13,13 +13,14 @@ import {
   useGridElementAtIndex,
 } from "../../../hooks/useCurrentGridPreset";
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
+import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
 interface ControlChangeProps {
   index: number;
 }
 
-const ICON_SIZE = 55;
+const ICON_SIZE = 40;
 const TOP_BAR_HEIGHT = 60;
 
 const DEGREE_LIST_LIST = [
@@ -27,142 +28,178 @@ const DEGREE_LIST_LIST = [
   [270, 0, 90],
   [225, 180, 135],
 ];
+
 export default function ControlChange({ index }: ControlChangeProps) {
-  const { rowCount, columnCount } = useCurrentGridPreset();
-  const currentGridElementState = useGridElementAtIndex(index);
-
-  const colorState = currentGridElementState.colorState;
-
-  const xAxisControlIndexState =
-    currentGridElementState.controlChangeState.xAxisControlIndex;
-  const yAxisControlIndexState =
-    currentGridElementState.controlChangeState.yAxisControlIndex;
-  const iconNameState = currentGridElementState.controlChangeState.iconName;
-
   const { sendMidiControlChange } = useDesktopCommunication();
+  const { rowCount, columnCount } = useCurrentGridPreset();
+  const {
+    colorState,
+    controlChangeState: { xAxisControlIndex, yAxisControlIndex, iconName },
+  } = useGridElementAtIndex(index);
 
   // Positional knowledge
   const [elementWidth, setElementWidth] = useState(1);
   const [elementHeight, setElementHeight] = useState(1);
   const [spaceFromLeft, setSpaceFromLeft] = useState(1);
   const [spaceFromTop, setSpaceFromTop] = useState(1);
-
-  const currentControlChangeDirection =
-    xAxisControlIndexState > 0 && yAxisControlIndexState > 0
-      ? ControlChangeDirection.XY
-      : xAxisControlIndexState > 0
-      ? ControlChangeDirection.Horizontal
-      : ControlChangeDirection.Vertical;
-
-  function onLayout(event: any) {
-    setElementWidth(event.nativeEvent.layout.width);
-    setElementHeight(event.nativeEvent.layout.height);
-    setSpaceFromLeft((index % columnCount) * event.nativeEvent.layout.width);
-    setSpaceFromTop(
-      TOP_BAR_HEIGHT +
-        (rowCount - Math.floor(index / columnCount) - 1) *
-          event.nativeEvent.layout.height
-    );
-    setXPositionAbsolute(event.nativeEvent.layout.width / 2 - ICON_SIZE / 2);
-    setYPositionAbsolute(event.nativeEvent.layout.height / 2 - ICON_SIZE / 2);
-  }
-
   const [xPositionAbsolute, setXPositionAbsolute] = useState(elementWidth / 2);
   const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2);
 
-  function getIconName() {
-    if (iconNameState && iconNameState !== "") {
-      return iconNameState;
-    } else if (xAxisControlIndexState > 0 && yAxisControlIndexState > 0) {
-      // XY default
-      return "move";
-    } else if (yAxisControlIndexState > 0) {
-      // Vertical default
-      return "swap-vertical";
-    } else if (xAxisControlIndexState > 0) {
-      // Horizontal default
-      return "swap-horizontal";
-    }
-    return "move";
-  }
+  const [isInMotion, setIsInMotion] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  // TODO: Incorporate some kind of throttle or debounce system here for performance sake. No need for every pixel change
-  function onSliderChange(event: GestureResponderEvent) {
-    if (
-      currentControlChangeDirection === ControlChangeDirection.Horizontal ||
-      currentControlChangeDirection === ControlChangeDirection.XY
-    ) {
+  const currentControlChangeDirection = useMemo(
+    () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
+    [xAxisControlIndex, yAxisControlIndex]
+  );
+
+  const onLayout = useCallback(
+    (event: any) => {
+      const layoutWidth = event.nativeEvent.layout.width;
+      const layoutHeight = event.nativeEvent.layout.height;
+      setElementWidth(layoutWidth);
+      setElementHeight(layoutHeight);
+      setSpaceFromLeft((index % columnCount) * layoutWidth);
+      setSpaceFromTop(
+        TOP_BAR_HEIGHT +
+          (rowCount - Math.floor(index / columnCount) - 1) * layoutHeight
+      );
+      setXPositionAbsolute(layoutWidth / 2 - ICON_SIZE / 2);
+      setYPositionAbsolute(layoutHeight / 2 - ICON_SIZE / 2);
+    },
+    [
+      setElementWidth,
+      setElementHeight,
+      setSpaceFromLeft,
+      index,
+      columnCount,
+      setSpaceFromTop,
+      rowCount,
+      setXPositionAbsolute,
+      setYPositionAbsolute,
+    ]
+  );
+
+  const safeIconName = useMemo(
+    () => getSafeIconName(iconName, xAxisControlIndex, yAxisControlIndex),
+    [iconName, xAxisControlIndex, yAxisControlIndex]
+  );
+
+  const hasVerticalControl = useMemo(
+    () => currentControlChangeDirection !== ControlChangeDirection.Horizontal,
+    [currentControlChangeDirection]
+  );
+
+  const hasHorizontalControl = useMemo(
+    () => currentControlChangeDirection !== ControlChangeDirection.Vertical,
+    [currentControlChangeDirection]
+  );
+
+  const sendHorizontalCcMessage = useCallback(
+    (pageX: number) => {
+      const ccInput = createMidiControlChange(
+        xAxisControlIndex,
+        Math.floor((127 * (pageX - spaceFromLeft)) / elementWidth)
+      );
+      sendMidiControlChange(ccInput);
+    },
+    [xAxisControlIndex, spaceFromLeft, elementWidth, sendMidiControlChange]
+  );
+  const sendVerticalCcMessage = useCallback(
+    (pageY: number) => {
+      const ccInput = createMidiControlChange(
+        yAxisControlIndex,
+        Math.floor(127 - (127 * (pageY - spaceFromTop)) / elementHeight)
+      );
+      sendMidiControlChange(ccInput);
+    },
+    [yAxisControlIndex, spaceFromTop, elementHeight, sendMidiControlChange]
+  );
+
+  const updateXPositionAbsolute = useCallback(
+    (pageX: number) => {
       setXPositionAbsolute(
         Math.min(
           elementWidth - ICON_SIZE,
-          Math.max(0, event.nativeEvent.pageX - spaceFromLeft - ICON_SIZE / 2)
+          Math.max(0, pageX - spaceFromLeft - ICON_SIZE * 0.75)
         )
       );
-      sendMidiControlChange(
-        createMidiControlChange(
-          xAxisControlIndexState,
-          Math.floor(
-            (127 * (event.nativeEvent.pageX - spaceFromLeft)) / elementWidth
-          )
-        )
-      );
-    } else {
-      // Locked horizontally
-      // Vertical only control
-      setXPositionAbsolute(elementWidth / 2 - ICON_SIZE / 2);
-    }
-
-    if (
-      currentControlChangeDirection === ControlChangeDirection.Vertical ||
-      currentControlChangeDirection === ControlChangeDirection.XY
-    ) {
+    },
+    [xAxisControlIndex, spaceFromLeft, elementWidth, setXPositionAbsolute]
+  );
+  const updateYPositionAbsolute = useCallback(
+    (pageY: number) => {
       setYPositionAbsolute(
         Math.min(
           elementHeight - ICON_SIZE,
-          Math.max(0, event.nativeEvent.pageY - spaceFromTop - ICON_SIZE / 2)
+          Math.max(0, pageY - spaceFromTop - ICON_SIZE * 2.5)
         )
       );
-      sendMidiControlChange(
-        createMidiControlChange(
-          yAxisControlIndexState,
-          Math.floor(
-            127 -
-              (127 * (event.nativeEvent.pageY - spaceFromTop)) / elementHeight
-          )
-        )
-      );
-    } else {
-      // Locked vertically
-      // Horizontal only control
-      setYPositionAbsolute(elementHeight / 2 - ICON_SIZE / 2);
-    }
-  }
+    },
+    [yAxisControlIndex, spaceFromTop, elementHeight, setYPositionAbsolute]
+  );
 
-  const [isInMotion, setIsInMotion] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
-  function fadeIn() {
+  const onSliderChange = useCallback(
+    (event: GestureResponderEvent) => {
+      if (hasHorizontalControl) {
+        const pageX = event.nativeEvent.pageX;
+        updateXPositionAbsolute(pageX);
+        sendHorizontalCcMessage(pageX);
+      } else {
+        // Locked horizontally. Vertical only control
+        setXPositionAbsolute(elementWidth / 2 - ICON_SIZE / 2);
+      }
+
+      if (hasVerticalControl) {
+        const pageY = event.nativeEvent.pageY;
+        updateYPositionAbsolute(pageY);
+        sendVerticalCcMessage(pageY);
+      } else {
+        // Locked vertically. Horizontal only control
+        setYPositionAbsolute(elementHeight / 2 - ICON_SIZE / 2);
+      }
+    },
+    [
+      elementWidth,
+      elementHeight,
+      sendHorizontalCcMessage,
+      sendVerticalCcMessage,
+      updateXPositionAbsolute,
+      setXPositionAbsolute,
+      updateYPositionAbsolute,
+      setYPositionAbsolute,
+    ]
+  );
+
+  const fadeIn = useCallback(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 300,
       useNativeDriver: true,
     }).start();
-  }
-  function fadeOut(opacity: number) {
-    Animated.timing(fadeAnim, {
-      toValue: opacity,
-      duration: 1,
-      useNativeDriver: true,
-    }).start(() => {
-      setIsInMotion(true);
-    });
-  }
-  function playModeTouchStartHandler() {
+  }, [fadeAnim]);
+
+  const fadeOut = useCallback(
+    (opacity: number) => {
+      Animated.timing(fadeAnim, {
+        toValue: opacity,
+        duration: 1,
+        useNativeDriver: true,
+      }).start(() => {
+        setIsInMotion(true);
+      });
+    },
+    [fadeAnim, setIsInMotion]
+  );
+
+  const playModeTouchStartHandler = useCallback(() => {
     fadeOut(0.25);
-  }
-  function playModeTouchEndHandler() {
+  }, [fadeOut]);
+
+  const playModeTouchEndHandler = useCallback(() => {
     setIsInMotion(false);
     fadeIn();
-  }
+  }, [fadeIn, setIsInMotion]);
 
   const BaseIcon = (
     <View
@@ -173,49 +210,14 @@ export default function ControlChange({ index }: ControlChangeProps) {
         backgroundColor: colorState.pressedColor,
       }}
     >
-      <Icon
+      <GridThemedIcon
         //Changes on move as one option. Hard set to a value as another option
-        name={getIconName()}
+        index={index}
+        invert
+        name={safeIconName}
         type="ionicon"
-        color={colorState.unpressedColor}
       />
     </View>
-  );
-
-  const SpreadNeighboursIcon = (
-    <>
-      {DEGREE_LIST_LIST.map((degreeList, i) => {
-        return degreeList.map((degree, j) => {
-          //Complete compression at 10
-          const spreadFactor = isInMotion
-            ? Math.max(1, (1 - xPositionAbsolute / elementWidth) * 6)
-            : 10;
-          const getIconPosition = (position: number, index: number) => {
-            // 0.71 === 1/root(2) // which makes the corners circularly distanced instead of box distanced
-            const radialMultiplier = degree % 90 === 0 ? 1 : 0.71;
-            const spreadOffset = (ICON_SIZE * (index - 1)) / spreadFactor;
-            return position + spreadOffset * radialMultiplier;
-          };
-          return (
-            <View
-              key={`CcSubIcon_${i}_${j}`}
-              style={{
-                ...styles.ccIcon,
-                top: getIconPosition(yPositionAbsolute, i),
-                left: getIconPosition(xPositionAbsolute, j),
-              }}
-            >
-              <Icon
-                name={getIconName()}
-                type="ionicon"
-                color={colorState.pressedColor}
-                style={{ transform: [{ rotate: `${degree}deg` }] }}
-              />
-            </View>
-          );
-        });
-      })}
-    </>
   );
 
   return (
@@ -247,13 +249,77 @@ export default function ControlChange({ index }: ControlChangeProps) {
           onTouchEnd={playModeTouchEndHandler}
         >
           {currentControlChangeDirection === ControlChangeDirection.XY &&
-            SpreadNeighboursIcon}
+            isInMotion && (
+              <SpreadNeighboursIcons
+                index={index}
+                xPositionAbsolute={xPositionAbsolute}
+                yPositionAbsolute={yPositionAbsolute}
+                elementWidth={elementWidth}
+                safeIconName={safeIconName}
+              />
+            )}
           {BaseIcon}
         </Animated.View>
       </View>
     </>
   );
 }
+
+const SpreadNeighboursIcons = (props: {
+  index: number;
+  xPositionAbsolute: number;
+  elementWidth: number;
+
+  yPositionAbsolute: number;
+  safeIconName: string;
+}) => {
+  const {
+    index,
+    xPositionAbsolute,
+    elementWidth,
+
+    yPositionAbsolute,
+    safeIconName,
+  } = props;
+
+  const getIconPosition = useCallback(
+    (degree: number, position: number, index: number) => {
+      const spreadFactor = Math.max(
+        1,
+        (1 - xPositionAbsolute / elementWidth) * 6
+      );
+      // 0.71 === 1/root(2) // which makes the corners circularly distanced instead of box distanced
+      const radialMultiplier = degree % 90 === 0 ? 1 : 0.71;
+      const spreadOffset = (ICON_SIZE * (index - 1)) / spreadFactor;
+      return position + spreadOffset * radialMultiplier;
+    },
+    [xPositionAbsolute, elementWidth]
+  );
+
+  return (
+    <>
+      {DEGREE_LIST_LIST.map((degreeList, i) =>
+        degreeList.map((degree, j) => (
+          <View
+            key={`CcSubIcon_${i}_${j}`}
+            style={{
+              ...styles.ccIcon,
+              top: getIconPosition(degree, yPositionAbsolute, i),
+              left: getIconPosition(degree, xPositionAbsolute, j),
+            }}
+          >
+            <GridThemedIcon
+              name={safeIconName}
+              type="ionicon"
+              index={index}
+              style={{ transform: [{ rotate: `${degree}deg` }] }}
+            />
+          </View>
+        ))
+      )}
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   gridElementBasePressedView: {
@@ -278,3 +344,34 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
+
+const getCcDirection = (
+  xAxisControlIndex: number,
+  yAxisControlIndex: number
+) => {
+  return xAxisControlIndex > 0 && yAxisControlIndex > 0
+    ? ControlChangeDirection.XY
+    : xAxisControlIndex > 0
+    ? ControlChangeDirection.Horizontal
+    : ControlChangeDirection.Vertical;
+};
+
+const getSafeIconName = (
+  iconName: string,
+  xAxisControlIndex: number,
+  yAxisControlIndex: number
+) => {
+  if (iconName) {
+    return iconName;
+  } else if (xAxisControlIndex > 0 && yAxisControlIndex > 0) {
+    // XY default
+    return "move";
+  } else if (yAxisControlIndex > 0) {
+    // Vertical default
+    return "swap-vertical";
+  } else if (xAxisControlIndex > 0) {
+    // Horizontal default
+    return "swap-horizontal";
+  }
+  return "move";
+};
