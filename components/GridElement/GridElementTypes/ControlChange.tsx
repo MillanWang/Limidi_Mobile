@@ -1,4 +1,3 @@
-import { Icon } from "@rneui/themed";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -6,7 +5,10 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { createMidiControlChange } from "../../../constants/MIDI_Notes";
+import {
+  createMidiControlChange,
+  MidiControlChangeProps,
+} from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
 import {
   useCurrentGridPreset,
@@ -15,10 +17,13 @@ import {
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
+import { debounce } from "../../../services/debounce";
 
 interface ControlChangeProps {
   index: number;
 }
+
+const CcDebounceDelay = 200;
 
 const ICON_SIZE = 40;
 const TOP_BAR_HEIGHT = 60;
@@ -95,25 +100,38 @@ export default function ControlChange({ index }: ControlChangeProps) {
     [currentControlChangeDirection]
   );
 
-  const sendHorizontalCcMessage = useCallback(
+  const debouncedSendXCcMessage = useCallback(
+    debounce((ccInput: MidiControlChangeProps) => {
+      sendMidiControlChange(ccInput);
+    }, CcDebounceDelay),
+    []
+  );
+  const debouncedSendYCcMessage = useCallback(
+    debounce((ccInput: MidiControlChangeProps) => {
+      sendMidiControlChange(ccInput);
+    }, CcDebounceDelay),
+    []
+  );
+
+  const send_X_CcMessage = useCallback(
     (pageX: number) => {
       const ccInput = createMidiControlChange(
         xAxisControlIndex,
         Math.floor((127 * (pageX - spaceFromLeft)) / elementWidth)
       );
-      sendMidiControlChange(ccInput);
+      debouncedSendXCcMessage(ccInput);
     },
-    [xAxisControlIndex, spaceFromLeft, elementWidth, sendMidiControlChange]
+    [xAxisControlIndex, spaceFromLeft, elementWidth, debouncedSendXCcMessage]
   );
-  const sendVerticalCcMessage = useCallback(
+  const send_Y_CcMessage = useCallback(
     (pageY: number) => {
       const ccInput = createMidiControlChange(
         yAxisControlIndex,
         Math.floor(127 - (127 * (pageY - spaceFromTop)) / elementHeight)
       );
-      sendMidiControlChange(ccInput);
+      debouncedSendYCcMessage(ccInput);
     },
-    [yAxisControlIndex, spaceFromTop, elementHeight, sendMidiControlChange]
+    [yAxisControlIndex, spaceFromTop, elementHeight, debouncedSendYCcMessage]
   );
 
   const updateXPositionAbsolute = useCallback(
@@ -144,7 +162,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
       if (hasHorizontalControl) {
         const pageX = event.nativeEvent.pageX;
         updateXPositionAbsolute(pageX);
-        sendHorizontalCcMessage(pageX);
+        send_X_CcMessage(pageX);
       } else {
         // Locked horizontally. Vertical only control
         setXPositionAbsolute(elementWidth / 2 - ICON_SIZE / 2);
@@ -153,7 +171,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
       if (hasVerticalControl) {
         const pageY = event.nativeEvent.pageY;
         updateYPositionAbsolute(pageY);
-        sendVerticalCcMessage(pageY);
+        send_Y_CcMessage(pageY);
       } else {
         // Locked vertically. Horizontal only control
         setYPositionAbsolute(elementHeight / 2 - ICON_SIZE / 2);
@@ -162,8 +180,8 @@ export default function ControlChange({ index }: ControlChangeProps) {
     [
       elementWidth,
       elementHeight,
-      sendHorizontalCcMessage,
-      sendVerticalCcMessage,
+      send_X_CcMessage,
+      send_Y_CcMessage,
       updateXPositionAbsolute,
       setXPositionAbsolute,
       updateYPositionAbsolute,

@@ -18,7 +18,8 @@
     - isLocked Icons
 - CONTROL CHANGE
   - Debouncing/throttling of api calls
-  - Limits on the total number of CC components. Probably gonna be a performance bottleneck with all those API calls
+    - Determine a fair delay value
+  - Limits on the total number of CC components (4 xy)
 - SCALES
   - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.
   - Add FL studio FPC default for 4 column

@@ -43,15 +43,11 @@ export function useDesktopCommunication() {
       .catch(fetchErrorCatcher);
   }
 
-  const MINIMUM_CC_INTERVAL_DELAY = 100;
-  const [previousCcTime, setPreviousCcTime] = useState(0);
   async function sendMidiControlChange({
     controlIndex,
     level,
   }: MidiControlChangeProps) {
     if (controlIndex < 0) return;
-    if (Date.now() - previousCcTime < MINIMUM_CC_INTERVAL_DELAY) return;
-    setPreviousCcTime(Date.now());
     fetchWithTimeout(
       `http://${baseAddress}/ControlChangeInput/?controlIndex=${controlIndex}&level=${level}`
     )
