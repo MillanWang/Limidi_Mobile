@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { ControlChangeSettingsPanel } from "./ccSettings/ControlChangeSettingsPanel";
 import { MidiNoteControlChangeSelector } from "./MidiNoteControlChangeSelector";
@@ -13,7 +13,7 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
   const { isMidiNote } = useGridElementAtIndex(index);
 
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView>
       <MidiNoteControlChangeSelector index={index} />
 
       {isMidiNote ? (
@@ -21,6 +21,6 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
       ) : (
         <ControlChangeSettingsPanel index={index} />
       )}
-    </View>
+    </ScrollView>
   );
 }

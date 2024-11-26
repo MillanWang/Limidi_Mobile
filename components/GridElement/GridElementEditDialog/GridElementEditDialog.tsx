@@ -9,7 +9,6 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-
 import { theme } from "../../../constants/theme";
 import {
   useCurrentGridPresetColors,
@@ -44,7 +43,6 @@ export default function GridElementEditDialog({
   const [tabIndex, setTabIndex] = React.useState(0);
   const dispatch = useAppDispatch();
 
-  const gridTheme = useCurrentGridPresetColors();
   const { isLocked, isMidiNote } = useGridElementAtIndex(index);
 
   const toggleElementMidiLock = () =>
@@ -94,22 +92,18 @@ export default function GridElementEditDialog({
               </View>
             </View>
 
-            <ScrollView>
-              <View style={{ alignItems: "center", marginTop: 8 }}>
-                <Text style={{ color: theme.color.white }}>
-                  Element #{index}
-                </Text>
-                <GridPreview index={index} />
-              </View>
-              <View style={styles.dialogContentContainer}>
-                {tabIndex === 0 && (
-                  <GridElementEditMidiSettingsTab index={index} />
-                )}
-                {tabIndex === 1 && (
-                  <GridElementEditStyleSettingsTab index={index} />
-                )}
-              </View>
-            </ScrollView>
+            <View style={{ alignItems: "center", marginTop: 8 }}>
+              <Text style={{ color: theme.color.white }}>Element #{index}</Text>
+              <GridPreview index={index} />
+            </View>
+            <View style={styles.dialogContentContainer}>
+              {tabIndex === 0 && (
+                <GridElementEditMidiSettingsTab index={index} />
+              )}
+              {tabIndex === 1 && (
+                <GridElementEditStyleSettingsTab index={index} />
+              )}
+            </View>
           </>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

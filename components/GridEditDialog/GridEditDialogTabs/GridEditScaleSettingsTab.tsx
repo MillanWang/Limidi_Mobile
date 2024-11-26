@@ -14,6 +14,7 @@ import {
 import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
 import { NoteSelector } from "./NoteSelector";
+import { usePresetDefault } from "../../../hooks/usePresetDefault";
 
 export function GridEditScaleSettings() {
   return (
@@ -58,7 +59,7 @@ export function ScaleRootNoteSelector() {
 export function ScaleSelector() {
   const dispatch = useAppDispatch();
   const { scale, gridTheme } = useCurrentGridPreset();
-
+  const { scale: defaultScale } = usePresetDefault();
   // To choose a scale before applying it
   const [currentScale, setCurrentScale] = useState(scale);
 
@@ -102,7 +103,9 @@ export function ScaleSelector() {
           Apply {formatScaleName(currentScale)} scale
         </GridThemedButton>
 
-        <FullGridOperationButtons />
+        <FullGridOperationButtons
+          resetCallback={() => setCurrentScale(defaultScale)}
+        />
       </View>
     </View>
   );

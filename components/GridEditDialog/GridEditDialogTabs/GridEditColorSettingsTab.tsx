@@ -1,7 +1,12 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import { DEFAULT, PRESET_COLOR_LIST } from "../../../constants/ColorPresets";
+import {
+  arePresetsEqual,
+  PRESET_COLOR_LIST,
+} from "../../../constants/ColorPresets";
+import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPreset";
+import { usePresetDefault } from "../../../hooks/usePresetDefault";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setGridColorPresetGlobally } from "../../../redux/slices/GridPresetsSlice";
 import { GridPreviewSizeSelector } from "../../GridPreview";
@@ -18,8 +23,9 @@ export function GridEditStyleSettingsTab(): JSX.Element {
 
 const ColorThemeSelector = () => {
   const dispatch = useAppDispatch();
-
-  const [currentPreset, setCurrentPreset] = useState(DEFAULT);
+  const { gridTheme: defaultPreset } = usePresetDefault();
+  const currentPresetColors = useCurrentGridPresetColors();
+  const [currentPreset, setCurrentPreset] = useState(currentPresetColors);
 
   const applySelectedPresetGlobally = () =>
     dispatch(setGridColorPresetGlobally(currentPreset));
@@ -32,10 +38,9 @@ const ColorThemeSelector = () => {
             <Button
               buttonStyle={{
                 backgroundColor: preset.unpressedColor,
-                borderColor:
-                  currentPreset === preset
-                    ? preset.pressedColor
-                    : preset.unpressedColor,
+                borderColor: arePresetsEqual(currentPreset, preset)
+                  ? preset.pressedColor
+                  : preset.unpressedColor,
                 ...styles.colorPresetButton,
               }}
               key={`ColorPreset_${preset.name}`}
@@ -49,7 +54,7 @@ const ColorThemeSelector = () => {
               >
                 {preset.name}
               </Text>
-              {currentPreset === preset && (
+              {arePresetsEqual(currentPresetColors, preset) && (
                 <View style={styles.selectedCheckmarkIcon}>
                   <Icon name="done" color={preset.pressedColor} />
                 </View>
@@ -71,7 +76,9 @@ const ColorThemeSelector = () => {
           Apply Color Globally
         </Button>
 
-        <FullGridOperationButtons />
+        <FullGridOperationButtons
+          resetCallback={() => setCurrentPreset(defaultPreset)}
+        />
       </View>
     </View>
   );

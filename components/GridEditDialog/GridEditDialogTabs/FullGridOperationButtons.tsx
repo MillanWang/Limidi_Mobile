@@ -1,6 +1,5 @@
-import { Button, Icon } from "@rneui/themed";
 import React from "react";
-import { theme } from "../../../constants/theme";
+import { View } from "react-native";
 import { useAppDispatch } from "../../../redux/hooks";
 import {
   restoreCurrentPresetToDefault,
@@ -8,9 +7,10 @@ import {
 } from "../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
-import { View } from "react-native";
 
-export const FullGridOperationButtons = () => {
+export const FullGridOperationButtons = (props: {
+  resetCallback: () => void;
+}) => {
   const dispatch = useAppDispatch();
   return (
     <View style={{ gap: 4 }}>
@@ -24,7 +24,10 @@ export const FullGridOperationButtons = () => {
       </GridThemedButton>
       <GridThemedButton
         // TODO - This needs a confirmation modal
-        onPress={() => dispatch(restoreCurrentPresetToDefault(null))}
+        onPress={() => {
+          dispatch(restoreCurrentPresetToDefault(null));
+          props.resetCallback();
+        }}
       >
         <GridThemedIcon
           name={"sync"}

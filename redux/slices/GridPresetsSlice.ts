@@ -15,7 +15,7 @@ import {
   isNoteLabelStandard,
 } from "../../constants/MIDI_Notes";
 
-const defaultPresets: GridState[] = [
+export const defaultPresets: GridState[] = [
   defaultPreset1,
   defaultPreset2,
   defaultPreset3,
