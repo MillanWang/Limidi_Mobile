@@ -194,17 +194,18 @@ export default function ControlChange({ index }: ControlChangeProps) {
       toValue: 1,
       duration: 300,
       useNativeDriver: true,
-    }).start();
-  }, [fadeAnim]);
+    }).start(() => {});
+  }, [fadeAnim, setIsInMotion]);
 
   const fadeOut = useCallback(
     (opacity: number) => {
+      console.log("fadeOut :", Date.now());
       Animated.timing(fadeAnim, {
         toValue: opacity,
         duration: 1,
         useNativeDriver: true,
       }).start(() => {
-        setIsInMotion(true);
+        setIsInMotion(false);
       });
     },
     [fadeAnim, setIsInMotion]
@@ -260,7 +261,14 @@ export default function ControlChange({ index }: ControlChangeProps) {
                     ? 1 - xPositionAbsolute / elementWidth
                     : yPositionAbsolute / elementHeight
                 )
-              : fadeAnim,
+              : /*
+                - Relying on fadeAnim seems to be the issue with why all of this is being strange. 
+                  - Note that fading in makes the opacity 1 again and Returns this component to its original Unpressed state.
+                  - Having this hard coated to 1 Works, but it is a little bit jarring to have the colour instantly disappear when the drug does not do that.
+                  - Perhaps other animation libraries will be better suited for dealing with this.  
+                */
+                // : 1,
+                fadeAnim,
             backgroundColor: colorState.unpressedColor,
           }}
           onTouchStart={playModeTouchStartHandler}
