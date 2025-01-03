@@ -91,6 +91,10 @@ export default function DrumPad({ index }: DrumPadProps) {
           }}
           onTouchStart={playModeTouchStartHandler}
           onTouchEnd={playModeTouchEndHandler}
+          onTouchCancel={playModeTouchEndHandler}
+          onTouchMove={() => {
+            // TODO - Need to check If we are still in the element. If not, then we must run the touch and handler
+          }}
         >
           <View style={styles.gridElementUnpressedView}>
             <Text style={{ color: colorState.pressedColor }}>{nameState}</Text>

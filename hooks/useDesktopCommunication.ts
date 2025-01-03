@@ -6,6 +6,8 @@ import {
   setMostRecentNetworkFixTime,
 } from "../redux/slices/HttpCommunicationsSlice";
 
+const LOG_MESSAGES = false;
+
 export function useDesktopCommunication() {
   const {
     httpCommunicationInfo: { baseAddress },
@@ -16,11 +18,11 @@ export function useDesktopCommunication() {
   const dispatch = useAppDispatch();
 
   async function sendHeartbeatMessage() {
-    console.log(`Heartbeat started at ${Date.now()}`);
+    if (LOG_MESSAGES) console.log(`Heartbeat started at ${Date.now()}`);
     fetchWithTimeout(`http://${baseAddress}/Heartbeat`)
       .then((response: any) => {
         if (response.ok) {
-          console.log(`Heartbeat verified at ${Date.now()}`);
+          if (LOG_MESSAGES) console.log(`Heartbeat verified at ${Date.now()}`);
           dispatch(
             setMostRecentNetworkFixTime({
               mostRecentNetworkFixTime: Date.now(),
@@ -58,12 +60,13 @@ export function useDesktopCommunication() {
   const MINIMUM_NETWORK_FAIL_INTERVAL_DELAY = 1000 * 5;
   const responseHandler = (response: any) => {
     if (!response.ok) {
-      console.log(`${Date.now()} ${response.status} MIDI API fault`);
+      if (LOG_MESSAGES)
+        console.log(`${Date.now()} ${response.status} MIDI API fault`);
     }
   };
 
   const fetchErrorCatcher = (error: any) => {
-    console.log(`${Date.now()} ${error} API fault`);
+    if (LOG_MESSAGES) console.log(`${Date.now()} ${error} API fault`);
     const now = Date.now();
     const isErrorNew =
       now - mostRecentNetworkFixTime > MINIMUM_NETWORK_FAIL_INTERVAL_DELAY;
