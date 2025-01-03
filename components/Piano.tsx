@@ -1,4 +1,4 @@
-import { Text } from "@rneui/base";
+import { Text } from "@rneui/themed";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { DEFAULT, HULK } from "../constants/ColorPresets";

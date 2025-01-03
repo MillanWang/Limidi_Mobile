@@ -1,4 +1,4 @@
-import { Icon } from "@rneui/base";
+import { Icon } from "@rneui/themed";
 import { Button } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
