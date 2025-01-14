@@ -1,3 +1,9 @@
+import ReAnimated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  withRepeat,
+} from "react-native-reanimated";
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import {
   Animated,
@@ -19,6 +25,17 @@ import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 import { debounce } from "../../../services/debounce";
 
+export function App() {
+  return (
+    <Animated.View
+      style={{
+        width: 100,
+        height: 100,
+        backgroundColor: "violet",
+      }}
+    />
+  );
+}
 interface ControlChangeProps {
   index: number;
 }
@@ -189,36 +206,39 @@ export default function ControlChange({ index }: ControlChangeProps) {
     ]
   );
 
-  const fadeIn = useCallback(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start(() => {});
-  }, [fadeAnim, setIsInMotion]);
+  const inMotionCoverOpacity = Math.max(
+    0.15,
+    currentControlChangeDirection === ControlChangeDirection.Horizontal
+      ? 1 - xPositionAbsolute / elementWidth
+      : yPositionAbsolute / elementHeight
+  );
 
-  const fadeOut = useCallback(
+  const coverOpacity = useSharedValue(0.1);
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    opacity: coverOpacity.value,
+  }));
+
+  const fadeToStaticColor = useCallback(() => {
+    coverOpacity.value = withTiming(1, { duration: 1750 });
+  }, [fadeAnim, setIsInMotion, coverOpacity]);
+
+  const fadeToInMotionColor = useCallback(
     (opacity: number) => {
-      console.log("fadeOut :", Date.now());
-      Animated.timing(fadeAnim, {
-        toValue: opacity,
-        duration: 1,
-        useNativeDriver: true,
-      }).start(() => {
-        setIsInMotion(false);
-      });
+      coverOpacity.value = withTiming(opacity, { duration: 1750 });
     },
-    [fadeAnim, setIsInMotion]
+    [fadeAnim, setIsInMotion, coverOpacity]
   );
 
   const playModeTouchStartHandler = useCallback(() => {
-    fadeOut(0.25);
-  }, [fadeOut]);
+    setIsInMotion(true);
+    fadeToInMotionColor(0.25);
+  }, [fadeToInMotionColor]);
 
   const playModeTouchEndHandler = useCallback(() => {
     setIsInMotion(false);
-    fadeIn();
-  }, [fadeIn, setIsInMotion]);
+    fadeToStaticColor();
+  }, [fadeToStaticColor, setIsInMotion]);
 
   const BaseIcon = (
     <View
@@ -253,23 +273,19 @@ export default function ControlChange({ index }: ControlChangeProps) {
         <Animated.View
           style={{
             ...styles.gridElementBasePressedView,
-            opacity: isInMotion
-              ? Math.max(
-                  0.15,
-                  currentControlChangeDirection ===
-                    ControlChangeDirection.Horizontal
-                    ? 1 - xPositionAbsolute / elementWidth
-                    : yPositionAbsolute / elementHeight
-                )
-              : /*
-                - Relying on fadeAnim seems to be the issue with why all of this is being strange. 
-                  - Note that fading in makes the opacity 1 again and Returns this component to its original Unpressed state.
-                  - Having this hard coated to 1 Works, but it is a little bit jarring to have the colour instantly disappear when the drug does not do that.
-                  - Perhaps other animation libraries will be better suited for dealing with this.  
-                */
-                // : 1,
-                fadeAnim,
+            // opacity: isInMotion
+            //   ? inMotionCoverOpacity
+            //   : /*
+            //     - Relying on fadeAnim seems to be the issue with why all of this is being strange.
+            //       - Note that fading in makes the opacity 1 again and Returns this component to its original Unpressed state.
+            //       - Having this hard coated to 1 Works, but it is a little bit jarring to have the colour instantly disappear when the drug does not do that.
+            //       - Perhaps other animation libraries will be better suited for dealing with this.
+            //     */
+            //     // : 1,
+            //     // fadeAnim
+            //     1,
             backgroundColor: colorState.unpressedColor,
+            ...animatedStyles,
           }}
           onTouchStart={playModeTouchStartHandler}
           onTouchEnd={playModeTouchEndHandler}
