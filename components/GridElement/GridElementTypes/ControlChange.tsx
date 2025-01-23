@@ -1,16 +1,17 @@
-import ReAnimated, {
+import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
   withRepeat,
 } from "react-native-reanimated";
-import React, { useCallback, useMemo, useRef, useState } from "react";
-import {
-  Animated,
-  GestureResponderEvent,
-  StyleSheet,
-  View,
-} from "react-native";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { GestureResponderEvent, StyleSheet, View } from "react-native";
 import {
   createMidiControlChange,
   MidiControlChangeProps,
@@ -68,7 +69,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
   const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2);
 
   const [isInMotion, setIsInMotion] = useState(false);
-  const fadeAnim = useRef(new Animated.Value(1)).current;
+  // const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const currentControlChangeDirection = useMemo(
     () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
@@ -152,7 +153,14 @@ export default function ControlChange({ index }: ControlChangeProps) {
   );
 
   const updateXPositionAbsolute = useCallback(
-    (pageX: number) => {
+    (pageX: number, pageY: number) => {
+      if (pageX < spaceFromLeft || pageX > spaceFromLeft + elementWidth) {
+        return;
+      }
+      if (pageY < spaceFromTop || pageY > spaceFromTop + elementHeight) {
+        return;
+      }
+
       setXPositionAbsolute(
         Math.min(
           elementWidth - ICON_SIZE,
@@ -160,10 +168,23 @@ export default function ControlChange({ index }: ControlChangeProps) {
         )
       );
     },
-    [xAxisControlIndex, spaceFromLeft, elementWidth, setXPositionAbsolute]
+    [
+      xAxisControlIndex,
+      spaceFromLeft,
+      elementWidth,
+      spaceFromTop,
+      elementHeight,
+      setXPositionAbsolute,
+    ]
   );
   const updateYPositionAbsolute = useCallback(
-    (pageY: number) => {
+    (pageX: number, pageY: number) => {
+      if (pageX < spaceFromLeft || pageX > spaceFromLeft + elementWidth) {
+        return;
+      }
+      if (pageY < spaceFromTop || pageY > spaceFromTop + elementHeight) {
+        return;
+      }
       setYPositionAbsolute(
         Math.min(
           elementHeight - ICON_SIZE,
@@ -171,14 +192,23 @@ export default function ControlChange({ index }: ControlChangeProps) {
         )
       );
     },
-    [yAxisControlIndex, spaceFromTop, elementHeight, setYPositionAbsolute]
+    [
+      yAxisControlIndex,
+      spaceFromLeft,
+      elementWidth,
+      spaceFromTop,
+      elementHeight,
+      setYPositionAbsolute,
+    ]
   );
 
   const onSliderChange = useCallback(
     (event: GestureResponderEvent) => {
+      const { locationX, locationY } = event.nativeEvent;
+      const pageX = event.nativeEvent.pageX;
+      const pageY = event.nativeEvent.pageY;
       if (hasHorizontalControl) {
-        const pageX = event.nativeEvent.pageX;
-        updateXPositionAbsolute(pageX);
+        updateXPositionAbsolute(pageX, pageY);
         send_X_CcMessage(pageX);
       } else {
         // Locked horizontally. Vertical only control
@@ -186,8 +216,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
       }
 
       if (hasVerticalControl) {
-        const pageY = event.nativeEvent.pageY;
-        updateYPositionAbsolute(pageY);
+        updateYPositionAbsolute(pageX, pageY);
         send_Y_CcMessage(pageY);
       } else {
         // Locked vertically. Horizontal only control
@@ -206,29 +235,34 @@ export default function ControlChange({ index }: ControlChangeProps) {
     ]
   );
 
-  const inMotionCoverOpacity = Math.max(
-    0.15,
-    currentControlChangeDirection === ControlChangeDirection.Horizontal
-      ? 1 - xPositionAbsolute / elementWidth
-      : yPositionAbsolute / elementHeight
-  );
+  const coverOpacity = useSharedValue(1);
 
-  const coverOpacity = useSharedValue(0.1);
+  const fadeToStaticColor = useCallback(() => {
+    coverOpacity.value = withTiming(1, { duration: 200 });
+  }, [setIsInMotion, coverOpacity]);
+
+  const fadeToInMotionColor = useCallback(
+    (opacity: number) => {
+      coverOpacity.value = withTiming(opacity, { duration: 10 });
+    },
+    [setIsInMotion, coverOpacity]
+  );
 
   const animatedStyles = useAnimatedStyle(() => ({
     opacity: coverOpacity.value,
   }));
 
-  const fadeToStaticColor = useCallback(() => {
-    coverOpacity.value = withTiming(1, { duration: 1750 });
-  }, [fadeAnim, setIsInMotion, coverOpacity]);
-
-  const fadeToInMotionColor = useCallback(
-    (opacity: number) => {
-      coverOpacity.value = withTiming(opacity, { duration: 1750 });
-    },
-    [fadeAnim, setIsInMotion, coverOpacity]
-  );
+  useEffect(() => {
+    if (isInMotion) {
+      const inMotionCoverOpacity = Math.max(
+        0.15,
+        currentControlChangeDirection === ControlChangeDirection.Horizontal
+          ? 1 - xPositionAbsolute / elementWidth
+          : yPositionAbsolute / elementHeight
+      );
+      fadeToInMotionColor(inMotionCoverOpacity);
+    }
+  }, [isInMotion, xPositionAbsolute, yPositionAbsolute, fadeToInMotionColor]);
 
   const playModeTouchStartHandler = useCallback(() => {
     setIsInMotion(true);
@@ -267,28 +301,28 @@ export default function ControlChange({ index }: ControlChangeProps) {
           backgroundColor: colorState.pressedColor,
         }}
         onLayout={onLayout}
-        onTouchMove={onSliderChange}
-        onTouchStart={onSliderChange}
       >
         <Animated.View
-          style={{
-            ...styles.gridElementBasePressedView,
-            // opacity: isInMotion
-            //   ? inMotionCoverOpacity
-            //   : /*
-            //     - Relying on fadeAnim seems to be the issue with why all of this is being strange.
-            //       - Note that fading in makes the opacity 1 again and Returns this component to its original Unpressed state.
-            //       - Having this hard coated to 1 Works, but it is a little bit jarring to have the colour instantly disappear when the drug does not do that.
-            //       - Perhaps other animation libraries will be better suited for dealing with this.
-            //     */
-            //     // : 1,
-            //     // fadeAnim
-            //     1,
-            backgroundColor: colorState.unpressedColor,
-            ...animatedStyles,
+          style={[
+            animatedStyles,
+            {
+              ...styles.gridElementBasePressedView,
+              backgroundColor: colorState.unpressedColor,
+            },
+          ]}
+          onTouchMove={onSliderChange}
+          onTouchStart={(e) => {
+            onSliderChange(e);
+            playModeTouchStartHandler();
           }}
-          onTouchStart={playModeTouchStartHandler}
-          onTouchEnd={playModeTouchEndHandler}
+          onTouchEnd={(e) => {
+            onSliderChange(e);
+            playModeTouchEndHandler();
+          }}
+          onTouchCancel={(e) => {
+            onSliderChange(e);
+            playModeTouchEndHandler();
+          }}
         >
           {currentControlChangeDirection === ControlChangeDirection.XY &&
             isInMotion && (
