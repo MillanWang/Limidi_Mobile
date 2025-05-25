@@ -1,11 +1,10 @@
 import { Icon, Text } from "@rneui/themed";
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import {
   useCurrentGridPreset,
   useGridElementAtIndex,
 } from "../../hooks/useCurrentGridPreset";
-import { useAppSelector } from "../../redux/hooks";
 import GridElementEditDialog from "./GridElementEditDialog/GridElementEditDialog";
 import ControlChange from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
@@ -57,7 +56,7 @@ const GridElementEditButton = (props: { index: number }) => {
 
   return (
     <>
-      <View
+      <TouchableOpacity
         style={[
           styles.gridElementUnpressedView,
           styles.gridElementEditView,
@@ -66,7 +65,7 @@ const GridElementEditButton = (props: { index: number }) => {
             borderColor: colorState.pressedColor,
           },
         ]}
-        onTouchStart={() => setDialogVisible(true)}
+        onPress={() => setDialogVisible(true)}
       >
         <View
           style={{
@@ -92,7 +91,7 @@ const GridElementEditButton = (props: { index: number }) => {
             <Text style={{ color: colorState.pressedColor }}>{name}</Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
 
       <GridElementEditDialog
         index={index}
