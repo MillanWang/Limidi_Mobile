@@ -5,7 +5,7 @@ import {
   useCurrentGridPreset,
   useGridElementAtIndex,
 } from "../../hooks/useCurrentGridPreset";
-import GridElementEditDialog from "./GridElementEditDialog/GridElementEditDialog";
+import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
 import ControlChange from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
 

@@ -1,17 +1,10 @@
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withRepeat,
-} from "react-native-reanimated";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GestureResponderEvent, StyleSheet, View } from "react-native";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 import {
   createMidiControlChange,
   MidiControlChangeProps,
@@ -22,9 +15,9 @@ import {
   useGridElementAtIndex,
 } from "../../../hooks/useCurrentGridPreset";
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
+import { debounce } from "../../../services/debounce";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
-import { debounce } from "../../../services/debounce";
 
 export function App() {
   return (

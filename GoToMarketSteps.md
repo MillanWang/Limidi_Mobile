@@ -5,9 +5,6 @@
 - DATA
   - Emergency backing-store reset upon load failure
 - MENU
-  - Shrinking down maximum grid size. Choosing maximums
-  - Header component update
-    - Corner monosized play-edit indicator
   - New menu selector component
     - Colorable
     - Based on buttons with full touch events instead of just first touch during scroll
