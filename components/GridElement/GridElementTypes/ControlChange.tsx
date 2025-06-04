@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { GestureResponderEvent, StyleSheet, View } from "react-native";
 import Animated, {
+  FadeIn,
+  FadeOut,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -19,17 +21,6 @@ import { debounce } from "../../../services/debounce";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
-export function App() {
-  return (
-    <Animated.View
-      style={{
-        width: 100,
-        height: 100,
-        backgroundColor: "violet",
-      }}
-    />
-  );
-}
 interface ControlChangeProps {
   index: number;
 }
@@ -62,7 +53,6 @@ export default function ControlChange({ index }: ControlChangeProps) {
   const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2);
 
   const [isInMotion, setIsInMotion] = useState(false);
-  // const fadeAnim = useRef(new Animated.Value(1)).current;
 
   const currentControlChangeDirection = useMemo(
     () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
@@ -170,18 +160,30 @@ export default function ControlChange({ index }: ControlChangeProps) {
       setXPositionAbsolute,
     ]
   );
+
   const updateYPositionAbsolute = useCallback(
     (pageX: number, pageY: number) => {
       if (pageX < spaceFromLeft || pageX > spaceFromLeft + elementWidth) {
-        return;
+        return; // Outside of the side walls
       }
-      if (pageY < spaceFromTop || pageY > spaceFromTop + elementHeight) {
-        return;
+      if (
+        pageY < spaceFromTop ||
+        pageY >
+          spaceFromTop +
+            elementHeight * iconSizeOffsetFromTouchPositionMultiplier
+      ) {
+        return; // outside the top/bottom walls
       }
+
       setYPositionAbsolute(
         Math.min(
           elementHeight - ICON_SIZE,
-          Math.max(0, pageY - spaceFromTop - ICON_SIZE * 2.5)
+          Math.max(
+            0,
+            pageY -
+              spaceFromTop -
+              ICON_SIZE * iconSizeOffsetFromTouchPositionMultiplier
+          )
         )
       );
     },
@@ -317,16 +319,34 @@ export default function ControlChange({ index }: ControlChangeProps) {
             playModeTouchEndHandler();
           }}
         >
-          {currentControlChangeDirection === ControlChangeDirection.XY &&
-            isInMotion && (
-              <SpreadNeighboursIcons
-                index={index}
-                xPositionAbsolute={xPositionAbsolute}
-                yPositionAbsolute={yPositionAbsolute}
-                elementWidth={elementWidth}
-                safeIconName={safeIconName}
-              />
-            )}
+          {isInMotion && (
+            <>
+              {currentControlChangeDirection !==
+                ControlChangeDirection.Horizontal && (
+                <VerticalLevelLineIndicator
+                  absolutePosition={yPositionAbsolute}
+                  color={colorState.pressedColor}
+                />
+              )}
+              {currentControlChangeDirection !==
+                ControlChangeDirection.Vertical && (
+                <HorizontalLevelLineIndicator
+                  absolutePosition={xPositionAbsolute}
+                  color={colorState.pressedColor}
+                />
+              )}
+
+              {currentControlChangeDirection === ControlChangeDirection.XY && (
+                <SpreadNeighboursIcons
+                  index={index}
+                  xPositionAbsolute={xPositionAbsolute}
+                  yPositionAbsolute={yPositionAbsolute}
+                  elementWidth={elementWidth}
+                  safeIconName={safeIconName}
+                />
+              )}
+            </>
+          )}
           {BaseIcon}
         </Animated.View>
       </View>
@@ -334,6 +354,52 @@ export default function ControlChange({ index }: ControlChangeProps) {
   );
 }
 
+const lineIndicatorThickness = 2;
+const lineFadeInDuration = 100;
+const lineFadeOutDuration = 250;
+
+const VerticalLevelLineIndicator = (props: {
+  absolutePosition: number;
+  color: string;
+}) => {
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: props.absolutePosition + ICON_SIZE / 2,
+        height: lineIndicatorThickness,
+        backgroundColor: props.color,
+      }}
+      entering={FadeIn.duration(lineFadeInDuration)}
+      exiting={FadeOut.duration(lineFadeOutDuration)}
+    />
+  );
+};
+const HorizontalLevelLineIndicator = (props: {
+  absolutePosition: number;
+  color: string;
+}) => {
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        top: 0,
+        bottom: 0,
+        left: props.absolutePosition + ICON_SIZE / 2,
+        width: lineIndicatorThickness,
+        backgroundColor: props.color,
+      }}
+      entering={FadeIn.duration(lineFadeInDuration)}
+      exiting={FadeOut.duration(lineFadeOutDuration)}
+    />
+  );
+};
+const iconSizeOffsetFromTouchPositionMultiplier = 1.5; // To keep the icon directly under the touch position
+
+const spreadDistanceMultiplier = 2;
+const cornerSpreadDistanceMultiplier = 0.71; // 1/root(2) // which makes the corners circularly distanced instead of box distanced
 const SpreadNeighboursIcons = (props: {
   index: number;
   xPositionAbsolute: number;
@@ -353,13 +419,13 @@ const SpreadNeighboursIcons = (props: {
 
   const getIconPosition = useCallback(
     (degree: number, position: number, index: number) => {
-      const spreadFactor = Math.max(
-        1,
-        (1 - xPositionAbsolute / elementWidth) * 6
-      );
-      // 0.71 === 1/root(2) // which makes the corners circularly distanced instead of box distanced
-      const radialMultiplier = degree % 90 === 0 ? 1 : 0.71;
-      const spreadOffset = (ICON_SIZE * (index - 1)) / spreadFactor;
+      const rawSpreadFactor =
+        (1 - xPositionAbsolute / elementWidth) * spreadDistanceMultiplier;
+
+      const radialMultiplier =
+        degree % 90 === 0 ? 1 : cornerSpreadDistanceMultiplier;
+
+      const spreadOffset = ((ICON_SIZE * (index - 1)) / rawSpreadFactor) * 0.5;
       return position + spreadOffset * radialMultiplier;
     },
     [xPositionAbsolute, elementWidth]
@@ -369,13 +435,15 @@ const SpreadNeighboursIcons = (props: {
     <>
       {DEGREE_LIST_LIST.map((degreeList, i) =>
         degreeList.map((degree, j) => (
-          <View
+          <Animated.View
             key={`CcSubIcon_${i}_${j}`}
             style={{
               ...styles.ccIcon,
               top: getIconPosition(degree, yPositionAbsolute, i),
               left: getIconPosition(degree, xPositionAbsolute, j),
             }}
+            entering={FadeIn.duration(lineFadeInDuration)}
+            exiting={FadeOut.duration(lineFadeOutDuration)}
           >
             <GridThemedIcon
               name={safeIconName}
@@ -383,7 +451,7 @@ const SpreadNeighboursIcons = (props: {
               index={index}
               style={{ transform: [{ rotate: `${degree}deg` }] }}
             />
-          </View>
+          </Animated.View>
         ))
       )}
     </>
@@ -418,9 +486,9 @@ const getCcDirection = (
   xAxisControlIndex: number,
   yAxisControlIndex: number
 ) => {
-  return xAxisControlIndex > 0 && yAxisControlIndex > 0
+  return xAxisControlIndex >= 0 && yAxisControlIndex >= 0
     ? ControlChangeDirection.XY
-    : xAxisControlIndex > 0
+    : xAxisControlIndex >= 0
     ? ControlChangeDirection.Horizontal
     : ControlChangeDirection.Vertical;
 };
