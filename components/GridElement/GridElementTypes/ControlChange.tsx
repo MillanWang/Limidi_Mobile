@@ -1,16 +1,22 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { GestureResponderEvent, StyleSheet, View } from "react-native";
+import {
+  GestureResponderEvent,
+  LayoutChangeEvent,
+  StyleSheet,
+  View,
+} from "react-native";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Animated, {
-  FadeIn,
-  FadeOut,
+  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import {
-  createMidiControlChange,
-  MidiControlChangeProps,
-} from "../../../constants/MIDI_Notes";
+import { createMidiControlChange } from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
 import {
   useCurrentGridPreset,
@@ -20,30 +26,161 @@ import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication"
 import { debounce } from "../../../services/debounce";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
+import {
+  styles as ccStyles,
+  ControlChangeActiveIndicators,
+  ICON_SIZE,
+  useCcLevelOpacity,
+} from "./ControlChangeActiveIndicators";
 
-interface ControlChangeProps {
-  index: number;
-}
-
-const CcDebounceDelay = 200;
-
-const ICON_SIZE = 40;
+const abUseNew = true;
+const halfIconSize = ICON_SIZE / 2;
+const CcDebounceDelay = abUseNew ? 50 : 200;
 const TOP_BAR_HEIGHT = 60;
 
-const DEGREE_LIST_LIST = [
-  [315, 0, 45],
-  [270, 0, 90],
-  [225, 180, 135],
-];
+type ControlChangeProps = { index: number };
+type TouchPoint = { x: number; y: number };
 
-export default function ControlChange({ index }: ControlChangeProps) {
-  const { sendMidiControlChange } = useDesktopCommunication();
-  const { rowCount, columnCount } = useCurrentGridPreset();
+export function ControlChange({ index }: ControlChangeProps) {
+  return abUseNew ? (
+    <ControlChange_NEW index={index} />
+  ) : (
+    <ControlChange_ORIGINAL index={index} />
+  );
+}
+
+export function ControlChange_NEW({ index }: ControlChangeProps) {
+  const [touch, setTouch] = useState<TouchPoint | null>(null);
+  const [isInMotion, setIsInMotion] = useState(false);
+  const { send_X_CcMessage, send_Y_CcMessage } =
+    useCcNetworkCommunication(index);
+
   const {
+    currentControlChangeDirection,
+    safeIconName,
+    hasVerticalControl,
+    hasHorizontalControl,
     colorState,
-    controlChangeState: { xAxisControlIndex, yAxisControlIndex, iconName },
-  } = useGridElementAtIndex(index);
+  } = useCcPersistedProperties({ index });
 
+  const { elementWidth, elementHeight, onLayout } = useCcElementPositioning({
+    index,
+  });
+
+  const xPercent = touch ? getPositionalPercent(touch.x, elementWidth) : 0;
+  const yPercent = touch ? 1 - getPositionalPercent(touch.y, elementHeight) : 0;
+  const opacityPercent = hasVerticalControl ? yPercent : xPercent;
+
+  const { animatedStyle } = useCcLevelOpacity({ isInMotion, opacityPercent });
+
+  const updateTouchPosition = useCallback(
+    (touch: TouchPoint) => {
+      // need to ensure that the touch is in bounds
+      // Need to keep the touch on a line if not in XY mode
+      const finalX = hasHorizontalControl
+        ? getInboundsTouchPosition(touch.x, elementWidth)
+        : elementWidth / 2;
+      const finalY = hasVerticalControl
+        ? getInboundsTouchPosition(touch.y, elementHeight)
+        : elementHeight / 2;
+      setTouch({ x: finalX, y: finalY });
+      if (hasHorizontalControl) {
+        send_X_CcMessage(getPositionalPercent(finalX, elementWidth));
+      }
+      if (hasVerticalControl) {
+        send_Y_CcMessage(1 - getPositionalPercent(finalY, elementHeight));
+      }
+    },
+    [
+      setTouch,
+      elementWidth,
+      elementHeight,
+      hasVerticalControl,
+      hasHorizontalControl,
+    ]
+  );
+
+  const gesture = Gesture.Pan()
+    .onTouchesDown((event) => {
+      if (event.allTouches.length > 0) {
+        const firstTouch = event.allTouches[0];
+        runOnJS(updateTouchPosition)(firstTouch);
+        runOnJS(setIsInMotion)(true);
+      }
+    })
+    .onTouchesMove((event) => {
+      if (event.allTouches.length > 0) {
+        const firstTouch = event.allTouches[0];
+        runOnJS(updateTouchPosition)(firstTouch);
+      }
+    })
+    .onTouchesUp(() => {
+      runOnJS(setIsInMotion)(false);
+    })
+    .onTouchesCancelled(() => {
+      runOnJS(setIsInMotion)(false);
+    });
+
+  // Initialize touch position
+  useEffect(() => {
+    updateTouchPosition({ x: elementWidth / 2, y: elementHeight / 2 });
+  }, [updateTouchPosition, elementWidth, elementHeight]);
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayout}>
+      <GestureDetector gesture={gesture}>
+        <View
+          style={{
+            ...styles.gridElementBasePressedView,
+            backgroundColor: colorState.pressedColor,
+          }}
+        >
+          <Animated.View
+            style={[
+              styles.gridElementBasePressedView,
+              { backgroundColor: colorState.unpressedColor },
+              animatedStyle,
+            ]}
+          >
+            {touch && (
+              <>
+                <View
+                  style={{
+                    ...ccStyles.ccIcon,
+                    left: touch.x - ICON_SIZE / 2,
+                    top: touch.y - ICON_SIZE / 2,
+                    backgroundColor: colorState.pressedColor,
+                  }}
+                >
+                  <GridThemedIcon
+                    index={index}
+                    invert
+                    name={safeIconName}
+                    type="ionicon"
+                  />
+                </View>
+                <ControlChangeActiveIndicators
+                  show={isInMotion}
+                  index={index}
+                  controlChangeDirection={currentControlChangeDirection}
+                  xPositionAbsolute={touch.x}
+                  yPositionAbsolute={touch.y}
+                  elementWidth={elementWidth}
+                  safeIconName={safeIconName}
+                  color={colorState.pressedColor}
+                />
+              </>
+            )}
+          </Animated.View>
+        </View>
+      </GestureDetector>
+    </GestureHandlerRootView>
+  );
+}
+
+const useCcElementPositioning = (props: { index: number }) => {
+  const { index } = props;
+  const { rowCount, columnCount } = useCurrentGridPreset();
   // Positional knowledge
   const [elementWidth, setElementWidth] = useState(1);
   const [elementHeight, setElementHeight] = useState(1);
@@ -52,15 +189,8 @@ export default function ControlChange({ index }: ControlChangeProps) {
   const [xPositionAbsolute, setXPositionAbsolute] = useState(elementWidth / 2);
   const [yPositionAbsolute, setYPositionAbsolute] = useState(elementHeight / 2);
 
-  const [isInMotion, setIsInMotion] = useState(false);
-
-  const currentControlChangeDirection = useMemo(
-    () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
-    [xAxisControlIndex, yAxisControlIndex]
-  );
-
   const onLayout = useCallback(
-    (event: any) => {
+    (event: LayoutChangeEvent) => {
       const layoutWidth = event.nativeEvent.layout.width;
       const layoutHeight = event.nativeEvent.layout.height;
       setElementWidth(layoutWidth);
@@ -86,6 +216,30 @@ export default function ControlChange({ index }: ControlChangeProps) {
     ]
   );
 
+  return {
+    elementWidth,
+    elementHeight,
+    spaceFromLeft,
+    spaceFromTop,
+    xPositionAbsolute,
+    yPositionAbsolute,
+    onLayout,
+    setXPositionAbsolute,
+    setYPositionAbsolute,
+  };
+};
+
+const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
+  const {
+    colorState,
+    controlChangeState: { xAxisControlIndex, yAxisControlIndex, iconName },
+  } = useGridElementAtIndex(index);
+
+  const currentControlChangeDirection = useMemo(
+    () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
+    [xAxisControlIndex, yAxisControlIndex]
+  );
+
   const safeIconName = useMemo(
     () => getSafeIconName(iconName, xAxisControlIndex, yAxisControlIndex),
     [iconName, xAxisControlIndex, yAxisControlIndex]
@@ -101,18 +255,92 @@ export default function ControlChange({ index }: ControlChangeProps) {
     [currentControlChangeDirection]
   );
 
+  return {
+    currentControlChangeDirection,
+    safeIconName,
+    hasVerticalControl,
+    hasHorizontalControl,
+    colorState,
+  };
+};
+
+const useCcNetworkCommunication = (index: number) => {
+  const { sendMidiControlChange } = useDesktopCommunication();
+  const {
+    controlChangeState: { xAxisControlIndex, yAxisControlIndex },
+  } = useGridElementAtIndex(index);
+  /**
+   * Separate debouncers are used here so that one won't interfere with the other. They should both have separate max waits
+   */
+  // (ccInput: MidiControlChangeProps) => sendMidiControlChange(ccInput),
   const debouncedSendXCcMessage = useCallback(
-    debounce((ccInput: MidiControlChangeProps) => {
-      sendMidiControlChange(ccInput);
-    }, CcDebounceDelay),
+    debounce(sendMidiControlChange, CcDebounceDelay),
     []
   );
   const debouncedSendYCcMessage = useCallback(
-    debounce((ccInput: MidiControlChangeProps) => {
-      sendMidiControlChange(ccInput);
-    }, CcDebounceDelay),
+    debounce(sendMidiControlChange, CcDebounceDelay),
     []
   );
+
+  const send_X_CcMessage = useCallback(
+    (valuePercent: number) => {
+      const ccInput = createMidiControlChange(
+        xAxisControlIndex,
+        Math.floor(127 * valuePercent)
+      );
+      debouncedSendXCcMessage(ccInput);
+    },
+    [xAxisControlIndex, debouncedSendXCcMessage]
+  );
+  const send_Y_CcMessage = useCallback(
+    (valuePercent: number) => {
+      const ccInput = createMidiControlChange(
+        yAxisControlIndex,
+        Math.floor(127 * valuePercent)
+      );
+      debouncedSendYCcMessage(ccInput);
+    },
+    [yAxisControlIndex, debouncedSendYCcMessage]
+  );
+
+  return {
+    debouncedSendXCcMessage,
+    debouncedSendYCcMessage,
+    send_X_CcMessage,
+    send_Y_CcMessage,
+  };
+};
+
+export function ControlChange_ORIGINAL({ index }: ControlChangeProps) {
+  const { debouncedSendXCcMessage, debouncedSendYCcMessage } =
+    useCcNetworkCommunication(index);
+
+  const {
+    controlChangeState: { xAxisControlIndex, yAxisControlIndex },
+  } = useGridElementAtIndex(index);
+
+  // Positional knowledge
+  const {
+    elementWidth,
+    elementHeight,
+    spaceFromLeft,
+    spaceFromTop,
+    xPositionAbsolute,
+    yPositionAbsolute,
+    onLayout,
+    setXPositionAbsolute,
+    setYPositionAbsolute,
+  } = useCcElementPositioning({ index });
+
+  const [isInMotion, setIsInMotion] = useState(false);
+
+  const {
+    currentControlChangeDirection,
+    safeIconName,
+    hasVerticalControl,
+    hasHorizontalControl,
+    colorState,
+  } = useCcPersistedProperties({ index });
 
   const send_X_CcMessage = useCallback(
     (pageX: number) => {
@@ -272,19 +500,13 @@ export default function ControlChange({ index }: ControlChangeProps) {
   const BaseIcon = (
     <View
       style={{
-        ...styles.ccIcon,
+        ...ccStyles.ccIcon,
         top: yPositionAbsolute,
         left: xPositionAbsolute,
         backgroundColor: colorState.pressedColor,
       }}
     >
-      <GridThemedIcon
-        //Changes on move as one option. Hard set to a value as another option
-        index={index}
-        invert
-        name={safeIconName}
-        type="ionicon"
-      />
+      <GridThemedIcon index={index} invert name={safeIconName} type="ionicon" />
     </View>
   );
 
@@ -319,34 +541,17 @@ export default function ControlChange({ index }: ControlChangeProps) {
             playModeTouchEndHandler();
           }}
         >
-          {isInMotion && (
-            <>
-              {currentControlChangeDirection !==
-                ControlChangeDirection.Horizontal && (
-                <VerticalLevelLineIndicator
-                  absolutePosition={yPositionAbsolute}
-                  color={colorState.pressedColor}
-                />
-              )}
-              {currentControlChangeDirection !==
-                ControlChangeDirection.Vertical && (
-                <HorizontalLevelLineIndicator
-                  absolutePosition={xPositionAbsolute}
-                  color={colorState.pressedColor}
-                />
-              )}
+          <ControlChangeActiveIndicators
+            show={isInMotion}
+            index={index}
+            controlChangeDirection={currentControlChangeDirection}
+            xPositionAbsolute={xPositionAbsolute + halfIconSize}
+            yPositionAbsolute={yPositionAbsolute + halfIconSize}
+            elementWidth={elementWidth}
+            safeIconName={safeIconName}
+            color={colorState.pressedColor}
+          />
 
-              {currentControlChangeDirection === ControlChangeDirection.XY && (
-                <SpreadNeighboursIcons
-                  index={index}
-                  xPositionAbsolute={xPositionAbsolute}
-                  yPositionAbsolute={yPositionAbsolute}
-                  elementWidth={elementWidth}
-                  safeIconName={safeIconName}
-                />
-              )}
-            </>
-          )}
           {BaseIcon}
         </Animated.View>
       </View>
@@ -354,109 +559,7 @@ export default function ControlChange({ index }: ControlChangeProps) {
   );
 }
 
-const lineIndicatorThickness = 2;
-const lineFadeInDuration = 100;
-const lineFadeOutDuration = 250;
-
-const VerticalLevelLineIndicator = (props: {
-  absolutePosition: number;
-  color: string;
-}) => {
-  return (
-    <Animated.View
-      style={{
-        position: "absolute",
-        left: 0,
-        right: 0,
-        top: props.absolutePosition + ICON_SIZE / 2,
-        height: lineIndicatorThickness,
-        backgroundColor: props.color,
-      }}
-      entering={FadeIn.duration(lineFadeInDuration)}
-      exiting={FadeOut.duration(lineFadeOutDuration)}
-    />
-  );
-};
-const HorizontalLevelLineIndicator = (props: {
-  absolutePosition: number;
-  color: string;
-}) => {
-  return (
-    <Animated.View
-      style={{
-        position: "absolute",
-        top: 0,
-        bottom: 0,
-        left: props.absolutePosition + ICON_SIZE / 2,
-        width: lineIndicatorThickness,
-        backgroundColor: props.color,
-      }}
-      entering={FadeIn.duration(lineFadeInDuration)}
-      exiting={FadeOut.duration(lineFadeOutDuration)}
-    />
-  );
-};
 const iconSizeOffsetFromTouchPositionMultiplier = 1.5; // To keep the icon directly under the touch position
-
-const spreadDistanceMultiplier = 2;
-const cornerSpreadDistanceMultiplier = 0.71; // 1/root(2) // which makes the corners circularly distanced instead of box distanced
-const SpreadNeighboursIcons = (props: {
-  index: number;
-  xPositionAbsolute: number;
-  elementWidth: number;
-
-  yPositionAbsolute: number;
-  safeIconName: string;
-}) => {
-  const {
-    index,
-    xPositionAbsolute,
-    elementWidth,
-
-    yPositionAbsolute,
-    safeIconName,
-  } = props;
-
-  const getIconPosition = useCallback(
-    (degree: number, position: number, index: number) => {
-      const rawSpreadFactor =
-        (1 - xPositionAbsolute / elementWidth) * spreadDistanceMultiplier;
-
-      const radialMultiplier =
-        degree % 90 === 0 ? 1 : cornerSpreadDistanceMultiplier;
-
-      const spreadOffset = ((ICON_SIZE * (index - 1)) / rawSpreadFactor) * 0.5;
-      return position + spreadOffset * radialMultiplier;
-    },
-    [xPositionAbsolute, elementWidth]
-  );
-
-  return (
-    <>
-      {DEGREE_LIST_LIST.map((degreeList, i) =>
-        degreeList.map((degree, j) => (
-          <Animated.View
-            key={`CcSubIcon_${i}_${j}`}
-            style={{
-              ...styles.ccIcon,
-              top: getIconPosition(degree, yPositionAbsolute, i),
-              left: getIconPosition(degree, xPositionAbsolute, j),
-            }}
-            entering={FadeIn.duration(lineFadeInDuration)}
-            exiting={FadeOut.duration(lineFadeOutDuration)}
-          >
-            <GridThemedIcon
-              name={safeIconName}
-              type="ionicon"
-              index={index}
-              style={{ transform: [{ rotate: `${degree}deg` }] }}
-            />
-          </Animated.View>
-        ))
-      )}
-    </>
-  );
-};
 
 const styles = StyleSheet.create({
   gridElementBasePressedView: {
@@ -471,14 +574,6 @@ const styles = StyleSheet.create({
   gridElementEditView: {
     flexDirection: "row",
     borderColor: theme.color.white,
-  },
-  ccIcon: {
-    position: "absolute",
-    height: ICON_SIZE,
-    width: ICON_SIZE,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
   },
 });
 
@@ -511,4 +606,21 @@ const getSafeIconName = (
     return "swap-horizontal";
   }
   return "move";
+};
+
+const getPositionalPercent = (
+  touchPosition: number,
+  elementDimensionMax: number
+) => {
+  return (touchPosition - halfIconSize) / (elementDimensionMax - ICON_SIZE);
+};
+
+const getInboundsTouchPosition = (
+  touchPosition: number,
+  elementDimensionMax: number
+) => {
+  return Math.min(
+    Math.max(touchPosition, halfIconSize),
+    elementDimensionMax - halfIconSize
+  );
 };
