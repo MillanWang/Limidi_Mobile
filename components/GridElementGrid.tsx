@@ -1,7 +1,6 @@
-import React from "react";
+import React, { type ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { GridElementRow } from "../components/GridElementRow";
-import { useAppSelector } from "../redux/hooks";
 import { useCurrentGridPreset } from "../hooks/useCurrentGridPreset";
 
 export interface GridElementGridProps {
@@ -10,9 +9,8 @@ export interface GridElementGridProps {
 
 export function GridElementGrid({ isPlayMode }: GridElementGridProps) {
   const currentGridPreset = useCurrentGridPreset();
-
   // Creating the rows
-  let gridElementRows: JSX.Element[] = [];
+  const gridElementRows: ReactNode[] = [];
   for (let i = 0; i < currentGridPreset.rowCount; i++) {
     gridElementRows.push(
       <GridElementRow

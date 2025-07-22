@@ -1,15 +1,15 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Text, View } from "react-native";
-import { Piano } from "../../Piano";
 import { theme } from "../../../constants/theme";
 import { IncrementorButton } from "../../IncrementorButton";
+import { Piano } from "../../Piano";
 interface NoteSelectorProps {
   noteNumber: number;
   setNoteNumber: (noteNumber: number) => void;
   increaseOctave: () => void;
   decreaseOctave: () => void;
 
-  header: React.JSX.Element;
+  header: ReactNode;
   index?: number;
 }
 

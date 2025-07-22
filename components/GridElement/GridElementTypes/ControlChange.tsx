@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { LayoutChangeEvent, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   Gesture,
   GestureDetector,
@@ -10,7 +10,9 @@ import { createMidiControlChange } from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
 import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
+import { useElementSize } from "../../../hooks/useElementSize";
 import { debounce } from "../../../services/debounce";
+import { TouchPoint } from "../../../types";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 import {
@@ -24,7 +26,6 @@ const halfIconSize = ICON_SIZE / 2;
 const CcDebounceDelay = 50;
 
 type ControlChangeProps = { index: number };
-type TouchPoint = { x: number; y: number };
 
 export function ControlChange({ index }: ControlChangeProps) {
   const [touch, setTouch] = useState<TouchPoint | null>(null);
@@ -162,28 +163,6 @@ export function ControlChange({ index }: ControlChangeProps) {
     </GestureHandlerRootView>
   );
 }
-
-const useElementSize = (props: { index: number }) => {
-  const { index } = props;
-  const [elementWidth, setElementWidth] = useState(1);
-  const [elementHeight, setElementHeight] = useState(1);
-
-  const onLayout = useCallback(
-    (event: LayoutChangeEvent) => {
-      const layoutWidth = event.nativeEvent.layout.width;
-      const layoutHeight = event.nativeEvent.layout.height;
-      setElementWidth(layoutWidth);
-      setElementHeight(layoutHeight);
-    },
-    [setElementWidth, setElementHeight, index]
-  );
-
-  return {
-    elementWidth,
-    elementHeight,
-    onLayout,
-  };
-};
 
 const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
   const {

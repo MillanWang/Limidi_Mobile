@@ -22,9 +22,7 @@ export const useCcLevelOpacity = (props: {
     });
   }, [isInMotion, opacity, opacityPercent]);
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    opacity: opacity.value,
-  }));
+  const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
   return { animatedStyle };
 };
 

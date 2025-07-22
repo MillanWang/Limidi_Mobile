@@ -1,5 +1,5 @@
 import { Button, Icon } from "@rneui/themed";
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import {
   arePresetsEqual,
@@ -12,7 +12,7 @@ import { setGridColorPresetGlobally } from "../../../redux/slices/GridPresetsSli
 import { GridPreviewSizeSelector } from "../../GridPreview";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
 
-export function GridEditStyleSettingsTab(): JSX.Element {
+export function GridEditStyleSettingsTab(): ReactNode {
   return (
     <View style={styles.container}>
       <GridPreviewSizeSelector />

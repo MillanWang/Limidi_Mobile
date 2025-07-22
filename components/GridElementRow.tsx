@@ -15,7 +15,7 @@ export function GridElementRow({
   const currentGridPreset = useCurrentGridPreset();
 
   // Populating the row
-  let gridElements: JSX.Element[] = [];
+  const gridElements: React.ReactNode[] = [];
   for (let i = 0; i < currentGridPreset.columnCount; i++) {
     const currentIndex = i + rowStartingIndex;
     gridElements.push(
