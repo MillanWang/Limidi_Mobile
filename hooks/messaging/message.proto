@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+message MidiNote {
+  int32 noteNumber = 1;
+  int32 velocity = 2;
+  bool isNoteOn = 3;
+}
+
+message ControlChange {
+  int32 controlIndex = 1;
+  int32 level = 2;
+}
+
+message WrapperMessage {
+  oneof payload {
+    MidiNote midiNote = 1;
+    ControlChange controlChange = 2;
+  }
+}

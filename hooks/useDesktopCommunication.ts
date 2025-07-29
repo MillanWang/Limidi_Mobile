@@ -1,97 +1,96 @@
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MidiControlChangeProps, MidiNoteProps } from "../constants/MIDI_Notes";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useAppSelector } from "../redux/hooks";
 import {
-  setMostRecentNetworkFailTime,
-  setMostRecentNetworkFixTime,
-} from "../redux/slices/HttpCommunicationsSlice";
+  encodeControlChange,
+  encodeMidiNote,
+} from "./messaging/EncodeDesktopMessage";
 
 const LOG_MESSAGES = false;
 
 export function useDesktopCommunication() {
-  const {
-    httpCommunicationInfo: { baseAddress },
-    mostRecentNetworkFailTime,
-    mostRecentNetworkFixTime,
-  } = useAppSelector((state) => state.httpCommunicationsReducer);
-
-  const dispatch = useAppDispatch();
+  const { sendMessage } = useWebSocket();
 
   async function sendHeartbeatMessage() {
     if (LOG_MESSAGES) console.log(`Heartbeat started at ${Date.now()}`);
-    fetchWithTimeout(`http://${baseAddress}/Heartbeat`)
-      .then((response: any) => {
-        if (response.ok) {
-          if (LOG_MESSAGES) console.log(`Heartbeat verified at ${Date.now()}`);
-          dispatch(
-            setMostRecentNetworkFixTime({
-              mostRecentNetworkFixTime: Date.now(),
-            })
-          );
-        }
-      })
-      .catch(fetchErrorCatcher);
   }
 
-  async function sendMidiNote({
-    noteNumber,
-    velocity,
-    isNoteOn,
-  }: MidiNoteProps) {
-    fetchWithTimeout(
-      `http://${baseAddress}/MidiNote/?noteNumber=${noteNumber}&velocity=${velocity}&isNoteOn=${isNoteOn}`
-    )
-      .then(responseHandler)
-      .catch(fetchErrorCatcher);
+  async function sendMidiNote(props: MidiNoteProps) {
+    const encoded = encodeMidiNote(props);
+    sendMessage(encoded);
   }
 
-  async function sendMidiControlChange({
-    controlIndex,
-    level,
-  }: MidiControlChangeProps) {
-    if (controlIndex < 0) return;
-    fetchWithTimeout(
-      `http://${baseAddress}/ControlChangeInput/?controlIndex=${controlIndex}&level=${level}`
-    )
-      .then(responseHandler)
-      .catch(fetchErrorCatcher);
+  async function sendMidiControlChange(props: MidiControlChangeProps) {
+    if (props.controlIndex < 0) return;
+    const encoded = encodeControlChange(props);
+    sendMessage(encoded);
   }
-
-  const MINIMUM_NETWORK_FAIL_INTERVAL_DELAY = 1000 * 5;
-  const responseHandler = (response: any) => {
-    if (!response.ok) {
-      if (LOG_MESSAGES)
-        console.log(`${Date.now()} ${response.status} MIDI API fault`);
-    }
-  };
-
-  const fetchErrorCatcher = (error: any) => {
-    if (LOG_MESSAGES) console.log(`${Date.now()} ${error} API fault`);
-    const now = Date.now();
-    const isErrorNew =
-      now - mostRecentNetworkFixTime > MINIMUM_NETWORK_FAIL_INTERVAL_DELAY;
-
-    if (isErrorNew) {
-      dispatch(
-        setMostRecentNetworkFailTime({ mostRecentNetworkFailTime: now })
-      );
-    }
-  };
-
-  const fetchWithTimeout = async (url: string, timeout = 2000) => {
-    return Promise.race([
-      fetch(url, { method: "GET" }),
-      new Promise((_, reject) =>
-        setTimeout(() => {
-          reject(new Error("timeout"));
-        }, timeout)
-      ),
-    ]);
-  };
 
   return {
     sendHeartbeatMessage,
     sendMidiNote,
     sendMidiControlChange,
   };
+}
+
+/*
+TODO 
+- Single instance of websocket to be used throughout. Only one active connection 
+- Need a connection refresh system 
+*/
+
+enum WebSocketStatus {
+  CONNECTING = "connecting",
+  OPEN = "open",
+  CLOSED = "closed",
+  ERROR = "error",
+}
+
+export function useWebSocket() {
+  const baseAddress = useAppSelector(
+    (state) => state.httpCommunicationsReducer.httpCommunicationInfo.baseAddress
+  );
+
+  const wsRef = useRef<WebSocket | null>(null);
+  const [status, setStatus] = useState<WebSocketStatus>(
+    WebSocketStatus.CONNECTING
+  );
+
+  const url = `ws://${baseAddress}`;
+
+  const sendMessage = useCallback((message: Uint8Array<ArrayBufferLike>) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(message);
+    } else {
+      console.warn("WebSocket not connected. Cannot send message.");
+    }
+  }, []);
+
+  useEffect(() => {
+    const ws = new WebSocket(url);
+    wsRef.current = ws;
+
+    setStatus(WebSocketStatus.CONNECTING);
+
+    ws.onopen = () => {
+      setStatus(WebSocketStatus.OPEN);
+      console.log("WebSocket connected:", url);
+    };
+
+    ws.onerror = (err) => {
+      setStatus(WebSocketStatus.ERROR);
+      console.error("WebSocket error:", err);
+    };
+
+    ws.onclose = () => {
+      setStatus(WebSocketStatus.CLOSED);
+      console.log("WebSocket closed");
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [url]);
+
+  return { status, sendMessage };
 }
