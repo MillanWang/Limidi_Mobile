@@ -2,14 +2,14 @@ import { Input } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
-import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
+import { useWebSocketContext } from "../../hooks/useWebSocketContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { AddressValidationIcon } from "./AddressValidationIcon";
 
 export function NetworkAddressInput() {
   const dispatch = useAppDispatch();
-  const { tryConnection } = useDesktopCommunication();
+  const { tryConnection } = useWebSocketContext();
 
   const { baseAddress } = useAppSelector(
     (state) => state.httpCommunicationsReducer.httpCommunicationInfo

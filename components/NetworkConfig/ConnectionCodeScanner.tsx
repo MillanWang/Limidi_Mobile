@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
-import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
 import { useAppDispatch } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
@@ -13,7 +12,6 @@ import { CheckConnectionButton } from "./CheckConnectionButton";
 
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
-  const { tryConnection } = useDesktopCommunication();
   const [hasPermission, setHasPermission] = useState(false);
   const [scanData, setScanData] = useState<string | undefined>("<No scan yet>");
 
@@ -38,11 +36,11 @@ export function ConnectionCodeScanner() {
     );
   }
   const handleBarCodeScanned = (result: { type: string; data: string }) => {
-    if (result.type === "org.iso.QRCode") {
-      setScanData(result.data);
+    if (result.type === "qr") {
       if (isValidIpWithPort(result.data)) {
+        setScanData(result.data);
         dispatch(setBaseAddress({ baseAddress: result.data }));
-        setTimeout(() => tryConnection(), 1000);
+      } else {
       }
     }
   };
@@ -64,11 +62,11 @@ export function ConnectionCodeScanner() {
               onBarcodeScanned={scanData ? undefined : handleBarCodeScanned}
               style={{ ...StyleSheet.absoluteFillObject }}
               barcodeScannerSettings={{
-                barcodeTypes: ["qr", "pdf417"],
+                barcodeTypes: ["qr"],
               }}
             />
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <GridThemedButton onPress={() => setScanData("")}>
+              <GridThemedButton onPress={() => setScanData(undefined)}>
                 <BackIcon /> Cancel
               </GridThemedButton>
             </View>

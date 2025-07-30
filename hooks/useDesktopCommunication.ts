@@ -6,7 +6,7 @@ import {
 import { useWebSocketContext } from "./useWebSocketContext";
 
 export function useDesktopCommunication() {
-  const { sendMessage, tryConnection } = useWebSocketContext();
+  const { sendMessage } = useWebSocketContext();
 
   async function sendMidiNote(props: MidiNoteProps) {
     const encoded = encodeMidiNote(props);
@@ -20,7 +20,6 @@ export function useDesktopCommunication() {
   }
 
   return {
-    tryConnection,
     sendMidiNote,
     sendMidiControlChange,
   };
