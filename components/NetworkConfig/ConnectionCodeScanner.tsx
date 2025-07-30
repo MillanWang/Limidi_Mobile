@@ -1,19 +1,19 @@
-import { Button, Icon, Text } from "@rneui/themed";
+import { Icon, Text } from "@rneui/themed";
 import { Camera, CameraView } from "expo-camera";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
-import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
-import { isValidIpWithPort } from "./AddressValidationIcon";
-import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
-import { CheckConnectionButton } from "./CheckConnectionButton";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
+import { useDesktopCommunication } from "../../hooks/useDesktopCommunication";
+import { useAppDispatch } from "../../redux/hooks";
+import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
+import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
+import { isValidIpWithPort } from "./AddressValidationIcon";
+import { CheckConnectionButton } from "./CheckConnectionButton";
 
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
-  const { sendHeartbeatMessage } = useDesktopCommunication();
+  const { tryConnection } = useDesktopCommunication();
   const [hasPermission, setHasPermission] = useState(false);
   const [scanData, setScanData] = useState<string | undefined>("<No scan yet>");
 
@@ -42,7 +42,7 @@ export function ConnectionCodeScanner() {
       setScanData(result.data);
       if (isValidIpWithPort(result.data)) {
         dispatch(setBaseAddress({ baseAddress: result.data }));
-        setTimeout(() => sendHeartbeatMessage(), 1000);
+        setTimeout(() => tryConnection(), 1000);
       }
     }
   };

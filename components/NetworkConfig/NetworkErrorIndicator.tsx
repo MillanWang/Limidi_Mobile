@@ -1,8 +1,12 @@
 import { Icon, IconProps } from "@rneui/themed";
-import React from "react";
+import React, { useMemo } from "react";
+import { TouchableOpacity } from "react-native";
 import { theme } from "../../constants/theme";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
-import { useAppSelector } from "../../redux/hooks";
+import {
+  useWebSocketContext,
+  WebSocketStatus,
+} from "../../hooks/useWebSocketContext";
 
 interface NetworkConfigButtonProps {
   forceVisible?: boolean;
@@ -15,31 +19,39 @@ export const NetworkErrorIndicator = ({
   ...iconProps
 }: NetworkConfigButtonProps & Partial<IconProps>) => {
   const gridTheme = useCurrentGridPresetColors();
+  const { status, tryConnection } = useWebSocketContext();
 
-  const { mostRecentNetworkFailTime, mostRecentNetworkFixTime } =
-    useAppSelector((state) => state.httpCommunicationsReducer);
+  const isButtonVisible = forceVisible || status !== WebSocketStatus.OPEN;
 
-  const hasRecentError = mostRecentNetworkFailTime > mostRecentNetworkFixTime;
-  const isButtonVisible = forceVisible || hasRecentError;
+  const color = useMemo(() => {
+    if (useGridThemeColors) {
+      return gridTheme.pressedColor;
+    }
+
+    switch (status) {
+      case WebSocketStatus.OPEN:
+        return theme.color.white;
+      case WebSocketStatus.CONNECTING:
+        return "yellow";
+      default:
+        return "red";
+    }
+  }, [status]);
+
+  const iconName = useMemo(() => {
+    if (WebSocketStatus.OPEN === status) {
+      return "wifi";
+    }
+    return "wifi-off";
+  }, [status]);
 
   if (!isButtonVisible) {
     return null;
   }
 
-  const color = useGridThemeColors
-    ? gridTheme.pressedColor
-    : hasRecentError
-    ? "red"
-    : theme.color.white;
-
   return (
-    <>
-      <Icon
-        size={24}
-        name={hasRecentError ? "wifi-off" : "wifi"}
-        color={color}
-        {...iconProps}
-      />
-    </>
+    <TouchableOpacity onPress={tryConnection}>
+      <Icon size={24} name={iconName} color={color} {...iconProps} />
+    </TouchableOpacity>
   );
 };

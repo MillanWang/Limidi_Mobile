@@ -9,7 +9,7 @@ import { AddressValidationIcon } from "./AddressValidationIcon";
 
 export function NetworkAddressInput() {
   const dispatch = useAppDispatch();
-  const { sendHeartbeatMessage } = useDesktopCommunication();
+  const { tryConnection } = useDesktopCommunication();
 
   const { baseAddress } = useAppSelector(
     (state) => state.httpCommunicationsReducer.httpCommunicationInfo
@@ -17,7 +17,7 @@ export function NetworkAddressInput() {
 
   const onChangeHandler = (baseAddress: string) => {
     dispatch(setBaseAddress({ baseAddress }));
-    sendHeartbeatMessage();
+    tryConnection();
   };
 
   return (

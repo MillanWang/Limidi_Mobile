@@ -5,9 +5,9 @@ import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import { NetworkErrorIndicator } from "./NetworkErrorIndicator";
 
 export const CheckConnectionButton = (props: ButtonProps) => {
-  const { sendHeartbeatMessage } = useDesktopCommunication();
+  const { tryConnection } = useDesktopCommunication();
   return (
-    <GridThemedButton onPress={sendHeartbeatMessage} borderless {...props}>
+    <GridThemedButton onPress={tryConnection} borderless {...props}>
       <NetworkErrorIndicator style={{ marginRight: 8 }} useGridThemeColors />
       Check Connection
     </GridThemedButton>
