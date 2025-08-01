@@ -24,9 +24,11 @@ export function GridLayoutPresetButtons() {
     <>
       {PRESET_ICON_NAMES.map((iconNameString, presetIndex) => {
         return (
-          <TouchableOpacity onPress={setPresetIndexFunction(presetIndex)}>
+          <TouchableOpacity
+            onPress={setPresetIndexFunction(presetIndex)}
+            key={`PresetButtonIcon_${presetIndex}`}
+          >
             <Icon
-              key={`PresetButtonIcon_${presetIndex}`}
               name={`looks-${iconNameString}`} // Defines which icon is used
               color={gridTheme.pressedColor}
               style={{ opacity: currentPresetIndex === presetIndex ? 1 : 0.3 }}
