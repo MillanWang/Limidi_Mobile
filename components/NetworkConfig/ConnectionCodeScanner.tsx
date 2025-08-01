@@ -13,16 +13,18 @@ import { CheckConnectionButton } from "./CheckConnectionButton";
 export function ConnectionCodeScanner() {
   const dispatch = useAppDispatch();
   const [hasPermission, setHasPermission] = useState(false);
+  const [canAskAgain, setCanAskAgain] = useState(false);
   const [scanData, setScanData] = useState<string | undefined>("<No scan yet>");
 
+  const getCameraPermissions = async () => {
+    const { status, canAskAgain } =
+      await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status === "granted");
+    setCanAskAgain(canAskAgain);
+  };
   useEffect(() => {
     (async () => {
-      const getCameraPermissions = async () => {
-        const { status } = await Camera.requestCameraPermissionsAsync();
-        setHasPermission(status === "granted");
-      };
-
-      getCameraPermissions();
+      await getCameraPermissions();
     })();
   }, []);
 
@@ -30,8 +32,17 @@ export function ConnectionCodeScanner() {
     return (
       <View>
         <Text style={{ color: theme.color.lightText }}>
-          Enable camera permissions to scan Limidi Desktop QR code
+          Go to settings and enable camera permissions to scan the Limidi
+          Desktop QR code
         </Text>
+        {canAskAgain && (
+          <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
+            <GridThemedButton onPress={getCameraPermissions} borderless>
+              <CameraIcon />
+              Request Camera Permission
+            </GridThemedButton>
+          </View>
+        )}
       </View>
     );
   }
@@ -79,6 +90,7 @@ export function ConnectionCodeScanner() {
 
 const QRIcon = () => <StyledIcon name="qr-code-sharp" />;
 const BackIcon = () => <StyledIcon name="arrow-back-outline" />;
+const CameraIcon = () => <StyledIcon name="camera-outline" />;
 const StyledIcon = ({ name }: { name: string }) => {
   const gridTheme = useCurrentGridPresetColors();
   return (
