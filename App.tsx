@@ -21,12 +21,12 @@ export default function App() {
       <SafeAreaProvider>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
-            <WebSocketProvider>
-              <PageProvider>
+            <PageProvider>
+              <WebSocketProvider>
                 <StatusBar />
                 <GridScreen />
-              </PageProvider>
-            </WebSocketProvider>
+              </WebSocketProvider>
+            </PageProvider>
           </PersistGate>
         </Provider>
       </SafeAreaProvider>

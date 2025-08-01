@@ -8,6 +8,9 @@ import React, {
   useState,
 } from "react";
 import { useAppSelector } from "../redux/hooks";
+import { Page, usePageContext } from "./usePageContext";
+
+const MAX_CONNECTION_ATTEMPTS = 2;
 
 export enum WebSocketStatus {
   CONNECTING = "connecting",
@@ -27,10 +30,14 @@ const WebSocketContext = createContext<WebSocketContextType | undefined>(
 );
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
+  const [connectionAttempts, setConnectionAttempts] = useState(0);
+
   const wsRef = useRef<WebSocket | null>(null);
   const [status, setStatus] = useState<WebSocketStatus>(
     WebSocketStatus.CONNECTING
   );
+
+  const { navigateTo } = usePageContext();
 
   console.log("status :", status);
   const baseAddress = useAppSelector(
@@ -38,36 +45,46 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   );
   const url = `ws://${baseAddress}`;
 
-  const connectWebSocket = useCallback(() => {
-    // Close existing connection if any
-    if (wsRef.current) {
-      wsRef.current.close();
-    }
+  const connectWebSocket = useCallback(
+    (attempt: number) => {
+      // Close existing connection if any
+      if (wsRef.current) {
+        wsRef.current.close();
+      }
 
-    const ws = new WebSocket(url);
-    wsRef.current = ws;
+      const ws = new WebSocket(url);
+      wsRef.current = ws;
 
-    setStatus(WebSocketStatus.CONNECTING);
+      setStatus(WebSocketStatus.CONNECTING);
 
-    ws.onopen = () => {
-      setStatus(WebSocketStatus.OPEN);
-      console.log("WebSocket connected:", url);
-    };
+      ws.onopen = () => {
+        setConnectionAttempts(0);
+        setStatus(WebSocketStatus.OPEN);
+        console.log("WebSocket connected:", url);
+      };
 
-    ws.onerror = (err) => {
-      setStatus(WebSocketStatus.ERROR);
-      console.error("WebSocket error:", err);
-    };
+      ws.onerror = (err) => {
+        setStatus(WebSocketStatus.ERROR);
+        console.error("WebSocket error:", err);
+      };
 
-    ws.onclose = () => {
-      setStatus(WebSocketStatus.CLOSED);
-      console.log("WebSocket closed");
-    };
-  }, [url]);
+      ws.onclose = () => {
+        setStatus(WebSocketStatus.CLOSED);
+        console.log("WebSocket closed");
+      };
+
+      console.log("failedAttempts :", attempt);
+      setConnectionAttempts((attempt) => attempt + 1);
+      if (attempt >= MAX_CONNECTION_ATTEMPTS) {
+        navigateTo(Page.NetworkSettings);
+      }
+    },
+    [url, setConnectionAttempts]
+  );
   console.log("url :", url);
 
   useEffect(() => {
-    connectWebSocket();
+    connectWebSocket(0);
 
     return () => {
       if (wsRef.current) {
@@ -86,7 +103,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   return (
     <WebSocketContext.Provider
-      value={{ status, sendMessage, tryConnection: connectWebSocket }}
+      value={{
+        status,
+        sendMessage,
+        tryConnection: () => connectWebSocket(connectionAttempts),
+      }}
     >
       {children}
     </WebSocketContext.Provider>
