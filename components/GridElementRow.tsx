@@ -5,13 +5,9 @@ import GridElement from "./GridElement/GridElement";
 
 export interface GridElementRowProps {
   rowStartingIndex: number;
-  isPlayMode: boolean;
 }
 
-export function GridElementRow({
-  rowStartingIndex,
-  isPlayMode,
-}: GridElementRowProps) {
+export function GridElementRow({ rowStartingIndex }: GridElementRowProps) {
   const currentGridPreset = useCurrentGridPreset();
 
   // Populating the row
@@ -19,11 +15,7 @@ export function GridElementRow({
   for (let i = 0; i < currentGridPreset.columnCount; i++) {
     const currentIndex = i + rowStartingIndex;
     gridElements.push(
-      <GridElement
-        index={currentIndex}
-        isPlayMode={isPlayMode}
-        key={`gridElement_${currentIndex}`}
-      />
+      <GridElement index={currentIndex} key={`gridElement_${currentIndex}`} />
     );
   }
 

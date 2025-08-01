@@ -5,6 +5,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import useCachedResources from "./hooks/useCachedResources";
+import { PageProvider } from "./hooks/usePageContext";
 import { WebSocketProvider } from "./hooks/useWebSocketContext";
 import { persistor, store } from "./redux/store";
 import GridScreen from "./screens/GridScreen";
@@ -21,8 +22,10 @@ export default function App() {
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <WebSocketProvider>
-              <StatusBar />
-              <GridScreen />
+              <PageProvider>
+                <StatusBar />
+                <GridScreen />
+              </PageProvider>
             </WebSocketProvider>
           </PersistGate>
         </Provider>

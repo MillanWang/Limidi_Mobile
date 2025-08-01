@@ -6,26 +6,13 @@ import { theme } from "../constants/theme";
 import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPreset";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
+import { Page, usePageContext } from "../hooks/usePageContext";
 
-export interface GridScreenToolbarProps {
-  isPlayMode: boolean;
-  setIsPlayMode(isPlayMode: boolean): void;
-  isFullGridEditMode: boolean;
-  setIsFullGridEditMode(isPlayMode: boolean): void;
-}
-
-export function GridScreenToolbar({
-  isPlayMode,
-  setIsPlayMode,
-  isFullGridEditMode,
-  setIsFullGridEditMode,
-}: GridScreenToolbarProps) {
+export function GridScreenToolbar() {
   const gridTheme = useCurrentGridPresetColors();
-
-  const togglePlayMode = () => {
-    setIsPlayMode(!isPlayMode);
-    setIsFullGridEditMode(false);
-  };
+  const { togglePlayMode, toggleSettings, page, isInSettings } =
+    usePageContext();
+  const isPlayMode = page === Page.Play;
 
   return (
     <View style={styles.headerOptions}>
@@ -53,7 +40,7 @@ export function GridScreenToolbar({
 
       {!isPlayMode && (
         <Button
-          onPress={() => setIsFullGridEditMode(!isFullGridEditMode)}
+          onPress={toggleSettings}
           style={{ borderRadius: 0 }}
           containerStyle={{ borderRadius: 0 }}
           buttonStyle={{
@@ -64,7 +51,7 @@ export function GridScreenToolbar({
           }}
         >
           <Icon
-            name={isFullGridEditMode ? "grid-outline" : "settings-outline"}
+            name={!isInSettings ? "grid-outline" : "settings-outline"}
             color={gridTheme.pressedColor}
             type="ionicon"
           />

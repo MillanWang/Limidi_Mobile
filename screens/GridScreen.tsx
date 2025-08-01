@@ -1,28 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { GridEditMenu } from "../components/GridEditDialog/GridEditMenu";
 import { GridElementGrid } from "../components/GridElementGrid";
 import { GridScreenToolbar } from "../components/GridScreenToolbar";
 import { theme } from "../constants/theme";
+import { usePageContext } from "../hooks/usePageContext";
 
 export default function GridScreen() {
-  const [isPlayMode, setIsPlayMode] = useState(true);
-  const [isFullGridEditMode, setIsFullGridEditMode] = useState(false);
+  const { isInSettings } = usePageContext();
+
   const insets = useSafeAreaInsets();
   return (
     <View style={{ ...styles.container, paddingTop: insets.top }}>
-      <GridScreenToolbar
-        isPlayMode={isPlayMode}
-        setIsPlayMode={setIsPlayMode}
-        isFullGridEditMode={isFullGridEditMode}
-        setIsFullGridEditMode={setIsFullGridEditMode}
-      />
-      {isFullGridEditMode ? (
-        <GridEditMenu />
-      ) : (
-        <GridElementGrid isPlayMode={isPlayMode} />
-      )}
+      <GridScreenToolbar />
+      {isInSettings ? <GridEditMenu /> : <GridElementGrid />}
     </View>
   );
 }

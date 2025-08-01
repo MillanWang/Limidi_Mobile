@@ -8,24 +8,41 @@ import NetworkConfigSettingsTab from "../NetworkConfig/NetworkConfigSettingsTab"
 import { NetworkErrorIndicator } from "../NetworkConfig/NetworkErrorIndicator";
 import { GridEditStyleSettingsTab } from "./GridEditDialogTabs/GridEditColorSettingsTab";
 import { GridEditGridSettingsTab } from "./GridEditDialogTabs/GridEditGridSettingsTab";
+import { Page, usePageContext } from "../../hooks/usePageContext";
 
 const settingsTabs = [
-  { name: "Scale", iconName: "musical-notes", type: "ionicon" },
-  { name: "Color", iconName: "color-palette", type: "ionicon" },
-  { name: "Network", iconName: "network", isNetwork: true },
+  {
+    name: "Scale",
+    iconName: "musical-notes",
+    type: "ionicon",
+    page: Page.ScaleSettings,
+  },
+  {
+    name: "Color",
+    iconName: "color-palette",
+    type: "ionicon",
+    page: Page.ColorSettings,
+  },
+  {
+    name: "Network",
+    iconName: "network",
+    isNetwork: true,
+    page: Page.NetworkSettings,
+  },
 ];
 
 export const GridEditMenu = () => {
   const gridTheme = useCurrentGridPresetColors();
-  const [tabIndex, setTabIndex] = React.useState(0);
+  const { page, goToSettings } = usePageContext();
+
   return (
     <>
       <View style={styles.dialogTabSelectorContainer}>
         {settingsTabs.map((tab, i) => (
           <GridThemedButton
-            onPress={() => setTabIndex(i)}
+            onPress={() => goToSettings(tab.page)}
             key={`settingsTab-${i}`}
-            unfocused={tabIndex !== i}
+            unfocused={page !== tab.page}
             flex
           >
             <TabIcon {...tab} color={gridTheme.pressedColor} />
@@ -35,9 +52,9 @@ export const GridEditMenu = () => {
       </View>
 
       <View style={styles.dialogContentContainer}>
-        {tabIndex === 0 && <GridEditGridSettingsTab />}
-        {tabIndex === 1 && <GridEditStyleSettingsTab />}
-        {tabIndex === 2 && <NetworkConfigSettingsTab />}
+        {page === Page.ScaleSettings && <GridEditGridSettingsTab />}
+        {page === Page.ColorSettings && <GridEditStyleSettingsTab />}
+        {page === Page.NetworkSettings && <NetworkConfigSettingsTab />}
       </View>
     </>
   );

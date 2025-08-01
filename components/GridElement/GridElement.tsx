@@ -1,24 +1,19 @@
 import { Icon, Text } from "@rneui/themed";
 import React, { useState } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import {
   useCurrentGridPreset,
   useGridElementAtIndex,
 } from "../../hooks/useCurrentGridPreset";
+import { Page, usePageContext } from "../../hooks/usePageContext";
 import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
 import { ControlChange } from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
 
-interface GridElementProps {
-  index: number;
-
-  //Grid Controls
-  isPlayMode: boolean;
-}
-
-export default function GridElement({ index, isPlayMode }: GridElementProps) {
+export default function GridElement({ index }: { index: number }) {
   const { isMidiNote } = useCurrentGridPreset().gridElements[index];
-
+  const { page } = usePageContext();
+  const isPlayMode = page === Page.Play;
   if (!isPlayMode) {
     return <GridElementEditButton index={index} />;
   }
