@@ -1,32 +1,37 @@
 import { Icon, Text } from "@rneui/themed";
 import { Camera, CameraView } from "expo-camera";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
-import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
+import { StyledIcon } from "../GridThemedComponents/StyledIcon";
 import { isValidIpWithPort } from "./AddressValidationIcon";
-import { CheckConnectionButton } from "./CheckConnectionButton";
 
-export function ConnectionCodeScanner() {
+export function ConnectionCodeScanner(props: { onCancel: () => void }) {
+  const { onCancel } = props;
   const dispatch = useAppDispatch();
-  const [hasPermission, setHasPermission] = useState(false);
-  const [canAskAgain, setCanAskAgain] = useState(false);
-  const [scanData, setScanData] = useState<string | undefined>("<No scan yet>");
 
-  const getCameraPermissions = async () => {
-    const { status, canAskAgain } =
-      await Camera.requestCameraPermissionsAsync();
-    setHasPermission(status === "granted");
-    setCanAskAgain(canAskAgain);
-  };
-  useEffect(() => {
-    (async () => {
-      await getCameraPermissions();
-    })();
-  }, []);
+  const [hasScanError, setHasScanError] = useState(false);
+
+  const { hasPermission, canAskAgain, getCameraPermissions } =
+    useCameraPermissions();
+
+  const handleBarCodeScanned = useCallback(
+    (result: { type: string; data: string }) => {
+      if (result.type === "qr") {
+        if (isValidIpWithPort(result.data)) {
+          dispatch(setBaseAddress({ baseAddress: result.data }));
+          onCancel();
+          setHasScanError(false);
+        } else {
+          setHasScanError(true);
+        }
+      }
+    },
+    [dispatch, onCancel, setHasScanError]
+  );
 
   if (!hasPermission) {
     return (
@@ -46,59 +51,66 @@ export function ConnectionCodeScanner() {
       </View>
     );
   }
-  const handleBarCodeScanned = (result: { type: string; data: string }) => {
-    if (result.type === "qr") {
-      if (isValidIpWithPort(result.data)) {
-        setScanData(result.data);
-        dispatch(setBaseAddress({ baseAddress: result.data }));
-      } else {
-      }
-    }
-  };
 
   return (
-    <View>
-      {scanData !== undefined ? (
-        <View style={{ flexDirection: "row", gap: 8 }}>
-          <GridThemedButton onPress={() => setScanData(undefined)} borderless>
-            <QRIcon />
-            Scan
-          </GridThemedButton>
-          <CheckConnectionButton />
-        </View>
-      ) : (
-        <>
-          <View style={{ height: "80%" }}>
-            <CameraView
-              onBarcodeScanned={scanData ? undefined : handleBarCodeScanned}
-              style={{ ...StyleSheet.absoluteFillObject }}
-              barcodeScannerSettings={{
-                barcodeTypes: ["qr"],
-              }}
-            />
-            <View style={{ display: "flex", flexDirection: "row" }}>
-              <GridThemedButton onPress={() => setScanData(undefined)}>
-                <BackIcon /> Cancel
-              </GridThemedButton>
-            </View>
-          </View>
-        </>
-      )}
+    <View style={{ height: "100%" }}>
+      <CameraView
+        onBarcodeScanned={handleBarCodeScanned}
+        style={{ ...StyleSheet.absoluteFillObject }}
+        barcodeScannerSettings={{
+          barcodeTypes: ["qr"],
+        }}
+      />
+      <View style={{ display: "flex", flexDirection: "row" }}>
+        {hasScanError && <InvalidScanMessage />}
+      </View>
     </View>
   );
 }
 
-const QRIcon = () => <StyledIcon name="qr-code-sharp" />;
 const BackIcon = () => <StyledIcon name="arrow-back-outline" />;
 const CameraIcon = () => <StyledIcon name="camera-outline" />;
-const StyledIcon = ({ name }: { name: string }) => {
-  const gridTheme = useCurrentGridPresetColors();
+
+const useCameraPermissions = () => {
+  const [hasPermission, setHasPermission] = useState(false);
+  const [canAskAgain, setCanAskAgain] = useState(false);
+
+  const getCameraPermissions = useCallback(async () => {
+    const { status, canAskAgain } =
+      await Camera.requestCameraPermissionsAsync();
+    setHasPermission(status === "granted");
+    setCanAskAgain(canAskAgain);
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      await getCameraPermissions();
+    })();
+  }, []);
+
+  return { hasPermission, canAskAgain, getCameraPermissions };
+};
+
+const InvalidScanMessage = () => {
   return (
-    <Icon
-      name={name}
-      type="ionicon"
-      color={gridTheme.pressedColor}
-      style={{ marginRight: 8 }}
-    />
+    <View
+      style={{
+        flexDirection: "row",
+        gap: 8,
+        alignItems: "center",
+        justifyContent: "center",
+        flex: 1,
+        backgroundColor: theme.color.background,
+      }}
+    >
+      <Icon
+        name="alert-circle"
+        type="ionicon"
+        color={theme.color.warningText}
+      />
+      <Text style={{ color: theme.color.warningText }}>
+        {"Invalid scan. Try again"}
+      </Text>
+    </View>
   );
 };

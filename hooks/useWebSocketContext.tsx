@@ -13,10 +13,10 @@ import { Page, usePageContext } from "./usePageContext";
 const MAX_CONNECTION_ATTEMPTS = 2;
 
 export enum WebSocketStatus {
-  CONNECTING = "connecting",
-  OPEN = "open",
-  CLOSED = "closed",
-  ERROR = "error",
+  Connecting = "Connecting",
+  Connected = "Connected",
+  Disconnected = "Disconnected",
+  Error = "Error",
 }
 
 type WebSocketContextType = {
@@ -34,7 +34,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   const wsRef = useRef<WebSocket | null>(null);
   const [status, setStatus] = useState<WebSocketStatus>(
-    WebSocketStatus.CONNECTING
+    WebSocketStatus.Connecting
   );
 
   const { navigateTo } = usePageContext();
@@ -55,21 +55,21 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       const ws = new WebSocket(url);
       wsRef.current = ws;
 
-      setStatus(WebSocketStatus.CONNECTING);
+      setStatus(WebSocketStatus.Connecting);
 
       ws.onopen = () => {
         setConnectionAttempts(0);
-        setStatus(WebSocketStatus.OPEN);
+        setStatus(WebSocketStatus.Connected);
         console.log("WebSocket connected:", url);
       };
 
       ws.onerror = (err) => {
-        setStatus(WebSocketStatus.ERROR);
+        setStatus(WebSocketStatus.Error);
         console.error("WebSocket error:", err);
       };
 
       ws.onclose = () => {
-        setStatus(WebSocketStatus.CLOSED);
+        setStatus(WebSocketStatus.Disconnected);
         console.log("WebSocket closed");
       };
 

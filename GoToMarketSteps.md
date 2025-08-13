@@ -5,10 +5,6 @@
 - DATA
   - Emergency backing-store reset upon load failure
   - Getting the backing store to actually be reliable. Pretty questionable in the current state with occasional resets and things not actually getting persisted
-- MENU
-  - New menu selector component
-    - Colorable
-    - Based on buttons with full touch events instead of just first touch during scroll
 - GRID
   - Grid edit mode - Element info indication.
     - CC icon shown in the edit area preview
@@ -32,8 +28,7 @@
   - UI elements for an off-grid-theme element should match the element instead of the main theme
   - Dark mode all of the app manu areas
 - NETWORKING
-  - Sanitization of networking values from QR codes
-  - Auto attempting the heartbeat when typing in the manual typer
+  - Replace manual IP address entry wiht an alphanumeric encoding system
 - DESKTOP APP
   - Add button to restart the whole app
   - Indicator for network availability

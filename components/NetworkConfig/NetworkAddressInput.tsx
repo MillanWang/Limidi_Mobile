@@ -1,4 +1,4 @@
-import { Input } from "@rneui/themed";
+import { Input, Text } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
@@ -22,6 +22,7 @@ export function NetworkAddressInput() {
 
   return (
     <View>
+      <Text style={[styles.text]}>Connection Code</Text>
       <Input
         defaultValue={baseAddress}
         rightIcon={<AddressValidationIcon />}

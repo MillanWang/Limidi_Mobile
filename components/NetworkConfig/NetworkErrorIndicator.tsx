@@ -21,7 +21,7 @@ export const NetworkErrorIndicator = ({
   const gridTheme = useCurrentGridPresetColors();
   const { status, tryConnection } = useWebSocketContext();
 
-  const isButtonVisible = forceVisible || status !== WebSocketStatus.OPEN;
+  const isButtonVisible = forceVisible || status !== WebSocketStatus.Connected;
 
   const color = useMemo(() => {
     if (useGridThemeColors) {
@@ -29,9 +29,9 @@ export const NetworkErrorIndicator = ({
     }
 
     switch (status) {
-      case WebSocketStatus.OPEN:
+      case WebSocketStatus.Connected:
         return theme.color.white;
-      case WebSocketStatus.CONNECTING:
+      case WebSocketStatus.Connecting:
         return "yellow";
       default:
         return "red";
@@ -39,7 +39,7 @@ export const NetworkErrorIndicator = ({
   }, [status]);
 
   const iconName = useMemo(() => {
-    if (WebSocketStatus.OPEN === status) {
+    if (WebSocketStatus.Connected === status) {
       return "wifi";
     }
     return "wifi-off";

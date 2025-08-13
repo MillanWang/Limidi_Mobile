@@ -13,7 +13,7 @@ export const CheckConnectionButton = (props: ButtonProps) => {
         useGridThemeColors
         forceVisible
       />
-      Check Connection
+      Recheck
     </GridThemedButton>
   );
 };
