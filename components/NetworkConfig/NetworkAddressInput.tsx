@@ -14,6 +14,7 @@ import {
   encodeIpPort,
   getForceValidEncodedAddress,
 } from "./ipEncodeDecode";
+import { BodyText, Caption } from "../Typography";
 
 export function NetworkAddressInput() {
   const dispatch = useAppDispatch();
@@ -47,7 +48,7 @@ export function NetworkAddressInput() {
 
   return (
     <View>
-      <Text style={[styles.text]}>Connection Code</Text>
+      <Text style={[styles.text]}>Code</Text>
       <Input
         value={displayedCode}
         rightIcon={<AddressValidationIcon />}
@@ -55,7 +56,8 @@ export function NetworkAddressInput() {
         onChangeText={onChangeHandler}
         placeholder={`Ex: ABCDEFGX123`}
         placeholderTextColor={"red"}
-      ></Input>
+      />
+      <Caption>Enter the code shown in Limidi Desktop</Caption>
     </View>
   );
 }

@@ -79,7 +79,7 @@ const StatusMessage = () => {
   const { status } = useWebSocketContext();
   return (
     <>
-      <View style={{ marginBottom: 16 }}>
+      <View style={{ marginBottom: 16, minHeight: 80 }}>
         <BodyTextLarge>Status: {status}</BodyTextLarge>
         {status === WebSocketStatus.Connected ? (
           <>

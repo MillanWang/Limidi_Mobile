@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: "normal",
     lineHeight: 16,
-    color: theme.color.darkText,
+    color: theme.color.lightText,
   },
   label: {
     fontSize: 14,
