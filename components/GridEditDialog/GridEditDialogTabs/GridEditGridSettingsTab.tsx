@@ -5,7 +5,7 @@ import { GridEditScaleSettings } from "./GridEditScaleSettingsTab";
 
 export function GridEditGridSettingsTab() {
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <GridPreviewSizeSelector />
       <GridEditScaleSettings />
     </View>

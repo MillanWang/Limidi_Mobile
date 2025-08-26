@@ -139,7 +139,7 @@ export const styles = StyleSheet.create({
   xyCentered: { alignItems: "center", justifyContent: "center" },
   scaleManagementView: { flexDirection: "row", paddingTop: 20 },
   scaleSelector: { height: 180, flexDirection: "column", width: "60%" },
-  scaleSelectorScrollView: { width: "100 %" },
+  scaleSelectorScrollView: { width: "100%" },
   scaleItem: {
     borderWidth: 1,
     height: 30,
@@ -147,7 +147,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#bbbbbb",
   },
   scaleItemText: { alignSelf: "center" },
-  applyScaleView: { width: "40 %" },
+  applyScaleView: { width: "40%" },
   labelText: { color: theme.color.lightText },
   rowsLabelText: { margin: 4, width: 50 },
   columnsLabelText: { marginLeft: 8, marginRight: 4, width: 72 },

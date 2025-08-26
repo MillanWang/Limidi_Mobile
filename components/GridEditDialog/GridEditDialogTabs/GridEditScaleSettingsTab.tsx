@@ -40,7 +40,7 @@ export function ScaleRootNoteSelector() {
 
   const noteSelectorHeader = (
     <View style={{}}>
-      <Text style={{ color: theme.color.white }}>Scale : {scale}</Text>
+      <Text style={{ color: theme.color.white }}>Active scale: {scale}</Text>
       <Text style={{ color: theme.color.white }}>{rootNote}</Text>
     </View>
   );
@@ -56,6 +56,8 @@ export function ScaleRootNoteSelector() {
   );
 }
 
+const scalesArray = [...Object.values(Scale), ...Object.values(Scale)];
+
 export function ScaleSelector() {
   const dispatch = useAppDispatch();
   const { scale, gridTheme } = useCurrentGridPreset();
@@ -67,7 +69,7 @@ export function ScaleSelector() {
     <View style={styles.scaleManagementView}>
       <View style={styles.scaleSelector}>
         <ScrollView style={styles.scaleSelectorScrollView}>
-          {Object.values(Scale).map((scalePreset) => (
+          {scalesArray.map((scalePreset, i) => (
             <Button
               buttonStyle={{
                 height: 40,
@@ -78,7 +80,7 @@ export function ScaleSelector() {
                 borderWidth: 2,
                 backgroundColor: gridTheme.unpressedColor,
               }}
-              key={`ScalePreset_${scalePreset}`}
+              key={`ScalePreset_${scalePreset}_${i}`}
               onPress={() => setCurrentScale(scalePreset)}
             >
               <Text
@@ -93,14 +95,18 @@ export function ScaleSelector() {
               )}
             </Button>
           ))}
+          <View style={{ height: 32 }} />
         </ScrollView>
       </View>
       <View style={styles.applyScaleView}>
+        <Text style={{ color: theme.color.white }}>
+          Selected: {formatScaleName(currentScale)}
+        </Text>
         <GridThemedButton
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}
         >
-          Apply {formatScaleName(currentScale)} scale
+          Apply scale
         </GridThemedButton>
 
         <FullGridOperationButtons
@@ -122,30 +128,31 @@ const formatScaleName = (name: string) => {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 30,
+    flex: 1,
+    height: "100%",
   },
   scaleManagementView: {
+    flex: 1,
+    height: "100%",
     flexDirection: "row",
     paddingTop: 20,
   },
   scaleSelector: {
+    flex: 1,
+    height: "100%",
     flexDirection: "column",
     width: "60%",
   },
   scaleSelectorScrollView: {
-    width: "100 %",
-  },
-  scaleItem: {
-    borderWidth: 1,
-    height: 30,
-    flexDirection: "row",
-    backgroundColor: "#bbbbbb",
+    width: "100%",
+    flex: 1,
   },
   scaleItemText: {
     alignSelf: "center",
   },
   applyScaleView: {
-    width: "40 %",
-    marginLeft: 4,
+    width: "40%",
+    paddingLeft: 8,
     gap: 4,
   },
 });

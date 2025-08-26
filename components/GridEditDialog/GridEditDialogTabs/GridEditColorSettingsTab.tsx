@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   colorPresetOptions: {
-    width: "40 %",
+    width: "40%",
     gap: 4,
   },
 });
