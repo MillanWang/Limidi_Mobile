@@ -10,10 +10,12 @@
     - CC icon shown in the edit area preview
     - CC XY control icons need to have a spread level that depnds on the size of the element. Currently not obvious enough when on iphone 2x2
     - isLocked Icons
+  - Replace the 2 slider velocity control with a singleTrack2Knob controller
 - CONTROL CHANGE
   - Limits on the total number of CC components (4 xy)
 - SCALES
   - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.
+    - Validate recent additions
   - Add FL studio FPC default for 4 column
   - Improve scale selector component
   - "Dirty" indicator when user deviates away from scale default

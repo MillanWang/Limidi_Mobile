@@ -5,7 +5,8 @@ import { getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
 import { Scale } from "../../../constants/Scales";
 import { theme } from "../../../constants/theme";
 import { useCurrentGridPreset } from "../../../hooks/useCurrentGridPreset";
-import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
+import { usePresetDefault } from "../../../hooks/usePresetDefault";
+import { useAppDispatch } from "../../../redux/hooks";
 import {
   setScale,
   setStartingNote,
@@ -14,7 +15,6 @@ import {
 import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
 import { NoteSelector } from "./NoteSelector";
-import { usePresetDefault } from "../../../hooks/usePresetDefault";
 
 export function GridEditScaleSettings() {
   return (
@@ -56,7 +56,7 @@ export function ScaleRootNoteSelector() {
   );
 }
 
-const scalesArray = [...Object.values(Scale), ...Object.values(Scale)];
+const scalesArray = Object.values(Scale);
 
 export function ScaleSelector() {
   const dispatch = useAppDispatch();
