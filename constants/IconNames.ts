@@ -3,13 +3,13 @@ import { ControlChangeDirection } from "../components/GridElement/GridElementEdi
 export const horizontalIconNamesIonicon = [
   "swap-horizontal",
   "code-outline",
-  "code-slash-outline",
+  "code-slash",
 ];
 
 export const verticalIconNamesIonicon = [
   "swap-vertical",
   "chevron-up",
-  // "chevron-expand"
+  "chevron-expand",
 ];
 
 export const xyIconNamesIonicon = [
@@ -63,7 +63,6 @@ export const ioniconValidIconNames = [
   "grid",
   "aperture",
   "bug",
-  "code-slash",
   "compass",
   "attach-outline",
   "cube",
@@ -92,6 +91,9 @@ export const ioniconIconNameAliases: Record<string, string> = {
   "musical-note": "Note",
   "musical-notes": "Notes",
   "attach-outline": "Paperclip",
+  "chevron-up": "Up",
+  "chevron-expand": "Chevrons",
+  "code-outline": "Chevrons",
 } as const;
 
 export const iconNames: Record<ControlChangeDirection, string[]> = {

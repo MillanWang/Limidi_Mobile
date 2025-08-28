@@ -35,9 +35,13 @@ export const ControlChangeIconSettings = ({
 
   return (
     <View style={{ marginBottom: 12 }}>
-      <Text style={{ color: theme.color.white }}>Icon</Text>
+      <Text style={{ color: theme.color.white }}>Icon:</Text>
       <View style={{ flexDirection: "row" }}>
-        <GridThemedButton onPress={() => setIconDialogOpen(true)} index={index}>
+        <GridThemedButton
+          onPress={() => setIconDialogOpen(true)}
+          index={index}
+          style={{ minWidth: 90 }}
+        >
           <IconWithTitle name={icon.name} index={index} />
         </GridThemedButton>
         <IconSelectDialog
@@ -156,37 +160,38 @@ const DialogHeaderRow = ({
       style={{
         flexDirection: "row",
         paddingBottom: 8,
-
         borderColor: mainColor,
         borderBottomWidth: 1,
       }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
         <View style={{ flexDirection: "column" }}>
           <Text style={{ color: theme.color.white }}>{`Selected:  `}</Text>
           <Text style={{ color: mainColor }}>
             {getFormattedIconName(selectedIconName)}
           </Text>
         </View>
-        <View
-          style={{
-            backgroundColor: mainColor,
-            borderRadius: 100,
-            width: 40,
-            height: 40,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <GridThemedIcon
-            name={selectedIconName}
-            type="ionicon"
-            invert={true}
-            index={index}
-          />
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <View
+            style={{
+              backgroundColor: mainColor,
+              borderRadius: 100,
+              width: 40,
+              height: 40,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <GridThemedIcon
+              name={selectedIconName}
+              type="ionicon"
+              invert={true}
+              index={index}
+            />
+          </View>
         </View>
       </View>
-      <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+      <View style={{ flexDirection: "row" }}>
         <GridThemedButton onPress={saveOnPress} index={index}>
           <GridThemedIcon
             index={index}

@@ -1,6 +1,6 @@
 import { Input, Text } from "@rneui/themed";
 import React from "react";
-import { View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../constants/theme";
 import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 import { IncrementorButton } from "../../../../IncrementorButton";
@@ -73,17 +73,21 @@ export const ControlChangeIndexSelector = (props: {
           alignItems: "center",
         }}
       >
-        <GridThemedIcon
-          style={{ opacity: currentCcIndexIsDefault ? 0 : 1, marginRight: 8 }}
-          index={index}
+        <TouchableOpacity
+          style={{ padding: 6 }}
           onPress={() => {
             if (!currentCcIndexIsDefault) {
               indexController.set(defaultCcIndex);
             }
           }}
-          name={"refresh-outline"}
-          type="ionicon"
-        />
+        >
+          <GridThemedIcon
+            style={{ opacity: currentCcIndexIsDefault ? 0 : 1, marginRight: 8 }}
+            index={index}
+            name={"refresh-outline"}
+            type="ionicon"
+          />
+        </TouchableOpacity>
         <GridThemedIcon
           style={{ opacity: hasIndexCollision ? 1 : 0, marginRight: 8 }}
           name={"warning-outline"}

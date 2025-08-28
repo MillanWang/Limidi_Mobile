@@ -83,15 +83,16 @@ export const ControlChangeIndexSettings = ({
       {showHorizontalControlChangeIndexSelector && (
         <View>
           <Text style={{ color: theme.color.white }}>
-            {`${isXY ? "Horizontal " : ""}MIDI CC Index`}
+            {`${isXY ? "Horizontal " : ""}MIDI CC Index:`}
           </Text>
           <ControlChangeIndexSelector index={index} isVertical={false} />
         </View>
       )}
+
       {showVerticalControlChangeIndexSelector && (
         <View>
           <Text style={{ color: theme.color.white }}>
-            {`${isXY ? "Vertical " : ""}MIDI CC Index`}
+            {`${isXY ? "Vertical " : ""}MIDI CC Index:`}
           </Text>
           <ControlChangeIndexSelector index={index} isVertical />
         </View>
