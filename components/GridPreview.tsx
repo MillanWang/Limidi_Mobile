@@ -43,7 +43,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
 
               const {
                 isLocked,
-                colorState: { pressedColor, unpressedColor },
+                colorState: { highlightColor, primaryColor },
               } = gridElements[currentElementIndex];
 
               return (
@@ -52,8 +52,8 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
                   style={{
                     flex: 1,
                     backgroundColor: isCurrentElementHighlighted
-                      ? pressedColor
-                      : unpressedColor,
+                      ? highlightColor
+                      : primaryColor,
                     borderWidth: 1,
                     borderColor: theme.color.black,
                   }}
@@ -64,7 +64,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
                       alignItems: "center",
                       margin: 2,
                       flex: 1,
-                      backgroundColor: unpressedColor,
+                      backgroundColor: primaryColor,
                     }}
                   >
                     {isLocked && (
@@ -72,7 +72,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
                         size={10}
                         type="ionicon"
                         name={"lock-closed"}
-                        color={pressedColor}
+                        color={highlightColor}
                       />
                     )}
                   </View>

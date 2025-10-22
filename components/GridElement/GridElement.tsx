@@ -56,8 +56,8 @@ const GridElementEditButton = (props: { index: number }) => {
           styles.gridElementUnpressedView,
           styles.gridElementEditView,
           {
-            backgroundColor: colorState.unpressedColor,
-            borderColor: colorState.pressedColor,
+            backgroundColor: colorState.primaryColor,
+            borderColor: colorState.highlightColor,
           },
         ]}
         onPress={() => setDialogVisible(true)}
@@ -69,7 +69,7 @@ const GridElementEditButton = (props: { index: number }) => {
             flex: 1,
           }}
         >
-          <Text style={{ color: colorState.pressedColor }}>#{index}</Text>
+          <Text style={{ color: colorState.highlightColor }}>#{index}</Text>
           <View
             style={{
               flexDirection: "column",
@@ -79,11 +79,11 @@ const GridElementEditButton = (props: { index: number }) => {
             }}
           >
             <GridElementEditButtonIconRow
-              color={colorState.pressedColor}
+              color={colorState.highlightColor}
               isLocked={isLocked}
               isMidiNote={isMidiNote}
             />
-            <Text style={{ color: colorState.pressedColor }}>{name}</Text>
+            <Text style={{ color: colorState.highlightColor }}>{name}</Text>
           </View>
         </View>
       </TouchableOpacity>

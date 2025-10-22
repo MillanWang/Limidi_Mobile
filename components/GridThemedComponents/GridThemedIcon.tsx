@@ -15,7 +15,7 @@ export const GridThemedIcon = (
 
   const color =
     props.color ??
-    (props.invert ? gridTheme.unpressedColor : gridTheme.pressedColor);
+    (props.invert ? gridTheme.primaryColor : gridTheme.highlightColor);
 
   return <Icon color={color} {...props} />;
 };

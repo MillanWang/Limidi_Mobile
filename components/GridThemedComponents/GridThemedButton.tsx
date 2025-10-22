@@ -13,24 +13,24 @@ export const GridThemedButton = (
     flex?: boolean;
   }
 ) => {
-  const { pressedColor, unpressedColor } =
+  const { highlightColor, primaryColor } =
     props.index !== undefined
       ? useCurrentGridElementPresetColors(props.index)
       : useCurrentGridPresetColors();
 
   const borderStyle = props.borderless
     ? {}
-    : { borderColor: pressedColor, borderWidth: 1, borderRadius: 0 };
+    : { borderColor: highlightColor, borderWidth: 1, borderRadius: 0 };
 
   return (
     <Button
       {...props}
       titleStyle={{
-        color: pressedColor,
+        color: highlightColor,
         ...(props.titleStyle as any),
       }}
       buttonStyle={{
-        backgroundColor: unpressedColor,
+        backgroundColor: primaryColor,
         ...borderStyle,
 
         ...(props.buttonStyle as any),

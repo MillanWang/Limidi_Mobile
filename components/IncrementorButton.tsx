@@ -20,7 +20,7 @@ export const IncrementorButton = (props: {
 
   const titleStyle = {
     ...styles.titleStyle,
-    color: gridTheme.pressedColor,
+    color: gridTheme.highlightColor,
   };
 
   return (
@@ -30,7 +30,7 @@ export const IncrementorButton = (props: {
       onPress={onPress}
       buttonStyle={{
         ...styles.gridSizeEditButtonStyle,
-        borderColor: gridTheme.pressedColor,
+        borderColor: gridTheme.highlightColor,
       }}
       disabledStyle={{ ...styles.gridSizeEditButtonDisabledStyle }}
       titleStyle={titleStyle}

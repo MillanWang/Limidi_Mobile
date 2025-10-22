@@ -22,8 +22,6 @@
 - COLOR
   - Add many more color presets
   - Improve color themes for grid icons
-  - UI elements for an off-grid-theme element should match the element instead of the main theme
-  - Dark mode all of the app manu areas
 - DESKTOP APP
   - Add button to restart the whole app
   - Indicator for network availability

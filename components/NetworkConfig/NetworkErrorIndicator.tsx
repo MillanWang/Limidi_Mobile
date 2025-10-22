@@ -25,7 +25,7 @@ export const NetworkErrorIndicator = ({
 
   const color = useMemo(() => {
     if (useGridThemeColors) {
-      return gridTheme.pressedColor;
+      return gridTheme.highlightColor;
     }
 
     switch (status) {

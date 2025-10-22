@@ -22,17 +22,17 @@ export function GridScreenToolbar() {
           style={{ borderRadius: 0 }}
           containerStyle={{ borderRadius: 0 }}
           buttonStyle={{
-            backgroundColor: gridTheme.unpressedColor,
+            backgroundColor: gridTheme.primaryColor,
             borderColor: isPlayMode
-              ? gridTheme.unpressedColor
-              : gridTheme.pressedColor,
+              ? gridTheme.primaryColor
+              : gridTheme.highlightColor,
             borderWidth: 1,
             borderRadius: 0,
           }}
         >
           <Icon
             name={isPlayMode ? "construct-outline" : "play"}
-            color={gridTheme.pressedColor}
+            color={gridTheme.highlightColor}
             type="ionicon"
           />
         </Button>
@@ -44,15 +44,15 @@ export function GridScreenToolbar() {
           style={{ borderRadius: 0 }}
           containerStyle={{ borderRadius: 0 }}
           buttonStyle={{
-            backgroundColor: gridTheme.unpressedColor,
-            borderColor: gridTheme.pressedColor,
+            backgroundColor: gridTheme.primaryColor,
+            borderColor: gridTheme.highlightColor,
             borderWidth: 1,
             borderRadius: 0,
           }}
         >
           <Icon
             name={!isInSettings ? "grid-outline" : "settings-outline"}
-            color={gridTheme.pressedColor}
+            color={gridTheme.highlightColor}
             type="ionicon"
           />
           <View style={{ flexDirection: "column" }}></View>

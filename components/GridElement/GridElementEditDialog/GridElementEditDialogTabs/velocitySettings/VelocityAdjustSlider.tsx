@@ -13,7 +13,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
   const { index } = props;
   const {
     midiNoteState: { velocity },
-    colorState: { unpressedColor, pressedColor },
+    colorState: { primaryColor, highlightColor },
   } = useGridElementAtIndex(index);
 
   const dispatch = useAppDispatch();
@@ -47,7 +47,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                 <Text
                   style={{
                     ...labelTextStyle,
-                    color: pressedColor,
+                    color: highlightColor,
                     width: markerSize * 2,
                     left:
                       (oneMarkerLeftPosition + twoMarkerLeftPosition) / 2 -
@@ -63,7 +63,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                   <Text
                     style={{
                       ...labelTextStyle,
-                      color: pressedColor,
+                      color: highlightColor,
                       left: oneMarkerLeftPosition - markerSize / 2,
                     }}
                   >
@@ -72,7 +72,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                   <Text
                     style={{
                       ...labelTextStyle,
-                      color: pressedColor,
+                      color: highlightColor,
                       left:
                         (oneMarkerLeftPosition +
                           twoMarkerLeftPosition -
@@ -85,7 +85,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                   <Text
                     style={{
                       ...labelTextStyle,
-                      color: pressedColor,
+                      color: highlightColor,
                       left: twoMarkerLeftPosition - markerSize / 2,
                     }}
                   >
@@ -105,24 +105,24 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
         max={127}
         step={1}
         trackStyle={{
-          backgroundColor: unpressedColor,
+          backgroundColor: primaryColor,
           borderWidth: 0.5,
-          borderColor: pressedColor,
+          borderColor: highlightColor,
           height: 4,
         }}
         selectedStyle={{
-          borderColor: unpressedColor,
-          backgroundColor: pressedColor,
+          borderColor: primaryColor,
+          backgroundColor: highlightColor,
         }}
         markerStyle={{
-          borderColor: pressedColor,
-          backgroundColor: unpressedColor,
+          borderColor: highlightColor,
+          backgroundColor: primaryColor,
           height: markerSize,
           width: markerSize,
         }}
         pressedMarkerStyle={{
-          borderColor: unpressedColor,
-          backgroundColor: pressedColor,
+          borderColor: primaryColor,
+          backgroundColor: highlightColor,
           height: markerSize + 8,
           width: markerSize + 8,
           zIndex: 1000,

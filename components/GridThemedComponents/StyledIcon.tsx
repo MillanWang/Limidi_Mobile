@@ -8,7 +8,7 @@ export const StyledIcon = ({ name }: { name: string }) => {
     <Icon
       name={name}
       type="ionicon"
-      color={gridTheme.pressedColor}
+      color={gridTheme.highlightColor}
       style={{ marginRight: 8 }}
     />
   );

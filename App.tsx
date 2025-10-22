@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -12,7 +12,9 @@ import GridScreen from "./screens/GridScreen";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  AsyncStorage.clear();
+  // useEffect(() => {
+  //   AsyncStorage.clear();
+  // }, []);
 
   if (!isLoadingComplete) {
     return null;

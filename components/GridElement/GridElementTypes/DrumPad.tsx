@@ -118,17 +118,17 @@ export default function DrumPad({ index }: DrumPadProps) {
         <View
           style={[
             styles.gridElementBasePressedView,
-            { backgroundColor: colorState.pressedColor },
+            { backgroundColor: colorState.highlightColor },
           ]}
         >
           <Animated.View
             style={[
               styles.gridElementUnpressedView,
-              { backgroundColor: colorState.unpressedColor },
+              { backgroundColor: colorState.primaryColor },
               animatedStyle,
             ]}
           >
-            <Text style={{ color: colorState.pressedColor }}>{name}</Text>
+            <Text style={{ color: colorState.highlightColor }}>{name}</Text>
           </Animated.View>
         </View>
       </GestureDetector>

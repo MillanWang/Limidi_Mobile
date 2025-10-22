@@ -153,7 +153,7 @@ const DialogHeaderRow = ({
   selectedIconName: string;
   index: number;
 }) => {
-  const mainColor = useCurrentGridElementPresetColors(index).pressedColor;
+  const mainColor = useCurrentGridElementPresetColors(index).highlightColor;
   const getFormattedIconName = useGetFormattedIconName();
   return (
     <View
@@ -216,7 +216,7 @@ const SelectableIconButton = ({
   isSelected: boolean;
 }) => {
   const dispatch = useAppDispatch();
-  const borderColor = useCurrentGridElementPresetColors(index).pressedColor;
+  const borderColor = useCurrentGridElementPresetColors(index).highlightColor;
   const iconTouchHandler = (name: string) => () => {
     dispatch(
       setGridElementControlChangeIconString({ index, iconString: name })

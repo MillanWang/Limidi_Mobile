@@ -75,22 +75,22 @@ export function ScaleSelector() {
                 height: 40,
                 borderColor:
                   currentScale === scalePreset
-                    ? gridTheme.pressedColor
-                    : gridTheme.unpressedColor,
+                    ? gridTheme.highlightColor
+                    : gridTheme.primaryColor,
                 borderWidth: 2,
-                backgroundColor: gridTheme.unpressedColor,
+                backgroundColor: gridTheme.primaryColor,
               }}
               key={`ScalePreset_${scalePreset}_${i}`}
               onPress={() => setCurrentScale(scalePreset)}
             >
               <Text
-                style={{ marginRight: "auto", color: gridTheme.pressedColor }}
+                style={{ marginRight: "auto", color: gridTheme.highlightColor }}
               >
                 {scalePreset}
               </Text>
               {scalePreset === scale && (
                 <View style={{ marginLeft: "auto" }}>
-                  <Icon name="done" color={gridTheme.pressedColor} />
+                  <Icon name="done" color={gridTheme.highlightColor} />
                 </View>
               )}
             </Button>

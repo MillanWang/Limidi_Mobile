@@ -26,8 +26,8 @@ function createGridElements(colorPreset: ColorPreset): GridElementState[] {
         velocity: { floor: 64, ceiling: 127, isVertical: true },
       },
       colorState: {
-        pressedColor: colorPreset.pressedColor,
-        unpressedColor: colorPreset.unpressedColor,
+        highlightColor: colorPreset.highlightColor,
+        primaryColor: colorPreset.primaryColor,
       },
       controlChangeState: {
         iconName: "move",

@@ -21,8 +21,8 @@ export interface PianoProps {
 
 const accidentalNoteNumbers = [1, 3, 6, 8, 10];
 
-const colorsWithAlternateKeyColors = [DEFAULT.pressedColor];
-const defaultSelectedKeyColor = HULK.pressedColor;
+const colorsWithAlternateKeyColors = [DEFAULT.highlightColor];
+const defaultSelectedKeyColor = HULK.highlightColor;
 
 const usePianoKeyColors = (index?: number) => {
   const gridTheme =
@@ -32,11 +32,11 @@ const usePianoKeyColors = (index?: number) => {
 
   return {
     highLightedKeyColor: colorsWithAlternateKeyColors.includes(
-      gridTheme.pressedColor
+      gridTheme.highlightColor
     )
       ? defaultSelectedKeyColor
-      : gridTheme.pressedColor,
-    noteLabelColor: gridTheme.unpressedColor,
+      : gridTheme.highlightColor,
+    noteLabelColor: gridTheme.primaryColor,
   };
 };
 

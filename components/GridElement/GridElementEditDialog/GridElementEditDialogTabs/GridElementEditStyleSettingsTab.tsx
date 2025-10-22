@@ -8,8 +8,8 @@ import {
 } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
 import {
-  setGridElementPressedColor,
-  setGridElementUnpressedColor,
+  setGridElementhighlightColor,
+  setGridElementprimaryColor,
 } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
@@ -28,12 +28,12 @@ export function GridElementEditStyleSettingsTab({
   const [currentPreset, setCurrentPreset] = useState(colorState);
 
   function setColors(colorPreset: {
-    unpressedColor: string;
-    pressedColor: string;
+    primaryColor: string;
+    highlightColor: string;
   }): void {
-    const { unpressedColor, pressedColor } = colorPreset;
-    dispatch(setGridElementUnpressedColor({ index, unpressedColor }));
-    dispatch(setGridElementPressedColor({ index, pressedColor }));
+    const { primaryColor, highlightColor } = colorPreset;
+    dispatch(setGridElementprimaryColor({ index, primaryColor }));
+    dispatch(setGridElementhighlightColor({ index, highlightColor }));
   }
 
   return (
@@ -41,18 +41,18 @@ export function GridElementEditStyleSettingsTab({
       <ScrollView style={{ width: "60%" }}>
         {PRESET_COLOR_LIST.map((preset, i) => {
           const isSet =
-            colorState.pressedColor === preset.pressedColor &&
-            colorState.unpressedColor === preset.unpressedColor;
+            colorState.highlightColor === preset.highlightColor &&
+            colorState.primaryColor === preset.primaryColor;
           const isSelected =
-            currentPreset.pressedColor === preset.pressedColor &&
-            currentPreset.unpressedColor === preset.unpressedColor;
+            currentPreset.highlightColor === preset.highlightColor &&
+            currentPreset.primaryColor === preset.primaryColor;
           return (
             <Button
               buttonStyle={{
-                backgroundColor: preset.unpressedColor,
+                backgroundColor: preset.primaryColor,
                 borderColor: isSelected
-                  ? preset.pressedColor
-                  : preset.unpressedColor,
+                  ? preset.highlightColor
+                  : preset.primaryColor,
                 ...styles.colorPresetButton,
               }}
               key={`ColorPreset_${preset.name}_${i}`}
@@ -60,7 +60,7 @@ export function GridElementEditStyleSettingsTab({
             >
               <Text
                 style={{
-                  color: preset.pressedColor,
+                  color: preset.highlightColor,
                   ...styles.colorPresetText,
                 }}
               >
@@ -68,7 +68,7 @@ export function GridElementEditStyleSettingsTab({
               </Text>
               {isSet && (
                 <View style={styles.selectedCheckmarkIcon}>
-                  <Icon name="done" color={preset.pressedColor} />
+                  <Icon name="done" color={preset.highlightColor} />
                 </View>
               )}
             </Button>
@@ -79,10 +79,10 @@ export function GridElementEditStyleSettingsTab({
       <View style={{ width: "40%", marginLeft: 8, gap: 8 }}>
         <Button
           onPress={() => setColors(currentPreset)}
-          titleStyle={{ color: currentPreset.pressedColor }}
+          titleStyle={{ color: currentPreset.highlightColor }}
           buttonStyle={{
-            backgroundColor: currentPreset.unpressedColor,
-            borderColor: currentPreset.pressedColor,
+            backgroundColor: currentPreset.primaryColor,
+            borderColor: currentPreset.highlightColor,
             borderWidth: 1,
           }}
         >

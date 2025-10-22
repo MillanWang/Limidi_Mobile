@@ -37,10 +37,10 @@ const ColorThemeSelector = () => {
           return (
             <Button
               buttonStyle={{
-                backgroundColor: preset.unpressedColor,
+                backgroundColor: preset.primaryColor,
                 borderColor: arePresetsEqual(currentPreset, preset)
-                  ? preset.pressedColor
-                  : preset.unpressedColor,
+                  ? preset.highlightColor
+                  : preset.primaryColor,
                 ...styles.colorPresetButton,
               }}
               key={`ColorPreset_${preset.name}`}
@@ -48,7 +48,7 @@ const ColorThemeSelector = () => {
             >
               <Text
                 style={{
-                  color: preset.pressedColor,
+                  color: preset.highlightColor,
                   ...styles.colorPresetText,
                 }}
               >
@@ -56,7 +56,7 @@ const ColorThemeSelector = () => {
               </Text>
               {arePresetsEqual(currentPresetColors, preset) && (
                 <View style={styles.selectedCheckmarkIcon}>
-                  <Icon name="done" color={preset.pressedColor} />
+                  <Icon name="done" color={preset.highlightColor} />
                 </View>
               )}
             </Button>
@@ -66,10 +66,10 @@ const ColorThemeSelector = () => {
       <View style={styles.colorPresetOptions}>
         <Button
           onPress={applySelectedPresetGlobally}
-          titleStyle={{ color: currentPreset.pressedColor }}
+          titleStyle={{ color: currentPreset.highlightColor }}
           buttonStyle={{
-            backgroundColor: currentPreset.unpressedColor,
-            borderColor: currentPreset.pressedColor,
+            backgroundColor: currentPreset.primaryColor,
+            borderColor: currentPreset.highlightColor,
             borderWidth: 2,
           }}
         >

@@ -108,16 +108,16 @@ export const GridPresetsSlice = createSlice({
     },
     // Grid color operations
     setGridColorPresetGlobally: (state, action) => {
-      const { unpressedColor, pressedColor } = action.payload;
+      const { primaryColor, highlightColor } = action.payload;
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridTheme.unpressedColor = unpressedColor;
-        grid.gridTheme.pressedColor = pressedColor;
+        grid.gridTheme.primaryColor = primaryColor;
+        grid.gridTheme.highlightColor = highlightColor;
         for (let gridElementStyle of grid.gridElements) {
           if (!gridElementStyle.isLocked) {
-            gridElementStyle.colorState.unpressedColor = unpressedColor;
-            gridElementStyle.colorState.pressedColor = pressedColor;
+            gridElementStyle.colorState.primaryColor = primaryColor;
+            gridElementStyle.colorState.highlightColor = highlightColor;
           }
         }
       }
@@ -254,20 +254,20 @@ export const GridPresetsSlice = createSlice({
       }
     },
     // Grid element color operations
-    setGridElementUnpressedColor: (state, action) => {
-      const { index, unpressedColor } = action.payload;
+    setGridElementprimaryColor: (state, action) => {
+      const { index, primaryColor } = action.payload;
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridElements[index].colorState.unpressedColor = unpressedColor;
+        grid.gridElements[index].colorState.primaryColor = primaryColor;
       }
     },
-    setGridElementPressedColor: (state, action) => {
-      const { index, pressedColor } = action.payload;
+    setGridElementhighlightColor: (state, action) => {
+      const { index, highlightColor } = action.payload;
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridElements[index].colorState.pressedColor = pressedColor;
+        grid.gridElements[index].colorState.highlightColor = highlightColor;
       }
     },
   },
@@ -307,8 +307,8 @@ export const {
   setGridElementControlChangeYIndex,
   setGridElementControlChangeIconString,
   // Grid element color operations
-  setGridElementUnpressedColor,
-  setGridElementPressedColor,
+  setGridElementprimaryColor,
+  setGridElementhighlightColor,
 } = GridPresetsSlice.actions;
 
 export default GridPresetsSlice.reducer;

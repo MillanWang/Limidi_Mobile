@@ -30,7 +30,7 @@ export function GridLayoutPresetButtons() {
           >
             <Icon
               name={`looks-${iconNameString}`} // Defines which icon is used
-              color={gridTheme.pressedColor}
+              color={gridTheme.highlightColor}
               style={{ opacity: currentPresetIndex === presetIndex ? 1 : 0.3 }}
             />
           </TouchableOpacity>

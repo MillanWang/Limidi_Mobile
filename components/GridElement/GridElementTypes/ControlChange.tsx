@@ -118,13 +118,13 @@ export function ControlChange({ index }: ControlChangeProps) {
         <View
           style={{
             ...styles.gridElementBasePressedView,
-            backgroundColor: colorState.pressedColor,
+            backgroundColor: colorState.highlightColor,
           }}
         >
           <Animated.View
             style={[
               styles.gridElementBasePressedView,
-              { backgroundColor: colorState.unpressedColor },
+              { backgroundColor: colorState.primaryColor },
               animatedStyle,
             ]}
           >
@@ -135,7 +135,7 @@ export function ControlChange({ index }: ControlChangeProps) {
                     ...ccStyles.ccIcon,
                     left: touch.x - ICON_SIZE / 2,
                     top: touch.y - ICON_SIZE / 2,
-                    backgroundColor: colorState.pressedColor,
+                    backgroundColor: colorState.highlightColor,
                   }}
                 >
                   <GridThemedIcon
@@ -153,7 +153,7 @@ export function ControlChange({ index }: ControlChangeProps) {
                   yPositionAbsolute={touch.y}
                   elementWidth={elementWidth}
                   safeIconName={safeIconName}
-                  color={colorState.pressedColor}
+                  color={colorState.highlightColor}
                 />
               </>
             )}

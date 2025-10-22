@@ -45,7 +45,7 @@ export const GridEditMenu = () => {
             unfocused={page !== tab.page}
             flex
           >
-            <TabIcon {...tab} color={gridTheme.pressedColor} />
+            <TabIcon {...tab} color={gridTheme.highlightColor} />
             {tab.name}
           </GridThemedButton>
         ))}

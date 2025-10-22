@@ -25,8 +25,8 @@ In the middle of adding custom color overrides here so that they can be thened t
 export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
   const backgroundColor =
     index !== undefined
-      ? useCurrentGridElementPresetColors(index).pressedColor
-      : useCurrentGridPresetColors().pressedColor;
+      ? useCurrentGridElementPresetColors(index).highlightColor
+      : useCurrentGridPresetColors().highlightColor;
 
   const getFormattedIconName = useGetFormattedIconName();
   const formattedName = useMemo(() => getFormattedIconName(name), [name]);
