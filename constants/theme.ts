@@ -16,6 +16,8 @@ export const theme = {
     lightText: "#dddddd",
     darkText: "#555555",
     warningText: "#eed202",
+    successText: "#4caf50",
+    errorText: "#f44336",
     modalBackground: "#282828",
   },
 };

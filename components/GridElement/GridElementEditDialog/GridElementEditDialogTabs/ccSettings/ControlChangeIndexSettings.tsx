@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed";
+import { Label } from "../../../../Typography";
 import React, { useCallback } from "react";
 import { View } from "react-native";
 import { theme } from "../../../../../constants/theme";
@@ -48,7 +48,7 @@ export const ControlChangeIndexSettings = ({
   return (
     <>
       <View style={{ marginBottom: 12 }}>
-        <Text style={{ color: theme.color.white }}>Orientation:</Text>
+        <Label>Orientation:</Label>
         <View
           style={{
             flexDirection: "row",
@@ -82,18 +82,14 @@ export const ControlChangeIndexSettings = ({
 
       {showHorizontalControlChangeIndexSelector && (
         <View>
-          <Text style={{ color: theme.color.white }}>
-            {`${isXY ? "Horizontal " : ""}MIDI CC Index:`}
-          </Text>
+          <Label>{`${isXY ? "Horizontal " : ""}MIDI CC Index:`}</Label>
           <ControlChangeIndexSelector index={index} isVertical={false} />
         </View>
       )}
 
       {showVerticalControlChangeIndexSelector && (
         <View>
-          <Text style={{ color: theme.color.white }}>
-            {`${isXY ? "Vertical " : ""}MIDI CC Index:`}
-          </Text>
+          <Label>{`${isXY ? "Vertical " : ""}MIDI CC Index:`}</Label>
           <ControlChangeIndexSelector index={index} isVertical />
         </View>
       )}

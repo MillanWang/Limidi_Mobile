@@ -1,4 +1,5 @@
-import { Icon, Text } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
+import { Label } from "../../../Typography";
 import React, { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../../../constants/theme";
@@ -20,7 +21,7 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
   return (
     <View>
       <View>
-        <Text style={{ color: theme.color.white }}>{"Mode: "}</Text>
+        <Label>Mode:</Label>
         <View style={styles.switchView}>
           <GridThemedButton
             index={index}

@@ -1,4 +1,5 @@
-import { Icon, Text } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
+import { BodyText } from "../Typography";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import {
@@ -69,7 +70,9 @@ const GridElementEditButton = (props: { index: number }) => {
             flex: 1,
           }}
         >
-          <Text style={{ color: colorState.highlightColor }}>#{index}</Text>
+          <BodyText style={{ color: colorState.highlightColor }}>
+            #{index}
+          </BodyText>
           <View
             style={{
               flexDirection: "column",
@@ -83,7 +86,9 @@ const GridElementEditButton = (props: { index: number }) => {
               isLocked={isLocked}
               isMidiNote={isMidiNote}
             />
-            <Text style={{ color: colorState.highlightColor }}>{name}</Text>
+            <BodyText style={{ color: colorState.highlightColor }}>
+              {name}
+            </BodyText>
           </View>
         </View>
       </TouchableOpacity>

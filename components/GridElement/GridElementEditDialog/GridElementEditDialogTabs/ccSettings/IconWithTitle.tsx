@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed";
+import { BodyText } from "../../../../Typography";
 import React, { useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { ioniconIconNameAliases } from "../../../../../constants/IconNames";
@@ -49,9 +49,9 @@ export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
           index={index}
         />
       </View>
-      <Text style={{ color: backgroundColor ?? theme.color.lightText }}>
+      <BodyText style={{ color: backgroundColor ?? theme.color.lightText }}>
         {formattedName}
-      </Text>
+      </BodyText>
     </View>
   );
 };

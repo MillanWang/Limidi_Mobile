@@ -1,4 +1,5 @@
-import { Button, Dialog, Text } from "@rneui/themed";
+import { Button, Dialog } from "@rneui/themed";
+import { Label, BodyText } from "../../../Typography";
 import React from "react";
 import { ScrollView, View } from "react-native";
 import {
@@ -35,7 +36,7 @@ export const ControlChangeIconSettings = ({
 
   return (
     <View style={{ marginBottom: 12 }}>
-      <Text style={{ color: theme.color.white }}>Icon:</Text>
+      <Label>Icon:</Label>
       <View style={{ flexDirection: "row" }}>
         <GridThemedButton
           onPress={() => setIconDialogOpen(true)}
@@ -102,7 +103,7 @@ const IconSelectDialog = ({
       <ScrollView
         style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}
       >
-        <Text style={{ color: theme.color.white }}>Directional Icons</Text>
+        <Label>Directional Icons</Label>
         <View style={{ flexDirection: "column" }}>
           {directionalIconRows.map((row, i) => (
             <View
@@ -121,7 +122,7 @@ const IconSelectDialog = ({
           ))}
         </View>
 
-        <Text style={{ color: theme.color.white }}>General Icons</Text>
+        <Label>General Icons</Label>
         <View style={{ flexDirection: "column" }}>
           {generalIconRows.map((row, i) => (
             <View
@@ -166,10 +167,10 @@ const DialogHeaderRow = ({
     >
       <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
         <View style={{ flexDirection: "column" }}>
-          <Text style={{ color: theme.color.white }}>{`Selected:  `}</Text>
-          <Text style={{ color: mainColor }}>
+          <Label>{`Selected:  `}</Label>
+          <BodyText style={{ color: mainColor }}>
             {getFormattedIconName(selectedIconName)}
-          </Text>
+          </BodyText>
         </View>
         <View style={{ flex: 1, alignItems: "center" }}>
           <View

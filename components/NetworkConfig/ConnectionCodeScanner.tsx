@@ -1,4 +1,5 @@
-import { Icon, Text } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
+import { BodyText, TypographyKind } from "../Typography";
 import { Camera, CameraView } from "expo-camera";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
@@ -36,10 +37,10 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
   if (!hasPermission) {
     return (
       <View>
-        <Text style={{ color: theme.color.lightText }}>
+        <BodyText>
           Go to settings and enable camera permissions to scan the Limidi
           Desktop QR code
-        </Text>
+        </BodyText>
         {canAskAgain && (
           <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
             <GridThemedButton onPress={getCameraPermissions} borderless>
@@ -108,9 +109,9 @@ const InvalidScanMessage = () => {
         type="ionicon"
         color={theme.color.warningText}
       />
-      <Text style={{ color: theme.color.warningText }}>
+      <BodyText kind={TypographyKind.WARNING}>
         {"Invalid scan. Try again"}
-      </Text>
+      </BodyText>
     </View>
   );
 };

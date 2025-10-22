@@ -1,8 +1,6 @@
-import { Text } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
 import { getNoteKeyFromNoteNumber } from "../../../../constants/MIDI_Notes";
-import { theme } from "../../../../constants/theme";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
 import {
@@ -10,6 +8,7 @@ import {
   setGridElementOctave,
 } from "../../../../redux/slices/GridPresetsSlice";
 import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSelector";
+import { Label, TextAudition } from "../../../Typography";
 import { GridElementNameInput } from "./GridElementNameInput";
 import { VelocityAdjustSlider } from "./velocitySettings/VelocityAdjustSlider";
 import { VelocityDirectionSelector } from "./velocitySettings/VelocityDirectionSelector";
@@ -41,6 +40,7 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
     <View>
       <GridElementNameInput index={index} />
 
+      <TextAudition />
       <NoteSelector
         index={index}
         increaseOctave={updateOctave(true)}
@@ -49,16 +49,16 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
         setNoteNumber={setNoteNumber}
         header={
           <View>
-            <Text style={{ color: theme.color.white }}>{noteKey}</Text>
+            <Label>{noteKey}</Label>
           </View>
         }
       />
 
       <View>
-        <Text style={{ color: theme.color.white }}>Velocity Direction:</Text>
+        <Label>Velocity Direction:</Label>
         <VelocityDirectionSelector index={index} />
 
-        <Text style={{ color: theme.color.white }}>{"Velocity range: "}</Text>
+        <Label>Velocity range:</Label>
         <VelocityAdjustSlider index={index} />
       </View>
     </View>

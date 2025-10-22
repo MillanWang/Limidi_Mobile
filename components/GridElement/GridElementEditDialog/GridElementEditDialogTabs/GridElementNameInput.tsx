@@ -1,4 +1,5 @@
-import { Input, Text } from "@rneui/themed";
+import { Input } from "@rneui/themed";
+import { Label } from "../../../Typography";
 import React from "react";
 import {
   getNoteKeyFromNoteNumber,
@@ -38,7 +39,7 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
         containerStyle={{ paddingLeft: -10, paddingRight: -10 }}
         inputStyle={{ color: theme.color.white }}
         rightIconContainerStyle={{ height: 24 }}
-        label={<Text style={{ color: theme.color.white }}>Name</Text>}
+        label={<Label>Name</Label>}
         maxLength={10}
         rightIcon={rightIcon}
         value={name}

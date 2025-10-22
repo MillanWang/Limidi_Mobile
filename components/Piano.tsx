@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed";
+import { Label } from "./Typography";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { DEFAULT, HULK } from "../constants/ColorPresets";
@@ -107,18 +107,17 @@ export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
 const KeyLabel = (props: { noteNumber: number; color: string }) => {
   const { noteNumber, color } = props;
   return (
-    <Text
+    <Label
       style={{
         marginTop: "auto",
         marginBottom: 2,
         color,
         textAlign: "center",
         fontSize: 16,
-        fontFamily: "monospace", // Added monospaced font
       }}
     >
       {Object.values(NOTE)[noteNumber % 12]}
-    </Text>
+    </Label>
   );
 };
 

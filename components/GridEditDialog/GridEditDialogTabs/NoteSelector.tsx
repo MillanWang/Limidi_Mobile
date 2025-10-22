@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
-import { Text, View } from "react-native";
-import { theme } from "../../../constants/theme";
+import { View } from "react-native";
+import { Label } from "../../Typography";
 import { IncrementorButton } from "../../IncrementorButton";
 import { Piano } from "../../Piano";
 interface NoteSelectorProps {
@@ -40,9 +40,9 @@ export const NoteSelector = ({
             onPress={decreaseOctave}
             disabled={currentOctave === 0}
           />
-          <Text style={{ color: theme.color.white, width: 64, marginLeft: 8 }}>
+          <Label style={{ width: 64, marginLeft: 8 }}>
             Octave: {currentOctave}
-          </Text>
+          </Label>
           <IncrementorButton
             index={index}
             onPress={increaseOctave}

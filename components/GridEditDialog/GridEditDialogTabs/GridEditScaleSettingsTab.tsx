@@ -1,9 +1,9 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { Label, BodyText } from "../../Typography";
 import { getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
 import { Scale } from "../../../constants/Scales";
-import { theme } from "../../../constants/theme";
 import { useCurrentGridPreset } from "../../../hooks/useCurrentGridPreset";
 import { usePresetDefault } from "../../../hooks/usePresetDefault";
 import { useAppDispatch } from "../../../redux/hooks";
@@ -40,8 +40,8 @@ export function ScaleRootNoteSelector() {
 
   const noteSelectorHeader = (
     <View style={{}}>
-      <Text style={{ color: theme.color.white }}>Active scale: {scale}</Text>
-      <Text style={{ color: theme.color.white }}>{rootNote}</Text>
+      <Label>Active scale: {scale}</Label>
+      <Label>{rootNote}</Label>
     </View>
   );
 
@@ -83,11 +83,11 @@ export function ScaleSelector() {
               key={`ScalePreset_${scalePreset}_${i}`}
               onPress={() => setCurrentScale(scalePreset)}
             >
-              <Text
+              <BodyText
                 style={{ marginRight: "auto", color: gridTheme.highlightColor }}
               >
                 {scalePreset}
-              </Text>
+              </BodyText>
               {scalePreset === scale && (
                 <View style={{ marginLeft: "auto" }}>
                   <Icon name="done" color={gridTheme.highlightColor} />
@@ -99,9 +99,7 @@ export function ScaleSelector() {
         </ScrollView>
       </View>
       <View style={styles.applyScaleView}>
-        <Text style={{ color: theme.color.white }}>
-          Selected: {formatScaleName(currentScale)}
-        </Text>
+        <Label>Selected: {formatScaleName(currentScale)}</Label>
         <GridThemedButton
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}

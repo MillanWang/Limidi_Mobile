@@ -6,7 +6,7 @@ import {
 } from "../../hooks/useWebSocketContext";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import { StyledIcon } from "../GridThemedComponents/StyledIcon";
-import { BodyTextLarge, BodyTextSmall } from "../Typography";
+import { BodyText } from "../Typography";
 import { ConnectionCodeScanner } from "./ConnectionCodeScanner";
 import { NetworkAddressInput } from "./NetworkAddressInput";
 
@@ -80,26 +80,26 @@ const StatusMessage = () => {
   return (
     <>
       <View style={{ marginBottom: 16, minHeight: 80 }}>
-        <BodyTextLarge>Status: {status}</BodyTextLarge>
+        <BodyText>Status: {status}</BodyText>
         {status === WebSocketStatus.Connected ? (
           <>
-            <BodyTextSmall>
+            <BodyText>
               Connection to Limidi Desktop is required to use this app. Please
               check your connection and try again.
-            </BodyTextSmall>
+            </BodyText>
           </>
         ) : status === WebSocketStatus.Disconnected ? (
-          <BodyTextSmall>
+          <BodyText>
             Connection to Limidi Desktop is required to use this app. Connect by
             scanning the QR code or inputting the code.
-          </BodyTextSmall>
+          </BodyText>
         ) : status === WebSocketStatus.Error ? (
-          <BodyTextSmall>
+          <BodyText>
             Connection to Limidi Desktop is required to use this app. Please
             check your connection and try again.
-          </BodyTextSmall>
+          </BodyText>
         ) : status === WebSocketStatus.Connecting ? (
-          <BodyTextSmall>Connecting...</BodyTextSmall>
+          <BodyText>Connecting...</BodyText>
         ) : null}
       </View>
     </>

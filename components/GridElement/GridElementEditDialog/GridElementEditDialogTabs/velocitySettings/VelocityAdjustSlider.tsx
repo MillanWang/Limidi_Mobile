@@ -1,7 +1,7 @@
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import { Text } from "@rneui/themed";
 import React from "react";
 import { View } from "react-native";
+import { BodyText } from "../../../../Typography";
 import { useGridElementAtIndex } from "../../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../../redux/hooks";
 import {
@@ -44,7 +44,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
           return (
             <View style={{ position: "absolute", width: "100%", zIndex: 5 }}>
               {isClose ? (
-                <Text
+                <BodyText
                   style={{
                     ...labelTextStyle,
                     color: highlightColor,
@@ -57,10 +57,10 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                   {oneMarkerValue === twoMarkerValue
                     ? oneMarkerValue
                     : `${oneMarkerValue} - ${twoMarkerValue}`}
-                </Text>
+                </BodyText>
               ) : (
                 <>
-                  <Text
+                  <BodyText
                     style={{
                       ...labelTextStyle,
                       color: highlightColor,
@@ -68,8 +68,8 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                     }}
                   >
                     {oneMarkerValue}
-                  </Text>
-                  <Text
+                  </BodyText>
+                  <BodyText
                     style={{
                       ...labelTextStyle,
                       color: highlightColor,
@@ -81,8 +81,8 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                     }}
                   >
                     -
-                  </Text>
-                  <Text
+                  </BodyText>
+                  <BodyText
                     style={{
                       ...labelTextStyle,
                       color: highlightColor,
@@ -90,7 +90,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
                     }}
                   >
                     {twoMarkerValue}
-                  </Text>
+                  </BodyText>
                 </>
               )}
             </View>
@@ -135,7 +135,7 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
 const markerSize = 40;
 const labelTextStyle = {
   position: "absolute",
-  top: markerSize / 2 - 34,
+  top: markerSize / 2 - 38,
   textAlign: "center",
   width: markerSize,
   pointerEvents: "none",

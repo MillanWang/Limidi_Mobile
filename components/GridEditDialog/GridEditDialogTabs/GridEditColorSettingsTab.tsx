@@ -1,6 +1,7 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { ReactNode, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
+import { BodyText } from "../../Typography";
 import {
   arePresetsEqual,
   PRESET_COLOR_LIST,
@@ -46,14 +47,14 @@ const ColorThemeSelector = () => {
               key={`ColorPreset_${preset.name}`}
               onPress={() => setCurrentPreset(preset)}
             >
-              <Text
+              <BodyText
                 style={{
                   color: preset.highlightColor,
                   ...styles.colorPresetText,
                 }}
               >
                 {preset.name}
-              </Text>
+              </BodyText>
               {arePresetsEqual(currentPresetColors, preset) && (
                 <View style={styles.selectedCheckmarkIcon}>
                   <Icon name="done" color={preset.highlightColor} />

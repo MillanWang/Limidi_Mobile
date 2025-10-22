@@ -1,6 +1,7 @@
-import { Button, Icon, Text } from "@rneui/themed";
+import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
+import { BodyText } from "../../../Typography";
 import { PRESET_COLOR_LIST } from "../../../../constants/ColorPresets";
 import {
   useCurrentGridPresetColors,
@@ -58,14 +59,14 @@ export function GridElementEditStyleSettingsTab({
               key={`ColorPreset_${preset.name}_${i}`}
               onPress={() => setCurrentPreset(preset)}
             >
-              <Text
+              <BodyText
                 style={{
                   color: preset.highlightColor,
                   ...styles.colorPresetText,
                 }}
               >
                 {preset.name}
-              </Text>
+              </BodyText>
               {isSet && (
                 <View style={styles.selectedCheckmarkIcon}>
                   <Icon name="done" color={preset.highlightColor} />

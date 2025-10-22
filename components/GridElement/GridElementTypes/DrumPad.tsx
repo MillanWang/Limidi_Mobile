@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed";
+import { BodyText } from "../../Typography";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import {
@@ -128,7 +128,9 @@ export default function DrumPad({ index }: DrumPadProps) {
               animatedStyle,
             ]}
           >
-            <Text style={{ color: colorState.highlightColor }}>{name}</Text>
+            <BodyText style={{ color: colorState.highlightColor }}>
+              {name}
+            </BodyText>
           </Animated.View>
         </View>
       </GestureDetector>

@@ -1,4 +1,5 @@
-import { Dialog, Text } from "@rneui/themed";
+import { Dialog } from "@rneui/themed";
+import { Label } from "../../Typography";
 import React, { useState } from "react";
 import {
   Keyboard,
@@ -82,7 +83,7 @@ export const GridElementEditDialog = ({
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPressIn={Keyboard.dismiss}>
         <View style={{ alignItems: "center", marginTop: 8 }}>
-          <Text style={{ color: theme.color.white }}>Element #{index}</Text>
+          <Label>Element #{index}</Label>
           <GridPreview index={index} />
         </View>
       </TouchableWithoutFeedback>

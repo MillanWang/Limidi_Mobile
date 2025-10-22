@@ -1,4 +1,5 @@
-import { Input, Text } from "@rneui/themed";
+import { Input } from "@rneui/themed";
+import { Label } from "../Typography";
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
@@ -48,7 +49,7 @@ export function NetworkAddressInput() {
 
   return (
     <View>
-      <Text style={[styles.text]}>Code</Text>
+      <Label>Code</Label>
       <Input
         value={displayedCode}
         rightIcon={<AddressValidationIcon />}

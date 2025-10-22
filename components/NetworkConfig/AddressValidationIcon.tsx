@@ -1,7 +1,8 @@
-import { Icon, Text } from "@rneui/themed";
+import { Icon } from "@rneui/themed";
 import React, { useMemo } from "react";
 import { theme } from "../../constants/theme";
 import { useAppSelector } from "../../redux/hooks";
+import { Label, TypographyKind } from "../Typography";
 
 export function AddressValidationIcon() {
   const { baseAddress } = useAppSelector(
@@ -18,7 +19,12 @@ export function AddressValidationIcon() {
   return (
     <>
       <Icon name="warning" type="ionicon" color={color} />
-      <Text style={{ color, width: 50, textAlign: "center" }}>{labelText}</Text>
+      <Label
+        kind={TypographyKind.WARNING}
+        style={{ width: 50, textAlign: "center" }}
+      >
+        {labelText}
+      </Label>
     </>
   );
 }

@@ -1,8 +1,9 @@
 import { Icon } from "@rneui/themed";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+import { Label } from "./Typography";
 import { theme } from "../constants/theme";
-import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { useAppDispatch } from "../redux/hooks";
 import {
   MaxGridDimension,
   setColumnCount,
@@ -97,9 +98,9 @@ export const GridPreviewSizeSelector = () => {
         onPress={() => dispatch(setRowCount(rowCount + 1))}
         isPlus
       />
-      <Text style={[styles.rowsLabelText, styles.labelText]}>
+      <Label style={{ ...styles.rowsLabelText, ...styles.labelText }}>
         Rows: {rowCount}
-      </Text>
+      </Label>
       <IncrementorButton
         disabled={rowCount === 1}
         onPress={() => dispatch(setRowCount(rowCount - 1))}
@@ -113,9 +114,9 @@ export const GridPreviewSizeSelector = () => {
         disabled={columnCount === 1}
         onPress={() => dispatch(setColumnCount(columnCount - 1))}
       />
-      <Text style={[styles.columnsLabelText, styles.labelText]}>
+      <Label style={{ ...styles.columnsLabelText, ...styles.labelText }}>
         Columns: {columnCount}
-      </Text>
+      </Label>
       <IncrementorButton
         disabled={columnCount === MaxGridDimension}
         onPress={() => dispatch(setColumnCount(columnCount + 1))}

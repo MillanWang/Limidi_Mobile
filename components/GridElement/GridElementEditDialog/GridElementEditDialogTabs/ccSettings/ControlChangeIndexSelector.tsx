@@ -1,4 +1,5 @@
-import { Input, Text } from "@rneui/themed";
+import { Input } from "@rneui/themed";
+import { Label, TypographyKind } from "../../../../Typography";
 import React from "react";
 import { TouchableOpacity, View } from "react-native";
 import { theme } from "../../../../../constants/theme";
@@ -95,9 +96,9 @@ export const ControlChangeIndexSelector = (props: {
           type="ionicon"
         />
 
-        <Text style={{ color: theme.color.warningText }}>
+        <Label kind={TypographyKind.WARNING}>
           {indexCollisionWarningMessage}
-        </Text>
+        </Label>
       </View>
     </View>
   );
