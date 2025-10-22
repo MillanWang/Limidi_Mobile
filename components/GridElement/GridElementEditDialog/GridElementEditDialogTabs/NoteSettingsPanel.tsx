@@ -3,18 +3,16 @@ import React from "react";
 import { View } from "react-native";
 import { getNoteKeyFromNoteNumber } from "../../../../constants/MIDI_Notes";
 import { theme } from "../../../../constants/theme";
-import { useAppDispatch, useAppSelector } from "../../../../redux/hooks";
+import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
+import { useAppDispatch } from "../../../../redux/hooks";
 import {
   setGridElementNote,
   setGridElementOctave,
-  setGridElementVelocityCeiling,
-  setGridElementVelocityFloor,
 } from "../../../../redux/slices/GridPresetsSlice";
 import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSelector";
 import { GridElementNameInput } from "./GridElementNameInput";
 import { VelocityAdjustSlider } from "./velocitySettings/VelocityAdjustSlider";
 import { VelocityDirectionSelector } from "./velocitySettings/VelocityDirectionSelector";
-import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 
 export interface NoteSettingsPanelProps {
   index: number;
@@ -22,8 +20,7 @@ export interface NoteSettingsPanelProps {
 
 export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
   const {
-    midiNoteState: { noteNumber, velocity },
-    colorState: { unpressedColor, pressedColor },
+    midiNoteState: { noteNumber },
   } = useGridElementAtIndex(index);
 
   const dispatch = useAppDispatch();
@@ -39,13 +36,6 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
 
   const setNoteNumber = (noteNumber: number) =>
     dispatch(setGridElementNote({ index, newNoteNumber: noteNumber }));
-
-  const setVelocityFloor = (velocity: number) =>
-    dispatch(setGridElementVelocityFloor({ index: index, floor: velocity }));
-  const setVelocityCeiling = (velocity: number) =>
-    dispatch(
-      setGridElementVelocityCeiling({ index: index, ceiling: velocity })
-    );
 
   return (
     <View>
@@ -68,25 +58,8 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
         <Text style={{ color: theme.color.white }}>Velocity Direction:</Text>
         <VelocityDirectionSelector index={index} />
 
-        <Text style={{ color: theme.color.white }}>
-          Velocity Floor: {velocity.floor}
-        </Text>
-        <VelocityAdjustSlider
-          backgroundColor={unpressedColor}
-          textColor={pressedColor}
-          velocity={velocity.floor}
-          setVelocity={setVelocityFloor}
-        />
-
-        <Text style={{ color: theme.color.white }}>
-          Velocity Ceiling: {velocity.ceiling}
-        </Text>
-        <VelocityAdjustSlider
-          backgroundColor={unpressedColor}
-          textColor={pressedColor}
-          velocity={velocity.ceiling}
-          setVelocity={setVelocityCeiling}
-        />
+        <Text style={{ color: theme.color.white }}>{"Velocity range: "}</Text>
+        <VelocityAdjustSlider index={index} />
       </View>
     </View>
   );
