@@ -8,7 +8,7 @@ import {
   setGridElementOctave,
 } from "../../../../redux/slices/GridPresetsSlice";
 import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSelector";
-import { Label, TextAudition } from "../../../Typography";
+import { Label } from "../../../Typography";
 import { GridElementNameInput } from "./GridElementNameInput";
 import { VelocityAdjustSlider } from "./velocitySettings/VelocityAdjustSlider";
 import { VelocityDirectionSelector } from "./velocitySettings/VelocityDirectionSelector";
@@ -39,8 +39,6 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
   return (
     <View>
       <GridElementNameInput index={index} />
-
-      <TextAudition />
       <NoteSelector
         index={index}
         increaseOctave={updateOctave(true)}

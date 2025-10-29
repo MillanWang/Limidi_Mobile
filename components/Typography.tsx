@@ -148,25 +148,3 @@ const styles = StyleSheet.create({
     lineHeight: 16,
   },
 });
-
-export const TextAudition = () => {
-  return (
-    <View style={{ flex: 1 }} pointerEvents="none">
-      <Heading>H3 - Default Text</Heading>
-
-      <HeadingSmall>H4 - Default Text</HeadingSmall>
-      <HeadingSmall kind={TypographyKind.WARNING}>
-        H4 - Warning Text
-      </HeadingSmall>
-
-      <BodyText>BodyText - Default Text</BodyText>
-      <BodyText kind={TypographyKind.SUCCESS}>BodyText - Success Text</BodyText>
-
-      <Caption>Caption - Default Text</Caption>
-      <Caption kind={TypographyKind.ERROR}>Caption - Error Text</Caption>
-
-      <Label>Label - Default Text</Label>
-      <Label kind={TypographyKind.WARNING}>Label - Warning Text</Label>
-    </View>
-  );
-};

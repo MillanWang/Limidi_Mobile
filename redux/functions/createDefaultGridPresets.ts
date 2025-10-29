@@ -2,9 +2,9 @@ import {
   ColorPreset,
   DEFAULT,
   FROST,
-  GRAPE,
+  SAPPHIRE,
   HULK,
-  LAVA,
+  AMETHYST,
   SLIME,
 } from "../../constants/ColorPresets";
 import { placeholderElementName } from "../../constants/MIDI_Notes";
@@ -64,8 +64,8 @@ export const defaultPreset3: GridState = rescaleGridElements({
   rowCount: 5,
   startingNoteNumber: 36, //C3
   scale: Scale.Dorian,
-  gridElements: createGridElements(GRAPE),
-  gridTheme: GRAPE,
+  gridElements: createGridElements(SAPPHIRE),
+  gridTheme: SAPPHIRE,
 });
 
 export const defaultPreset4: GridState = rescaleGridElements({
@@ -82,8 +82,8 @@ export const defaultPreset5: GridState = rescaleGridElements({
   rowCount: 2,
   startingNoteNumber: 36, //C3
   scale: Scale.Mixolydian,
-  gridElements: createGridElements(LAVA),
-  gridTheme: LAVA,
+  gridElements: createGridElements(AMETHYST),
+  gridTheme: AMETHYST,
 });
 
 export const defaultPreset6: GridState = rescaleGridElements({

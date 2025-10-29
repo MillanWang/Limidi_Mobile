@@ -36,25 +36,10 @@ export const FROST: ColorPreset = {
   primaryColor: "#012975",
   highlightColor: "#2ad9ed",
 };
-export const GRAPE: ColorPreset = {
-  name: "Grape",
-  primaryColor: "#540075",
-  highlightColor: "#c047ed",
-};
 export const SLIME: ColorPreset = {
   name: "Slime",
   primaryColor: "#0e4c00",
   highlightColor: "#44ed1e",
-};
-export const LAVA: ColorPreset = {
-  name: "Lava",
-  primaryColor: "#580c1f",
-  highlightColor: "#ed003f",
-};
-export const BANANA: ColorPreset = {
-  name: "Banana",
-  primaryColor: "#586600",
-  highlightColor: "#e1ef00",
 };
 export const HULK: ColorPreset = {
   name: "Hulk",
@@ -84,12 +69,6 @@ export const OCEAN: ColorPreset = {
   name: "Ocean",
   primaryColor: "#0d1b2a",
   highlightColor: "#219ebc",
-};
-
-export const COSMIC: ColorPreset = {
-  name: "Cosmic",
-  primaryColor: "#1a0033",
-  highlightColor: "#ff1493",
 };
 
 export const AURORA: ColorPreset = {
@@ -290,12 +269,6 @@ export const RUBY: ColorPreset = {
   highlightColor: "#f87171",
 };
 
-export const EMERALD_GEM: ColorPreset = {
-  name: "Emerald Gem",
-  primaryColor: "#064e3b",
-  highlightColor: "#34d399",
-};
-
 export const TOPAZ: ColorPreset = {
   name: "Topaz",
   primaryColor: "#92400e",
@@ -374,40 +347,10 @@ export const STEEL: ColorPreset = {
   highlightColor: "#9ca3af",
 };
 
-export const TITANIUM: ColorPreset = {
-  name: "Titanium",
-  primaryColor: "#1f2937",
-  highlightColor: "#e5e7eb",
-};
-
-export const ALUMINUM: ColorPreset = {
-  name: "Aluminum",
-  primaryColor: "#374151",
-  highlightColor: "#d1d5db",
-};
-
-export const NICKEL: ColorPreset = {
-  name: "Nickel",
-  primaryColor: "#374151",
-  highlightColor: "#9ca3af",
-};
-
-export const ZINC: ColorPreset = {
-  name: "Zinc",
-  primaryColor: "#374151",
-  highlightColor: "#9ca3af",
-};
-
 export const LEAD: ColorPreset = {
   name: "Lead",
   primaryColor: "#111827",
   highlightColor: "#6b7280",
-};
-
-export const TIN: ColorPreset = {
-  name: "Tin",
-  primaryColor: "#374151",
-  highlightColor: "#9ca3af",
 };
 
 export const IRON: ColorPreset = {
@@ -428,66 +371,6 @@ export const PLUTO: ColorPreset = {
   highlightColor: "#9ca3af",
 };
 
-export const MARS: ColorPreset = {
-  name: "Mars",
-  primaryColor: "#7f1d1d",
-  highlightColor: "#ef4444",
-};
-
-export const VENUS: ColorPreset = {
-  name: "Venus",
-  primaryColor: "#be185d",
-  highlightColor: "#fbbf24",
-};
-
-export const JUPITER: ColorPreset = {
-  name: "Jupiter",
-  primaryColor: "#92400e",
-  highlightColor: "#f59e0b",
-};
-
-export const SATURN: ColorPreset = {
-  name: "Saturn",
-  primaryColor: "#7c2d12",
-  highlightColor: "#fbbf24",
-};
-
-export const URANUS: ColorPreset = {
-  name: "Uranus",
-  primaryColor: "#0d9488",
-  highlightColor: "#5eead4",
-};
-
-export const NEPTUNE: ColorPreset = {
-  name: "Neptune",
-  primaryColor: "#1e40af",
-  highlightColor: "#60a5fa",
-};
-
-export const EARTH: ColorPreset = {
-  name: "Earth",
-  primaryColor: "#064e3b",
-  highlightColor: "#34d399",
-};
-
-export const MOON: ColorPreset = {
-  name: "Moon",
-  primaryColor: "#374151",
-  highlightColor: "#f3f4f6",
-};
-
-export const SUN: ColorPreset = {
-  name: "Sun",
-  primaryColor: "#ea580c",
-  highlightColor: "#fbbf24",
-};
-
-export const STAR: ColorPreset = {
-  name: "Star",
-  primaryColor: "#1e40af",
-  highlightColor: "#fbbf24",
-};
-
 export const GALAXY: ColorPreset = {
   name: "Galaxy",
   primaryColor: "#1a0033",
@@ -500,22 +383,10 @@ export const NEBULA: ColorPreset = {
   highlightColor: "#ec4899",
 };
 
-export const COMET: ColorPreset = {
-  name: "Comet",
-  primaryColor: "#0f172a",
-  highlightColor: "#00d4ff",
-};
-
 export const METEOR: ColorPreset = {
   name: "Meteor",
   primaryColor: "#1c1917",
   highlightColor: "#f97316",
-};
-
-export const ASTEROID: ColorPreset = {
-  name: "Asteroid",
-  primaryColor: "#374151",
-  highlightColor: "#9ca3af",
 };
 
 export const BLACK_HOLE: ColorPreset = {
@@ -560,123 +431,46 @@ export const ANTIMATTER: ColorPreset = {
   highlightColor: "#fbbf24",
 };
 
-export const PLASMA: ColorPreset = {
-  name: "Plasma",
-  primaryColor: "#1a0033",
-  highlightColor: "#ff1493",
-};
-
-export const ION: ColorPreset = {
-  name: "Ion",
-  primaryColor: "#0f172a",
-  highlightColor: "#00d4ff",
-};
-
-export const ATOM: ColorPreset = {
-  name: "Atom",
-  primaryColor: "#1e40af",
-  highlightColor: "#60a5fa",
-};
-
-export const MOLECULE: ColorPreset = {
-  name: "Molecule",
-  primaryColor: "#064e3b",
-  highlightColor: "#34d399",
-};
-
-export const ELECTRON: ColorPreset = {
-  name: "Electron",
-  primaryColor: "#0f172a",
-  highlightColor: "#3b82f6",
-};
-
-export const PROTON: ColorPreset = {
-  name: "Proton",
-  primaryColor: "#7f1d1d",
-  highlightColor: "#ef4444",
-};
-
-export const NEUTRON: ColorPreset = {
-  name: "Neutron",
-  primaryColor: "#374151",
-  highlightColor: "#9ca3af",
-};
-
-export const QUARK: ColorPreset = {
-  name: "Quark",
-  primaryColor: "#1a0033",
-  highlightColor: "#8b5cf6",
-};
-
-export const BOSON: ColorPreset = {
-  name: "Boson",
-  primaryColor: "#0f172a",
-  highlightColor: "#ec4899",
-};
-
-export const FERMION: ColorPreset = {
-  name: "Fermion",
-  primaryColor: "#1e40af",
-  highlightColor: "#60a5fa",
-};
-
-export const HIGGS: ColorPreset = {
-  name: "Higgs",
-  primaryColor: "#000000",
-  highlightColor: "#fbbf24",
-};
-
-export const GRAVITON: ColorPreset = {
-  name: "Graviton",
-  primaryColor: "#000000",
-  highlightColor: "#374151",
-};
-
-export const PHOTON: ColorPreset = {
-  name: "Photon",
-  primaryColor: "#0f172a",
-  highlightColor: "#fbbf24",
-};
-
-export const GLUON: ColorPreset = {
-  name: "Gluon",
-  primaryColor: "#7f1d1d",
-  highlightColor: "#ef4444",
-};
-
-export const W_BOSON: ColorPreset = {
-  name: "W Boson",
-  primaryColor: "#0d9488",
-  highlightColor: "#5eead4",
-};
-
-export const Z_BOSON: ColorPreset = {
-  name: "Z Boson",
-  primaryColor: "#1e40af",
-  highlightColor: "#60a5fa",
-};
-
 export const PRESET_COLOR_LIST: ColorPreset[] = [
+  // Top tier: Highest contrast with dark primary colors
+  ANTIMATTER,
+  DIAMOND,
   DEFAULT,
-  FROST,
-  GRAPE,
-  SLIME,
-  LAVA,
-  BANANA,
+  PULSAR,
   HULK,
+  SUPERNOVA,
+  NEON_CYAN,
+  ELECTRIC,
+  PLATINUM,
   NAVY,
+  PEARL,
   FOERST,
-  SUNSET,
-  OCEAN,
-  COSMIC,
   AURORA,
-  FIRE,
+  DAWN,
+  MERCURY,
+  FROST,
+  ARCTIC,
+  DUSK,
   ICE,
+  WINTER,
+
+  // Second tier: Good contrast and visual appeal
+  SILVER,
+  GOLDEN,
+  SLIME,
+  SUNSET,
+  RAINFOREST,
+  METEOR,
+  WORMHOLE,
+  PLUTO,
+  BLACK_HOLE,
+  CRYSTAL,
+  MIDNIGHT,
+  OCEAN,
+  FIRE,
   CRIMSON,
   EMERALD,
   PURPLE_HAZE,
-  GOLDEN,
-  NEON_CYAN,
   NEON_PINK,
   NEON_GREEN,
   NEON_BLUE,
@@ -684,85 +478,31 @@ export const PRESET_COLOR_LIST: ColorPreset[] = [
   NEON_YELLOW,
   NEON_PURPLE,
   NEON_RED,
-  ELECTRIC,
   VOLCANIC,
-  CRYSTAL,
-  MIDNIGHT,
-  DAWN,
-  DUSK,
   SPRING,
   SUMMER,
   AUTUMN,
-  WINTER,
   TROPICAL,
   DESERT,
-  RAINFOREST,
-  ARCTIC,
   SAHARA,
   AMETHYST,
   SAPPHIRE,
   RUBY,
-  EMERALD_GEM,
   TOPAZ,
   GARNET,
   AQUAMARINE,
   CORAL,
-  PEARL,
   ONYX,
-  DIAMOND,
   COPPER,
-  SILVER,
   ROSE_GOLD,
-  PLATINUM,
   BRONZE,
   STEEL,
-  TITANIUM,
-  ALUMINUM,
-  NICKEL,
-  ZINC,
   LEAD,
-  TIN,
   IRON,
-  MERCURY,
-  PLUTO,
-  MARS,
-  VENUS,
-  JUPITER,
-  SATURN,
-  URANUS,
-  NEPTUNE,
-  EARTH,
-  MOON,
-  SUN,
-  STAR,
   GALAXY,
   NEBULA,
-  COMET,
-  METEOR,
-  ASTEROID,
-  BLACK_HOLE,
-  SUPERNOVA,
-  PULSAR,
   QUASAR,
-  WORMHOLE,
   DARK_MATTER,
-  ANTIMATTER,
-  PLASMA,
-  ION,
-  ATOM,
-  MOLECULE,
-  ELECTRON,
-  PROTON,
-  NEUTRON,
-  QUARK,
-  BOSON,
-  FERMION,
-  HIGGS,
-  GRAVITON,
-  PHOTON,
-  GLUON,
-  W_BOSON,
-  Z_BOSON,
 ];
 
 export const arePresetsEqual = (
