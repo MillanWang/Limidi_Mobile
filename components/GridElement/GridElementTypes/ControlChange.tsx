@@ -19,7 +19,6 @@ import {
   styles as ccStyles,
   ControlChangeActiveIndicators,
   ICON_SIZE,
-  useCcLevelOpacity,
 } from "./ControlChangeActiveIndicators";
 
 const halfIconSize = ICON_SIZE / 2;
@@ -50,12 +49,6 @@ export function ControlChange({ index }: ControlChangeProps) {
   const { elementWidth, elementHeight, onLayout } = useElementSize({
     index,
   });
-
-  const xPercent = touch ? getPositionalPercent(touch.x, elementWidth) : 0;
-  const yPercent = touch ? 1 - getPositionalPercent(touch.y, elementHeight) : 0;
-  const opacityPercent = hasVerticalControl ? yPercent : xPercent;
-
-  const { animatedStyle } = useCcLevelOpacity({ isInMotion, opacityPercent });
 
   const updateTouchPosition = useCallback(
     (touch: TouchPoint) => {
@@ -121,48 +114,208 @@ export function ControlChange({ index }: ControlChangeProps) {
             backgroundColor: colorState.highlightColor,
           }}
         >
-          <Animated.View
+          <View
             style={[
               styles.gridElementBasePressedView,
               { backgroundColor: colorState.primaryColor },
-              animatedStyle,
             ]}
-          >
-            {touch && (
-              <>
-                <View
-                  style={{
-                    ...ccStyles.ccIcon,
-                    left: touch.x - ICON_SIZE / 2,
-                    top: touch.y - ICON_SIZE / 2,
-                    backgroundColor: colorState.highlightColor,
-                  }}
-                >
-                  <GridThemedIcon
-                    index={index}
-                    invert
-                    name={safeIconName}
-                    type="ionicon"
-                  />
-                </View>
-                <ControlChangeActiveIndicators
-                  show={isInMotion}
+          />
+
+          {touch && (
+            <>
+              <View
+                style={{
+                  ...ccStyles.ccIcon,
+                  left: touch.x - ICON_SIZE / 2,
+                  top: touch.y - ICON_SIZE / 2,
+                  backgroundColor: colorState.highlightColor,
+                  zIndex: 2,
+                }}
+              >
+                <GridThemedIcon
                   index={index}
-                  controlChangeDirection={currentControlChangeDirection}
-                  xPositionAbsolute={touch.x}
-                  yPositionAbsolute={touch.y}
-                  elementWidth={elementWidth}
-                  safeIconName={safeIconName}
-                  color={colorState.highlightColor}
+                  invert
+                  name={safeIconName}
+                  type="ionicon"
                 />
-              </>
-            )}
-          </Animated.View>
+              </View>
+              <ControlChangeLevelHighlights
+                touch={touch}
+                elementWidth={elementWidth}
+                elementHeight={elementHeight}
+                isInMotion={isInMotion}
+                hasVerticalControl={hasVerticalControl}
+                hasHorizontalControl={hasHorizontalControl}
+                highlightColor={colorState.highlightColor}
+              />
+              <ControlChangeActiveIndicators
+                show={isInMotion}
+                index={index}
+                controlChangeDirection={currentControlChangeDirection}
+                xPositionAbsolute={touch.x}
+                yPositionAbsolute={touch.y}
+                elementWidth={elementWidth}
+                safeIconName={safeIconName}
+                color={colorState.highlightColor}
+              />
+            </>
+          )}
         </View>
       </GestureDetector>
     </GestureHandlerRootView>
   );
 }
+
+type ControlChangeLevelHighlightsProps = {
+  touch: TouchPoint;
+  elementWidth: number;
+  elementHeight: number;
+  isInMotion: boolean;
+  hasVerticalControl: boolean;
+  hasHorizontalControl: boolean;
+  highlightColor: string;
+};
+
+const ControlChangeLevelHighlights = (
+  props: ControlChangeLevelHighlightsProps
+) => {
+  const {
+    touch,
+    elementWidth,
+    elementHeight,
+    isInMotion,
+    hasVerticalControl,
+    hasHorizontalControl,
+    highlightColor,
+  } = props;
+
+  // Calculate opacity for each of the 4 grid sections positioned around the touch point
+  const gridOpacities = useMemo(() => {
+    const unchangedOpacity = 1;
+    if (!isInMotion || !touch) {
+      return {
+        topLeft: unchangedOpacity,
+        topRight: unchangedOpacity,
+        bottomLeft: unchangedOpacity,
+        bottomRight: unchangedOpacity,
+      };
+    }
+
+    const xPercent = getPositionalPercent(touch.x, elementWidth);
+    const yPercent = 1 - getPositionalPercent(touch.y, elementHeight);
+    const opacityPercent = hasVerticalControl ? yPercent : xPercent;
+
+    if (hasVerticalControl && hasHorizontalControl) {
+      const xHighlightColor = Math.max(0.1, 1 - xPercent * 0.9);
+      const yHighlightColor = Math.max(0.1, 1 - yPercent * 0.9);
+      return {
+        topLeft: xHighlightColor,
+        topRight: unchangedOpacity,
+        bottomLeft: Math.min(xHighlightColor, yHighlightColor),
+        bottomRight: yHighlightColor,
+      };
+    }
+    const highlightColorOpacity = Math.max(0.1, 1 - opacityPercent * 0.9);
+
+    if (hasVerticalControl) {
+      return {
+        topLeft: unchangedOpacity,
+        topRight: unchangedOpacity,
+        bottomLeft: highlightColorOpacity,
+        bottomRight: highlightColorOpacity,
+      };
+    } else if (hasHorizontalControl) {
+      return {
+        topLeft: highlightColorOpacity,
+        bottomLeft: highlightColorOpacity,
+        topRight: unchangedOpacity,
+        bottomRight: unchangedOpacity,
+      };
+    }
+
+    return {
+      topLeft: unchangedOpacity,
+      topRight: unchangedOpacity,
+      bottomLeft: unchangedOpacity,
+      bottomRight: unchangedOpacity,
+    };
+  }, [
+    isInMotion,
+    touch,
+    hasVerticalControl,
+    hasHorizontalControl,
+    elementWidth,
+    elementHeight,
+  ]);
+
+  return (
+    <>
+      {/* Top Left Section */}
+      <Animated.View
+        style={[
+          styles.gridSection,
+          {
+            backgroundColor: highlightColor,
+            opacity: 1 - gridOpacities.topLeft,
+            left: 0,
+            top: 0,
+            width: touch.x,
+            height: touch.y,
+            zIndex: 1,
+          },
+        ]}
+      />
+
+      {/* Top Right Section */}
+      <Animated.View
+        style={[
+          styles.gridSection,
+          {
+            backgroundColor: highlightColor,
+            opacity: 1 - gridOpacities.topRight,
+            left: touch.x,
+            top: 0,
+            width: elementWidth - touch.x,
+            height: touch.y,
+            zIndex: 1,
+          },
+        ]}
+      />
+
+      {/* Bottom Left Section */}
+      <Animated.View
+        style={[
+          styles.gridSection,
+          {
+            backgroundColor: highlightColor,
+            opacity: 1 - gridOpacities.bottomLeft,
+            left: 0,
+            top: touch.y,
+            width: touch.x,
+            height: elementHeight - touch.y,
+            zIndex: 1,
+          },
+        ]}
+      />
+
+      {/* Bottom Right Section */}
+      <Animated.View
+        style={[
+          styles.gridSection,
+          {
+            backgroundColor: highlightColor,
+            opacity: 1 - gridOpacities.bottomRight,
+            left: touch.x,
+            top: touch.y,
+            width: elementWidth - touch.x,
+            height: elementHeight - touch.y,
+            zIndex: 1,
+          },
+        ]}
+      />
+    </>
+  );
+};
 
 const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
   const {
@@ -258,6 +411,9 @@ const styles = StyleSheet.create({
   gridElementEditView: {
     flexDirection: "row",
     borderColor: theme.color.white,
+  },
+  gridSection: {
+    position: "absolute",
   },
 });
 

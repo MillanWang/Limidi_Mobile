@@ -7,6 +7,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { LinearGradient } from "expo-linear-gradient";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
@@ -62,14 +63,14 @@ export const ControlChangeActiveIndicators = (props: {
           color={color}
         />
 
-        <SpreadNeighboursIcons
+        {/* <SpreadNeighboursIcons
           index={index}
           controlChangeDirection={controlChangeDirection}
           xPositionAbsolute={xPositionAbsolute}
           yPositionAbsolute={yPositionAbsolute}
           elementWidth={elementWidth}
           safeIconName={safeIconName}
-        />
+        /> */}
       </>
     </>
   );
@@ -97,22 +98,26 @@ const CcLevelLines = (props: {
         <VerticalLevelLineIndicator
           absolutePosition={yPositionAbsolute}
           color={color}
+          enableGradient={controlChangeDirection === ControlChangeDirection.XY}
         />
       )}
       {controlChangeDirection !== ControlChangeDirection.Vertical && (
         <HorizontalLevelLineIndicator
           absolutePosition={xPositionAbsolute}
           color={color}
+          enableGradient={controlChangeDirection === ControlChangeDirection.XY}
         />
       )}
     </>
   );
 };
 
-const VerticalLevelLineIndicator = (props: {
+type LineIndicatorProps = {
   absolutePosition: number;
   color: string;
-}) => {
+  enableGradient: boolean;
+};
+const VerticalLevelLineIndicator = (props: LineIndicatorProps) => {
   return (
     <Animated.View
       style={{
@@ -121,17 +126,23 @@ const VerticalLevelLineIndicator = (props: {
         right: 0,
         top: props.absolutePosition,
         height: lineIndicatorThickness,
-        backgroundColor: props.color,
+        ...(props.enableGradient ? {} : { backgroundColor: props.color }),
       }}
       entering={FadeIn.duration(lineFadeInDuration)}
       exiting={FadeOut.duration(lineFadeOutDuration)}
-    />
+    >
+      {props.enableGradient && (
+        <LinearGradient
+          colors={[`${props.color}00`, props.color]}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          style={{ flex: 1 }}
+        />
+      )}
+    </Animated.View>
   );
 };
-const HorizontalLevelLineIndicator = (props: {
-  absolutePosition: number;
-  color: string;
-}) => {
+const HorizontalLevelLineIndicator = (props: LineIndicatorProps) => {
   return (
     <Animated.View
       style={{
@@ -140,11 +151,20 @@ const HorizontalLevelLineIndicator = (props: {
         bottom: 0,
         left: props.absolutePosition,
         width: lineIndicatorThickness,
-        backgroundColor: props.color,
+        ...(props.enableGradient ? {} : { backgroundColor: props.color }),
       }}
       entering={FadeIn.duration(lineFadeInDuration)}
       exiting={FadeOut.duration(lineFadeOutDuration)}
-    />
+    >
+      {props.enableGradient && (
+        <LinearGradient
+          colors={[`${props.color}00`, props.color]}
+          start={{ x: 0, y: 1 }}
+          end={{ x: 1, y: 0 }}
+          style={{ flex: 1 }}
+        />
+      )}
+    </Animated.View>
   );
 };
 
