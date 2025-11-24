@@ -70,8 +70,12 @@ export const BodyText: React.FC<{
   children: React.ReactNode;
   style?: TextStyle;
   kind?: TypographyKind;
-}> = ({ children, style, kind = TypographyKind.DEFAULT }) => (
+  numberOfLines?: number;
+  ellipsizeMode?: "head" | "middle" | "tail" | "clip";
+}> = ({ children, style, kind = TypographyKind.DEFAULT, numberOfLines, ellipsizeMode }) => (
   <Text
+    numberOfLines={numberOfLines}
+    ellipsizeMode={ellipsizeMode}
     style={[
       baseTextStyle,
       styles.bodyText,

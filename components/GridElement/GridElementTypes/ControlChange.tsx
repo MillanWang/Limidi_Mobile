@@ -206,8 +206,8 @@ const ControlChangeLevelHighlights = (
     const opacityPercent = hasVerticalControl ? yPercent : xPercent;
 
     if (hasVerticalControl && hasHorizontalControl) {
-      const xHighlightColor = Math.max(0.1, 1 - xPercent * 0.9);
-      const yHighlightColor = Math.max(0.1, 1 - yPercent * 0.9);
+      const xHighlightColor = getHighlightColorOpacity(xPercent);
+      const yHighlightColor = getHighlightColorOpacity(yPercent);
       return {
         topLeft: xHighlightColor,
         topRight: unchangedOpacity,
@@ -215,7 +215,7 @@ const ControlChangeLevelHighlights = (
         bottomRight: yHighlightColor,
       };
     }
-    const highlightColorOpacity = Math.max(0.1, 1 - opacityPercent * 0.9);
+    const highlightColorOpacity = getHighlightColorOpacity(opacityPercent);
 
     if (hasVerticalControl) {
       return {
@@ -317,7 +317,11 @@ const ControlChangeLevelHighlights = (
   );
 };
 
-const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
+const getHighlightColorOpacity = (opacityPercent: number) => {
+  return Math.max(0.2, Math.min(0.9, 1 - opacityPercent * 0.9));
+};
+
+export const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
   const {
     colorState,
     controlChangeState: { xAxisControlIndex, yAxisControlIndex, iconName },

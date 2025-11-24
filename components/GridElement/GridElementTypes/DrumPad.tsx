@@ -128,8 +128,16 @@ export default function DrumPad({ index }: DrumPadProps) {
               animatedStyle,
             ]}
           >
-            <BodyText style={{ color: colorState.highlightColor }}>
-              {name}
+            <BodyText
+              numberOfLines={2}
+              style={{
+                color: colorState.highlightColor,
+                justifyContent: "center",
+                alignItems: "center",
+                textAlign: "center",
+              }}
+            >
+              {name.trim()}
             </BodyText>
           </Animated.View>
         </View>

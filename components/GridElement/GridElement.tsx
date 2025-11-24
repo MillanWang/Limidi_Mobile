@@ -1,14 +1,22 @@
 import { Icon } from "@rneui/themed";
-import { BodyText } from "../Typography";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  getNoteKeyFromNoteNumber,
+  isNoteLabelStandard,
+} from "../../constants/MIDI_Notes";
 import {
   useCurrentGridPreset,
   useGridElementAtIndex,
 } from "../../hooks/useCurrentGridPreset";
 import { Page, usePageContext } from "../../hooks/usePageContext";
+import { GridThemedIcon } from "../GridThemedComponents/GridThemedIcon";
+import { BodyText, Caption } from "../Typography";
 import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
-import { ControlChange } from "./GridElementTypes/ControlChange";
+import {
+  ControlChange,
+  useCcPersistedProperties,
+} from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
 
 export default function GridElement({ index }: { index: number }) {
@@ -27,18 +35,38 @@ export default function GridElement({ index }: { index: number }) {
 }
 
 const GridElementEditButtonIconRow = (props: {
-  isLocked: boolean;
+  safeIconName?: string;
   isMidiNote: boolean;
   color: string;
 }) => {
-  const { isLocked, isMidiNote, color } = props;
+  const { isMidiNote, color, safeIconName } = props;
   return (
-    <View style={{ flexDirection: "row" }}>
-      {isLocked && <Icon color={color} type="ionicon" name={"lock-closed"} />}
+    <View
+      style={{
+        flexDirection: "row",
+        gap: 4,
+        alignItems: "center",
+        marginBottom: 2,
+      }}
+    >
       {isMidiNote ? (
         <Icon color={color} type="material-community" name={"piano"} />
       ) : (
         <Icon color={color} type="feather" name={"sliders"} />
+      )}
+      {!isMidiNote && safeIconName && (
+        <View
+          style={{
+            height: 24,
+            width: 24,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 100,
+            backgroundColor: color,
+          }}
+        >
+          <GridThemedIcon invert name={safeIconName} type="ionicon" size={18} />
+        </View>
       )}
     </View>
   );
@@ -47,8 +75,16 @@ const GridElementEditButtonIconRow = (props: {
 const GridElementEditButton = (props: { index: number }) => {
   const { index } = props;
   const [dialogVisible, setDialogVisible] = useState(false);
-  const { name, colorState, isLocked, isMidiNote } =
-    useGridElementAtIndex(index);
+  const {
+    name,
+    colorState,
+    isLocked,
+    isMidiNote,
+    midiNoteState: { noteNumber },
+  } = useGridElementAtIndex(index);
+
+  const { safeIconName, xAxisControlIndex, yAxisControlIndex } =
+    useCcPersistedProperties({ index });
 
   return (
     <>
@@ -56,7 +92,9 @@ const GridElementEditButton = (props: { index: number }) => {
         style={[
           styles.gridElementUnpressedView,
           styles.gridElementEditView,
+
           {
+            padding: 2,
             backgroundColor: colorState.primaryColor,
             borderColor: colorState.highlightColor,
           },
@@ -70,25 +108,61 @@ const GridElementEditButton = (props: { index: number }) => {
             flex: 1,
           }}
         >
-          <BodyText style={{ color: colorState.highlightColor }}>
-            #{index}
-          </BodyText>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <BodyText
+              style={{ color: colorState.highlightColor, marginRight: "auto" }}
+            >
+              #{index}
+            </BodyText>
+            {isLocked && (
+              <GridThemedIcon type="ionicon" name="lock-closed" size={12} />
+            )}
+          </View>
           <View
             style={{
               flexDirection: "column",
               flex: 1,
-              justifyContent: "center",
               alignItems: "center",
             }}
           >
             <GridElementEditButtonIconRow
+              safeIconName={safeIconName}
               color={colorState.highlightColor}
-              isLocked={isLocked}
               isMidiNote={isMidiNote}
             />
-            <BodyText style={{ color: colorState.highlightColor }}>
-              {name}
-            </BodyText>
+            {isMidiNote ? (
+              <>
+                <Caption style={{ color: colorState.highlightColor }}>
+                  {getNoteKeyFromNoteNumber(noteNumber)}
+                </Caption>
+                {!isNoteLabelStandard(noteNumber, name) && (
+                  <BodyText
+                    numberOfLines={2}
+                    style={{
+                      color: colorState.highlightColor,
+                      textAlign: "center",
+                    }}
+                  >
+                    {name.trim() === "" ? "<Blank>" : name.trim()}
+                  </BodyText>
+                )}
+              </>
+            ) : (
+              <>
+                {xAxisControlIndex >= 0 && (
+                  <Caption style={{ color: colorState.highlightColor }}>
+                    CC{yAxisControlIndex >= 0 ? " (X)" : ""}:{" "}
+                    {xAxisControlIndex}
+                  </Caption>
+                )}
+                {yAxisControlIndex >= 0 && (
+                  <Caption style={{ color: colorState.highlightColor }}>
+                    CC{xAxisControlIndex >= 0 ? " (Y)" : ""}:{" "}
+                    {yAxisControlIndex}
+                  </Caption>
+                )}
+              </>
+            )}
           </View>
         </View>
       </TouchableOpacity>
