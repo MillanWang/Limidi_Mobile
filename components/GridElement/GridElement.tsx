@@ -18,6 +18,7 @@ import {
   useCcPersistedProperties,
 } from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
+import { useIsGridElementDirty } from "../../hooks/useIsGridElementDirty";
 
 export default function GridElement({ index }: { index: number }) {
   const { isMidiNote } = useCurrentGridPreset().gridElements[index];
@@ -86,6 +87,8 @@ const GridElementEditButton = (props: { index: number }) => {
   const { safeIconName, xAxisControlIndex, yAxisControlIndex } =
     useCcPersistedProperties({ index });
 
+  const isDirty = useIsGridElementDirty(index);
+
   return (
     <>
       <TouchableOpacity
@@ -113,6 +116,7 @@ const GridElementEditButton = (props: { index: number }) => {
               style={{ color: colorState.highlightColor, marginRight: "auto" }}
             >
               #{index}
+              {isDirty && "*"}
             </BodyText>
             {isLocked && (
               <GridThemedIcon type="ionicon" name="lock-closed" size={12} />

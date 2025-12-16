@@ -12,7 +12,6 @@
     - Validate recent additions
   - Add FL studio FPC default for 4 column
   - Improve scale selector component
-  - "Dirty" indicator when user deviates away from scale default
 - COLOR
   - Add many more color presets
   - Improve color themes for grid icons

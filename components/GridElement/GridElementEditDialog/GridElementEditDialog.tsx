@@ -22,6 +22,7 @@ import {
   GridElementEditStyleProps,
   GridElementEditStyleSettingsTab,
 } from "./GridElementEditDialogTabs/GridElementEditStyleSettingsTab";
+import { useIsGridElementDirty } from "../../../hooks/useIsGridElementDirty";
 
 interface GridElementEditDialogProps
   extends GridElementEditMidiProps,
@@ -42,6 +43,8 @@ export const GridElementEditDialog = ({
 
   const toggleElementMidiLock = () =>
     dispatch(setGridElementIsLocked({ index, isLocked: !isLocked }));
+
+  const isDirty = useIsGridElementDirty(index);
 
   return (
     <Dialog isVisible={dialogVisible} overlayStyle={styles.dialogOverlay}>
@@ -83,7 +86,10 @@ export const GridElementEditDialog = ({
       </TouchableWithoutFeedback>
       <TouchableWithoutFeedback onPressIn={Keyboard.dismiss}>
         <View style={{ alignItems: "center", marginTop: 8 }}>
-          <Label>Element #{index}</Label>
+          <Label>
+            Element #{index}
+            {isDirty ? "*" : ""}
+          </Label>
           <GridPreview index={index} />
         </View>
       </TouchableWithoutFeedback>
