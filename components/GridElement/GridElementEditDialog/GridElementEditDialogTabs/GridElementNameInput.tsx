@@ -39,7 +39,7 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
         containerStyle={{ paddingLeft: -10, paddingRight: -10 }}
         inputStyle={{ color: theme.color.white }}
         rightIconContainerStyle={{ height: 24 }}
-        label={<Label>Name</Label>}
+        label={<Label>Name:</Label>}
         maxLength={10}
         rightIcon={rightIcon}
         value={name}

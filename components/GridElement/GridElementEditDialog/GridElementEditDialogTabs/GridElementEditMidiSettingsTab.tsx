@@ -13,7 +13,7 @@ export function GridElementEditMidiSettingsTab({ index }: { index: number }) {
   const { isMidiNote } = useGridElementAtIndex(index);
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={{ gap: 8 }}>
       <MidiNoteControlChangeSelector index={index} />
 
       {isMidiNote ? (

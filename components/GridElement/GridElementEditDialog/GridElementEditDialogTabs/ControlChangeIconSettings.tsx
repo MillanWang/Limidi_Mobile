@@ -1,5 +1,4 @@
 import { Button, Dialog } from "@rneui/themed";
-import { Label, BodyText } from "../../../Typography";
 import React from "react";
 import { ScrollView, View } from "react-native";
 import {
@@ -14,6 +13,8 @@ import {
 import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementControlChangeIconString } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
+import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
+import { BodyText, Label } from "../../../Typography";
 import { ControlChangeSettingsPanelProps } from "./ccSettings/ControlChangeSettingsPanel";
 import {
   IconWithTitle,
@@ -23,19 +24,20 @@ import {
   getControlChangeDirection,
   useControlChangeIndexController,
 } from "./useControlChangeIndexController";
-import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
 
 export const ControlChangeIconSettings = ({
   index,
 }: ControlChangeSettingsPanelProps) => {
-  const currentGridElementState = useGridElementAtIndex(index);
-  const colorState = currentGridElementState.colorState;
-
   const { icon } = useControlChangeIndexController({ index });
   const [iconDialogOpen, setIconDialogOpen] = React.useState(false);
 
   return (
-    <View style={{ marginBottom: 12 }}>
+    <View
+      style={{
+        marginBottom: 12,
+        gap: 2,
+      }}
+    >
       <Label>Icon:</Label>
       <View style={{ flexDirection: "row" }}>
         <GridThemedButton

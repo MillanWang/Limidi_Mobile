@@ -34,6 +34,15 @@ export function isGridElementDirty(
   elementIndex: number,
   grid: GridState
 ): boolean {
+  const { colorState } = gridElement;
+  const { gridTheme } = grid;
+  if (
+    colorState.primaryColor !== gridTheme.primaryColor ||
+    colorState.highlightColor !== gridTheme.highlightColor
+  ) {
+    return true;
+  }
+
   if (!gridElement.isMidiNote) {
     const { xAxisControlIndex, yAxisControlIndex } =
       gridElement.controlChangeState;
@@ -43,6 +52,7 @@ export function isGridElementDirty(
     if (yAxisControlIndex > 0 && yAxisControlIndex !== elementIndex * 2 + 1) {
       return true;
     }
+    return false;
   }
 
   const {

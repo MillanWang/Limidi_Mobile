@@ -20,38 +20,36 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
 
   return (
     <View>
-      <View>
-        <Label>Mode:</Label>
-        <View style={styles.switchView}>
-          <GridThemedButton
+      <Label>Mode:</Label>
+      <View style={styles.switchView}>
+        <GridThemedButton
+          index={index}
+          onPress={setElementToMidiNote}
+          flex
+          unfocused={!isMidiNote}
+        >
+          <GridThemedIcon
             index={index}
-            onPress={setElementToMidiNote}
-            flex
-            unfocused={!isMidiNote}
-          >
-            <GridThemedIcon
-              index={index}
-              type="material-community"
-              name={"piano"}
-              style={{ marginRight: 4 }}
-            />
-            MIDI Note
-          </GridThemedButton>
-          <GridThemedButton
+            type="material-community"
+            name={"piano"}
+            style={{ marginRight: 4 }}
+          />
+          MIDI Note
+        </GridThemedButton>
+        <GridThemedButton
+          index={index}
+          onPress={setElementToControlChange}
+          flex
+          unfocused={isMidiNote}
+        >
+          <GridThemedIcon
             index={index}
-            onPress={setElementToControlChange}
-            flex
-            unfocused={isMidiNote}
-          >
-            <GridThemedIcon
-              index={index}
-              name="sliders"
-              type="feather"
-              style={{ marginRight: 4 }}
-            />
-            Control Change
-          </GridThemedButton>
-        </View>
+            name="sliders"
+            type="feather"
+            style={{ marginRight: 4 }}
+          />
+          Control Change
+        </GridThemedButton>
       </View>
     </View>
   );

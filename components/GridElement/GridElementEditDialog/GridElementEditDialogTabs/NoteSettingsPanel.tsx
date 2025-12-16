@@ -37,8 +37,9 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
     dispatch(setGridElementNote({ index, newNoteNumber: noteNumber }));
 
   return (
-    <View>
+    <>
       <GridElementNameInput index={index} />
+
       <NoteSelector
         index={index}
         increaseOctave={updateOctave(true)}
@@ -55,10 +56,12 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
       <View>
         <Label>Velocity Direction:</Label>
         <VelocityDirectionSelector index={index} />
+      </View>
 
+      <View>
         <Label>Velocity range:</Label>
         <VelocityAdjustSlider index={index} />
       </View>
-    </View>
+    </>
   );
 }

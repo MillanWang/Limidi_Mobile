@@ -1,5 +1,7 @@
-import React, { useState } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { Icon } from "@rneui/themed";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Animated, Easing, ScrollView, StyleSheet, View } from "react-native";
+import { theme } from "../../constants/theme";
 import {
   useWebSocketContext,
   WebSocketStatus,
@@ -75,12 +77,87 @@ export default function NetworkConfigSettingsTab() {
   );
 }
 
+const SpinWrapper = ({
+  children,
+  spin,
+}: {
+  children: React.ReactNode;
+  spin?: boolean;
+}) => {
+  const rotation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    if (!spin) {
+      return;
+    }
+
+    let looping: Animated.CompositeAnimation | null = null;
+    rotation.setValue(0);
+    looping = Animated.loop(
+      Animated.timing(rotation, {
+        toValue: 1,
+        duration: 2000,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      })
+    );
+    looping.start();
+
+    return () => {
+      looping && looping.stop();
+    };
+  }, [rotation, spin]);
+
+  if (!spin) {
+    return <>{children}</>;
+  }
+
+  const spinStyle = {
+    transform: [
+      {
+        rotate: rotation.interpolate({
+          inputRange: [0, 1],
+          outputRange: ["0deg", "360deg"],
+        }),
+      },
+    ],
+  };
+
+  return <Animated.View style={spinStyle}>{children}</Animated.View>;
+};
+
+const StatusIcon = () => {
+  const { status } = useWebSocketContext();
+
+  const { iconName, color, spin } = useMemo(() => {
+    switch (status) {
+      case WebSocketStatus.Connected:
+        return { iconName: "checkmark", color: theme.color.white };
+      case WebSocketStatus.Connecting:
+        return { iconName: "sync", color: "yellow", spin: true };
+      case WebSocketStatus.Disconnected:
+      case WebSocketStatus.Error:
+      default:
+        return { iconName: "close", color: "red" };
+    }
+  }, [status]);
+
+  return (
+    <SpinWrapper spin={spin}>
+      <Icon name={iconName} type="ionicon" color={color} />
+    </SpinWrapper>
+  );
+};
+
 const StatusMessage = () => {
   const { status } = useWebSocketContext();
+
   return (
     <>
       <View style={{ marginBottom: 16, minHeight: 80 }}>
-        <BodyText>Status: {status}</BodyText>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <StatusIcon /> <BodyText>{status}</BodyText>
+        </View>
         {status === WebSocketStatus.Connected ? (
           <>
             <BodyText>

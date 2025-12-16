@@ -11,9 +11,9 @@ export function ControlChangeSettingsPanel({
   index,
 }: ControlChangeSettingsPanelProps) {
   return (
-    <View>
+    <>
       <ControlChangeIndexSettings index={index} />
       <ControlChangeIconSettings index={index} />
-    </View>
+    </>
   );
 }
