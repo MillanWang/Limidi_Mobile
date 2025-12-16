@@ -347,12 +347,6 @@ export const STEEL: ColorPreset = {
   highlightColor: "#9ca3af",
 };
 
-export const LEAD: ColorPreset = {
-  name: "Lead",
-  primaryColor: "#111827",
-  highlightColor: "#6b7280",
-};
-
 export const IRON: ColorPreset = {
   name: "Iron",
   primaryColor: "#374151",
@@ -497,7 +491,6 @@ export const PRESET_COLOR_LIST: ColorPreset[] = [
   ROSE_GOLD,
   BRONZE,
   STEEL,
-  LEAD,
   IRON,
   GALAXY,
   NEBULA,

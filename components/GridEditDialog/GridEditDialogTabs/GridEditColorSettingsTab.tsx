@@ -86,14 +86,20 @@ const ColorThemeSelector = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+    marginBottom: 16,
+  },
   colorPresetContainer: {
+    flex: 1,
     flexDirection: "row",
     paddingTop: 10,
+    minHeight: 0,
   },
   colorPresetSelector: {
     width: "60%",
     marginRight: 4,
+    flex: 1,
   },
   colorPresetButton: {
     borderWidth: 2,

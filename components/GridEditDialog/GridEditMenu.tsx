@@ -36,7 +36,7 @@ export const GridEditMenu = () => {
   const { page, goToSettings } = usePageContext();
 
   return (
-    <>
+    <View style={{ flex: 1 }}>
       <View style={styles.dialogTabSelectorContainer}>
         {settingsTabs.map((tab, i) => (
           <GridThemedButton
@@ -56,7 +56,7 @@ export const GridEditMenu = () => {
         {page === Page.ColorSettings && <GridEditStyleSettingsTab />}
         {page === Page.NetworkSettings && <NetworkConfigSettingsTab />}
       </View>
-    </>
+    </View>
   );
 };
 
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
   },
   dialogContentContainer: {
     flex: 1,
-    height: "100%",
     padding: 12,
     backgroundColor: theme.color.background,
   },
