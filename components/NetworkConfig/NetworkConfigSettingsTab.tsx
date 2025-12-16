@@ -156,7 +156,8 @@ const StatusMessage = () => {
     <>
       <View style={{ marginBottom: 16, minHeight: 80 }}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <StatusIcon /> <BodyText>{status}</BodyText>
+          <StatusIcon />
+          <BodyText style={{ marginLeft: 8 }}>{status}</BodyText>
         </View>
         {status === WebSocketStatus.Connected ? (
           <>
