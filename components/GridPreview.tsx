@@ -151,5 +151,5 @@ export const styles = StyleSheet.create({
   applyScaleView: { width: "40%" },
   labelText: { color: theme.color.lightText },
   rowsLabelText: { margin: 4, width: 50 },
-  columnsLabelText: { marginLeft: 8, marginRight: 4, width: 72 },
+  columnsLabelText: { marginLeft: 4, marginRight: 4, width: 72 },
 });

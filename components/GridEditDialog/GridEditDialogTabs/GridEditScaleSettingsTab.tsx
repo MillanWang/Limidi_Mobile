@@ -104,7 +104,7 @@ export function ScaleSelector() {
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}
         >
-          Apply scale
+          Apply scale{currentScale !== scale ? "*" : ""}
         </GridThemedButton>
 
         <FullGridOperationButtons
