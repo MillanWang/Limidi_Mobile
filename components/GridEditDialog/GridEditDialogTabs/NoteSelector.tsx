@@ -40,7 +40,7 @@ export const NoteSelector = ({
             onPress={decreaseOctave}
             disabled={currentOctave === 0}
           />
-          <Label style={{ width: 64, marginLeft: 8 }}>
+          <Label style={{ width: 64, marginLeft: 4 }}>
             Octave: {currentOctave}
           </Label>
           <IncrementorButton
