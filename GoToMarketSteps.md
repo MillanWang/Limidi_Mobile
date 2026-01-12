@@ -16,14 +16,9 @@
   - Add many more color presets
   - Improve color themes for grid icons
 - DESKTOP APP
-  - Add button to restart the whole app
-  - Indicator for network availability
   - Styling
 - LAUNCH
   - Phone-sized screen testing and theme fitting
-  - Free and paid version feature flag
-    - Paywalled features
-      - Color selection
-      - Multiple hotswapable presets
-  - Get onto apple app store
+  - Get pro version onto apple app store
+  - Get free version onto apple app store with link to pro version
   - Host a website to download the platform specific desktop app
