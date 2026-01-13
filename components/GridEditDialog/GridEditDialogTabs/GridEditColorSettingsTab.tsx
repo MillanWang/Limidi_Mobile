@@ -1,16 +1,17 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { ReactNode, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { BodyText } from "../../Typography";
 import {
   arePresetsEqual,
   PRESET_COLOR_LIST,
 } from "../../../constants/ColorPresets";
 import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPreset";
 import { usePresetDefault } from "../../../hooks/usePresetDefault";
+import { useScrollToSelected } from "../../../hooks/useScrollToSelected";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setGridColorPresetGlobally } from "../../../redux/slices/GridPresetsSlice";
 import { GridPreviewSizeSelector } from "../../GridPreview";
+import { BodyText } from "../../Typography";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
 
 export function GridEditStyleSettingsTab(): ReactNode {
@@ -28,12 +29,19 @@ const ColorThemeSelector = () => {
   const currentPresetColors = useCurrentGridPresetColors();
   const [currentPreset, setCurrentPreset] = useState(currentPresetColors);
 
+  // Scroll to the currently selected color preset on initial load
+  const scrollViewRef = useScrollToSelected({
+    items: PRESET_COLOR_LIST,
+    selectedItem: currentPresetColors,
+    compareFn: arePresetsEqual,
+  });
+
   const applySelectedPresetGlobally = () =>
     dispatch(setGridColorPresetGlobally(currentPreset));
 
   return (
     <View style={styles.colorPresetContainer}>
-      <ScrollView style={styles.colorPresetSelector}>
+      <ScrollView ref={scrollViewRef} style={styles.colorPresetSelector}>
         {PRESET_COLOR_LIST.map((preset) => {
           return (
             <Button

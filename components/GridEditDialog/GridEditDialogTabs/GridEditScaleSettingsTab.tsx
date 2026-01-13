@@ -1,11 +1,11 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { Label, BodyText } from "../../Typography";
 import { getNoteKeyFromNoteNumber } from "../../../constants/MIDI_Notes";
 import { Scale } from "../../../constants/Scales";
 import { useCurrentGridPreset } from "../../../hooks/useCurrentGridPreset";
 import { usePresetDefault } from "../../../hooks/usePresetDefault";
+import { useScrollToSelected } from "../../../hooks/useScrollToSelected";
 import { useAppDispatch } from "../../../redux/hooks";
 import {
   setScale,
@@ -13,6 +13,7 @@ import {
   setStartingOctave,
 } from "../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
+import { BodyText, Label } from "../../Typography";
 import { FullGridOperationButtons } from "./FullGridOperationButtons";
 import { NoteSelector } from "./NoteSelector";
 
@@ -65,10 +66,16 @@ export function ScaleSelector() {
   // To choose a scale before applying it
   const [currentScale, setCurrentScale] = useState(scale);
 
+  // Scroll to the currently selected scale on initial load
+  const scrollViewRef = useScrollToSelected({
+    items: scalesArray,
+    selectedItem: scale,
+  });
+
   return (
     <View style={styles.scaleManagementView}>
       <View style={styles.scaleSelector}>
-        <ScrollView style={styles.scaleSelectorScrollView}>
+        <ScrollView ref={scrollViewRef} style={styles.scaleSelectorScrollView}>
           {scalesArray.map((scalePreset, i) => (
             <Button
               buttonStyle={{

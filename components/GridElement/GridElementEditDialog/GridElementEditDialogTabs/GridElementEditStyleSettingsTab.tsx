@@ -1,12 +1,15 @@
 import { Button, Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
-import { BodyText } from "../../../Typography";
-import { PRESET_COLOR_LIST } from "../../../../constants/ColorPresets";
+import {
+  arePresetsEqual,
+  PRESET_COLOR_LIST,
+} from "../../../../constants/ColorPresets";
 import {
   useCurrentGridPresetColors,
   useGridElementAtIndex,
 } from "../../../../hooks/useCurrentGridPreset";
+import { useScrollToSelected } from "../../../../hooks/useScrollToSelected";
 import { useAppDispatch } from "../../../../redux/hooks";
 import {
   setGridElementhighlightColor,
@@ -14,6 +17,7 @@ import {
 } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
+import { BodyText } from "../../../Typography";
 
 export interface GridElementEditStyleProps {
   index: number;
@@ -37,9 +41,16 @@ export function GridElementEditStyleSettingsTab({
     dispatch(setGridElementhighlightColor({ index, highlightColor }));
   }
 
+  // Scroll to the currently selected color preset on initial load
+  const scrollViewRef = useScrollToSelected({
+    items: PRESET_COLOR_LIST,
+    selectedItem: colorState,
+    compareFn: arePresetsEqual,
+  });
+
   return (
     <View style={{ ...styles.styleSettingsContainer }}>
-      <ScrollView style={{ width: "60%" }}>
+      <ScrollView ref={scrollViewRef} style={{ width: "60%" }}>
         {PRESET_COLOR_LIST.map((preset, i) => {
           const isSet =
             colorState.highlightColor === preset.highlightColor &&
