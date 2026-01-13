@@ -41,6 +41,8 @@ function createGridElements(colorPreset: ColorPreset): GridElementState[] {
   return allGridElements;
 }
 
+const defaultGlobalVelocity = { floor: 64, ceiling: 127 };
+
 export const defaultPreset1: GridState = rescaleGridElements({
   columnCount: 4,
   rowCount: 4,
@@ -48,6 +50,7 @@ export const defaultPreset1: GridState = rescaleGridElements({
   scale: Scale.Chromatic,
   gridElements: createGridElements(DEFAULT),
   gridTheme: DEFAULT,
+  globalVelocity: defaultGlobalVelocity,
 });
 
 export const defaultPreset2: GridState = rescaleGridElements({
@@ -57,6 +60,7 @@ export const defaultPreset2: GridState = rescaleGridElements({
   scale: Scale.Ionian,
   gridElements: createGridElements(FROST),
   gridTheme: FROST,
+  globalVelocity: defaultGlobalVelocity,
 });
 
 export const defaultPreset3: GridState = rescaleGridElements({
@@ -66,6 +70,7 @@ export const defaultPreset3: GridState = rescaleGridElements({
   scale: Scale.Dorian,
   gridElements: createGridElements(SAPPHIRE),
   gridTheme: SAPPHIRE,
+  globalVelocity: defaultGlobalVelocity,
 });
 
 export const defaultPreset4: GridState = rescaleGridElements({
@@ -75,6 +80,7 @@ export const defaultPreset4: GridState = rescaleGridElements({
   scale: Scale.Phrygian,
   gridElements: createGridElements(SLIME),
   gridTheme: SLIME,
+  globalVelocity: defaultGlobalVelocity,
 });
 
 export const defaultPreset5: GridState = rescaleGridElements({
@@ -84,6 +90,7 @@ export const defaultPreset5: GridState = rescaleGridElements({
   scale: Scale.Mixolydian,
   gridElements: createGridElements(AMETHYST),
   gridTheme: AMETHYST,
+  globalVelocity: defaultGlobalVelocity,
 });
 
 export const defaultPreset6: GridState = rescaleGridElements({
@@ -93,4 +100,5 @@ export const defaultPreset6: GridState = rescaleGridElements({
   scale: Scale.Aeolian,
   gridElements: createGridElements(HULK),
   gridTheme: HULK,
+  globalVelocity: defaultGlobalVelocity,
 });

@@ -226,6 +226,36 @@ export const GridPresetsSlice = createSlice({
         grid.gridElements[index].midiNoteState.velocity.isVertical = isVertical;
       }
     },
+    setVelocityGlobally: (state, action) => {
+      const { floor, ceiling } = action.payload;
+      const grid = state.gridPresets[state.currentPresetIndex];
+
+      // Persist the global velocity setting
+      if (floor !== undefined) {
+        grid.globalVelocity.floor = floor;
+      }
+      if (ceiling !== undefined) {
+        grid.globalVelocity.ceiling = ceiling;
+      }
+
+      // Apply to all unlocked elements
+      for (let elem of grid.gridElements) {
+        if (!elem.isLocked) {
+          if (floor !== undefined) {
+            elem.midiNoteState.velocity.floor = floor;
+            if (elem.midiNoteState.velocity.ceiling < floor) {
+              elem.midiNoteState.velocity.ceiling = floor;
+            }
+          }
+          if (ceiling !== undefined) {
+            elem.midiNoteState.velocity.ceiling = ceiling;
+            if (elem.midiNoteState.velocity.floor > ceiling) {
+              elem.midiNoteState.velocity.floor = ceiling;
+            }
+          }
+        }
+      }
+    },
     // Grid element control change operations
     setGridElementControlChangeXIndex: (state, action) => {
       const { index, xAxisControlIndex } = action.payload;
@@ -302,6 +332,7 @@ export const {
   setGridElementVelocityCeiling,
   setGridElementVelocityFloor,
   setGridElementVelocityIsVertical,
+  setVelocityGlobally,
   // Grid element control change operations
   setGridElementControlChangeXIndex,
   setGridElementControlChangeYIndex,

@@ -72,7 +72,9 @@ export default function DrumPad({ index }: DrumPadProps) {
   const startTouch = useCallback(
     (touch: TouchPoint) => {
       const percent = getTouchPercent(touch);
-      const velocityValue = Math.floor(127 * percent);
+      const velocityValue = Math.floor(
+        (velocity.ceiling - velocity.floor) * percent + velocity.floor
+      );
       sendMidiNote(createMidiNote(noteNumber, velocityValue, NOTE_ON));
     },
     [getTouchPercent, noteNumber, sendMidiNote]

@@ -10,7 +10,7 @@ import {
 import { NoteSelector } from "../../../GridEditDialog/GridEditDialogTabs/NoteSelector";
 import { Label } from "../../../Typography";
 import { GridElementNameInput } from "./GridElementNameInput";
-import { VelocityAdjustSlider } from "./velocitySettings/VelocityAdjustSlider";
+import { ElementVelocityAdjustSlider } from "./velocitySettings/ElementVelocityAdjustSlider";
 import { VelocityDirectionSelector } from "./velocitySettings/VelocityDirectionSelector";
 
 export interface NoteSettingsPanelProps {
@@ -60,7 +60,7 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
 
       <View>
         <Label>Velocity range:</Label>
-        <VelocityAdjustSlider index={index} />
+        <ElementVelocityAdjustSlider index={index} />
       </View>
     </>
   );

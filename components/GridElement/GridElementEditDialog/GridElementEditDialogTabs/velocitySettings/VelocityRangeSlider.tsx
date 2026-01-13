@@ -1,33 +1,40 @@
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
 import React from "react";
-import { View } from "react-native";
+import { View, StyleSheet, ViewStyle } from "react-native";
 import { BodyText } from "../../../../Typography";
-import { useGridElementAtIndex } from "../../../../../hooks/useCurrentGridPreset";
-import { useAppDispatch } from "../../../../../redux/hooks";
-import {
-  setGridElementVelocityCeiling,
-  setGridElementVelocityFloor,
-} from "../../../../../redux/slices/GridPresetsSlice";
 
-export const VelocityAdjustSlider = (props: { index: number }) => {
-  const { index } = props;
-  const {
-    midiNoteState: { velocity },
-    colorState: { primaryColor, highlightColor },
-  } = useGridElementAtIndex(index);
+const markerSize = 40;
+const labelTextStyle = {
+  position: "absolute",
+  top: markerSize / 2 - 38,
+  textAlign: "center",
+  width: markerSize,
+  pointerEvents: "none",
+} as const;
 
-  const dispatch = useAppDispatch();
+export interface VelocityRangeSliderProps {
+  floor: number;
+  ceiling: number;
+  primaryColor: string;
+  highlightColor: string;
+  onValuesChange: (floor: number, ceiling: number) => void;
+  containerStyle?: ViewStyle;
+}
 
-  const setVelocityFloor = (velocity: number) =>
-    dispatch(setGridElementVelocityFloor({ index: index, floor: velocity }));
-
-  const setVelocityCeiling = (velocity: number) =>
-    dispatch(
-      setGridElementVelocityCeiling({ index: index, ceiling: velocity })
-    );
+export const VelocityRangeSlider = ({
+  floor,
+  ceiling,
+  primaryColor,
+  highlightColor,
+  onValuesChange,
+  containerStyle,
+}: VelocityRangeSliderProps) => {
+  const handleValuesChange = (values: number[]) => {
+    onValuesChange(values[0], values[1]);
+  };
 
   return (
-    <View style={{ padding: 16, alignItems: "center" }}>
+    <View style={[styles.container, containerStyle]}>
       <MultiSlider
         isMarkersSeparated
         allowOverlap
@@ -96,11 +103,8 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
             </View>
           );
         }}
-        values={[velocity.floor, velocity.ceiling]}
-        onValuesChange={(e) => {
-          setVelocityFloor(e[0]);
-          setVelocityCeiling(e[1]);
-        }}
+        values={[floor, ceiling]}
+        onValuesChange={handleValuesChange}
         min={0}
         max={127}
         step={1}
@@ -132,11 +136,9 @@ export const VelocityAdjustSlider = (props: { index: number }) => {
   );
 };
 
-const markerSize = 40;
-const labelTextStyle = {
-  position: "absolute",
-  top: markerSize / 2 - 38,
-  textAlign: "center",
-  width: markerSize,
-  pointerEvents: "none",
-} as const;
+const styles = StyleSheet.create({
+  container: {
+    padding: 16,
+    alignItems: "center",
+  },
+});
