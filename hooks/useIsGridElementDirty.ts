@@ -1,7 +1,23 @@
-import { useMemo } from "react";
-import { isNoteLabelStandard } from "../constants/MIDI_Notes";
+import { useCallback, useMemo } from "react";
+import {
+  getNoteKeyFromNoteNumber,
+  isNoteLabelStandard,
+} from "../constants/MIDI_Notes";
+import { useAppDispatch } from "../redux/hooks";
 import { GridElementState } from "../redux/interfaces/GridElement/GridElementState";
 import { GridState } from "../redux/interfaces/GridState";
+import {
+  setGridElementControlChangeXIndex,
+  setGridElementControlChangeYIndex,
+  setGridElementhighlightColor,
+  setGridElementName,
+  setGridElementNote,
+  setGridElementOctave,
+  setGridElementprimaryColor,
+  setGridElementVelocityCeiling,
+  setGridElementVelocityFloor,
+  setGridElementVelocityIsVertical,
+} from "../redux/slices/GridPresetsSlice";
 import { ScaleService } from "../services/ScaleService";
 import {
   useCurrentGridPreset,
@@ -88,3 +104,80 @@ export function isGridElementDirty(
 
   return !isNoteLabelStandard(noteNumber, name);
 }
+
+/**
+ * Hook that returns a callback to reset a grid element to its default state.
+ * This will make the element no longer "dirty" by resetting all properties
+ * to match the grid's default values.
+ *
+ * @param elementIndex - The index of the element to reset
+ * @returns A callback function that resets the element
+ */
+export const useResetGridElement = (elementIndex: number): (() => void) => {
+  const dispatch = useAppDispatch();
+  const grid = useCurrentGridPreset();
+  const { isMidiNote } = useGridElementAtIndex(elementIndex);
+
+  return useCallback(() => {
+    // Reset colors to grid theme
+    const { primaryColor, highlightColor } = grid.gridTheme;
+    dispatch(setGridElementprimaryColor({ index: elementIndex, primaryColor }));
+    dispatch(
+      setGridElementhighlightColor({ index: elementIndex, highlightColor })
+    );
+
+    // Reset velocity to global velocity
+    const { floor, ceiling } = grid.globalVelocity;
+    dispatch(setGridElementVelocityFloor({ index: elementIndex, floor }));
+    dispatch(setGridElementVelocityCeiling({ index: elementIndex, ceiling }));
+    dispatch(
+      setGridElementVelocityIsVertical({
+        index: elementIndex,
+        isVertical: true,
+      })
+    );
+
+    if (isMidiNote) {
+      // Reset MIDI note to expected scale position
+      const scaleService = new ScaleService();
+      scaleService.setScale(grid.scale);
+      scaleService.setStartingNoteNumber(grid.startingNoteNumber);
+
+      let expectedNoteNumber = scaleService.getNextNoteNumber();
+      for (let i = 0; i < elementIndex; i++) {
+        expectedNoteNumber = scaleService.getNextNoteNumber();
+      }
+
+      // Set octave first, then note (to avoid octave preservation in setGridElementNote)
+      const expectedOctave = Math.floor(expectedNoteNumber / 12);
+      const expectedNote = expectedNoteNumber % 12;
+      dispatch(
+        setGridElementOctave({
+          index: elementIndex,
+          newNoteOctave: expectedOctave,
+        })
+      );
+      dispatch(
+        setGridElementNote({ index: elementIndex, newNoteNumber: expectedNote })
+      );
+      const name = getNoteKeyFromNoteNumber(expectedNoteNumber);
+      dispatch(setGridElementName({ index: elementIndex, name }));
+    } else {
+      // Reset control change indices to defaults
+      const xAxisControlIndex = (elementIndex * 2) % 128;
+      const yAxisControlIndex = (elementIndex * 2 + 1) % 128;
+      dispatch(
+        setGridElementControlChangeXIndex({
+          index: elementIndex,
+          xAxisControlIndex,
+        })
+      );
+      dispatch(
+        setGridElementControlChangeYIndex({
+          index: elementIndex,
+          yAxisControlIndex,
+        })
+      );
+    }
+  }, [dispatch, grid, isMidiNote, elementIndex]);
+};

@@ -1,5 +1,4 @@
 import { Dialog } from "@rneui/themed";
-import { Label } from "../../Typography";
 import React, { useState } from "react";
 import {
   Keyboard,
@@ -9,11 +8,16 @@ import {
 } from "react-native";
 import { theme } from "../../../constants/theme";
 import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
+import {
+  useIsGridElementDirty,
+  useResetGridElement,
+} from "../../../hooks/useIsGridElementDirty";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setGridElementIsLocked } from "../../../redux/slices/GridPresetsSlice";
 import { GridPreview } from "../../GridPreview";
 import { GridThemedButton } from "../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
+import { Label } from "../../Typography";
 import {
   GridElementEditMidiProps,
   GridElementEditMidiSettingsTab,
@@ -22,7 +26,6 @@ import {
   GridElementEditStyleProps,
   GridElementEditStyleSettingsTab,
 } from "./GridElementEditDialogTabs/GridElementEditStyleSettingsTab";
-import { useIsGridElementDirty } from "../../../hooks/useIsGridElementDirty";
 
 interface GridElementEditDialogProps
   extends GridElementEditMidiProps,
@@ -45,21 +48,33 @@ export const GridElementEditDialog = ({
     dispatch(setGridElementIsLocked({ index, isLocked: !isLocked }));
 
   const isDirty = useIsGridElementDirty(index);
+  const resetElement = useResetGridElement(index);
 
   return (
     <Dialog isVisible={dialogVisible} overlayStyle={styles.dialogOverlay}>
       <TouchableWithoutFeedback onPressIn={Keyboard.dismiss}>
         <View style={styles.dialogTabSelectorContainer}>
-          <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-            <GridThemedButton onPress={toggleElementMidiLock} index={index}>
-              <LockIcon index={index} isLocked={isLocked} />
-            </GridThemedButton>
-            <GridThemedButton
-              onPress={() => setDialogVisible(false)}
-              index={index}
-            >
-              <SaveIcon index={index} /> SAVE
-            </GridThemedButton>
+          <View style={{ flexDirection: "row" }}>
+            {isDirty && (
+              <GridThemedButton onPress={resetElement} index={index}>
+                <GridThemedIcon
+                  name="refresh-outline"
+                  type="ionicon"
+                  index={index}
+                />
+              </GridThemedButton>
+            )}
+            <View style={{ flexDirection: "row", marginLeft: "auto" }}>
+              <GridThemedButton onPress={toggleElementMidiLock} index={index}>
+                <LockIcon index={index} isLocked={isLocked} />
+              </GridThemedButton>
+              <GridThemedButton
+                onPress={() => setDialogVisible(false)}
+                index={index}
+              >
+                <SaveIcon index={index} /> Save
+              </GridThemedButton>
+            </View>
           </View>
           <Divider />
           <View style={{ flexDirection: "row" }}>
