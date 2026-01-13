@@ -43,6 +43,17 @@ export function isGridElementDirty(
     return true;
   }
 
+  const {
+    midiNoteState: { velocity },
+  } = gridElement;
+  if (
+    !velocity.isVertical ||
+    velocity.floor !== grid.globalVelocity.floor ||
+    velocity.ceiling !== grid.globalVelocity.ceiling
+  ) {
+    return true;
+  }
+
   if (!gridElement.isMidiNote) {
     const { xAxisControlIndex, yAxisControlIndex } =
       gridElement.controlChangeState;
