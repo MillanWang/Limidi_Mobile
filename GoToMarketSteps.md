@@ -5,8 +5,8 @@
 - DATA
   - Emergency backing-store reset upon load failure
   - Getting the backing store to actually be reliable. Pretty questionable in the current state with occasional resets and things not actually getting persisted
-- GRID
-- CONTROL CHANGE
+- SETTINGS
+  - Global setting for changing velocities of non-standard velocities. Must have reset all button for velocities for unlocked cells
 - SCALES
   - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.
     - Validate recent additions

@@ -4,35 +4,31 @@ export const DEFAULT_NOTE_NUMBER = 60; // Default C5
 
 const CHROMATIC_SCALE_STEPS = [1]; // Needed as a default outside of the map
 
-const SCALE_STEP_MAP = new Map<Scale, number[]>();
-SCALE_STEP_MAP.set(Scale.Chromatic, CHROMATIC_SCALE_STEPS);
-SCALE_STEP_MAP.set(Scale.Ionian, [2, 2, 1, 2, 2, 2, 1]);
-SCALE_STEP_MAP.set(Scale.Dorian, [2, 1, 2, 2, 2, 1, 2]);
-SCALE_STEP_MAP.set(Scale.Phrygian, [1, 2, 2, 2, 1, 2, 2]);
-SCALE_STEP_MAP.set(Scale.Lydian, [2, 2, 2, 1, 2, 2, 1]);
-SCALE_STEP_MAP.set(Scale.Mixolydian, [2, 2, 1, 2, 2, 1, 2]);
-SCALE_STEP_MAP.set(Scale.Aeolian, [2, 1, 2, 2, 1, 2, 2]);
-SCALE_STEP_MAP.set(Scale.Locrian, [1, 2, 2, 1, 2, 2, 2]);
-// GOTTA VALIDATE ALL THESE
-SCALE_STEP_MAP.set(Scale.MajorPentatonic, [2, 2, 3, 2, 3]);
-SCALE_STEP_MAP.set(Scale.MinorPentatonic, [3, 2, 2, 3, 2]);
-SCALE_STEP_MAP.set(Scale.MajorBlues, [2, 2, 1, 1, 3, 2]);
-SCALE_STEP_MAP.set(Scale.MinorBlues, [3, 2, 1, 1, 2, 3]);
-SCALE_STEP_MAP.set(Scale.HarmonicMinor, [2, 1, 2, 2, 1, 3, 1]);
-SCALE_STEP_MAP.set(Scale.HarmonicMajor, [2, 2, 1, 2, 1, 3, 1]);
-SCALE_STEP_MAP.set(Scale.MelodicMinor, [2, 1, 2, 2, 2, 2, 1]);
-SCALE_STEP_MAP.set(Scale.MelodicMajor, [2, 2, 1, 2, 2, 1, 2]);
-SCALE_STEP_MAP.set(Scale.WholeTone, [2, 2, 2, 2, 2, 2]);
-SCALE_STEP_MAP.set(Scale.Diminished, [2, 1, 2, 1, 2, 1, 2, 1]);
-SCALE_STEP_MAP.set(Scale.HungarianMinor, [2, 1, 3, 1, 2, 3, 1]);
-SCALE_STEP_MAP.set(Scale.Persian, [1, 3, 1, 2, 1, 3, 1]);
-SCALE_STEP_MAP.set(Scale.JapaneseDark, [1, 2, 2, 1, 2, 2, 2]);
-SCALE_STEP_MAP.set(Scale.JapaneseBright, [2, 2, 1, 2, 2, 1]);
-SCALE_STEP_MAP.set(Scale.LydianDominant, [2, 2, 2, 1, 2, 1, 2]);
-SCALE_STEP_MAP.set(Scale.Altered, [1, 2, 1, 2, 2, 2, 2]);
-SCALE_STEP_MAP.set(Scale.SuperLocrian, [1, 2, 1, 2, 2, 2, 2]);
-SCALE_STEP_MAP.set(Scale.NeapolitanMinor, [1, 2, 2, 2, 1, 3, 1]);
-
+const SCALE_STEP_MAP: Record<Scale, number[]> = {
+  [Scale.Chromatic]: CHROMATIC_SCALE_STEPS,
+  [Scale.Ionian]: [2, 2, 1, 2, 2, 2, 1],
+  [Scale.Dorian]: [2, 1, 2, 2, 2, 1, 2],
+  [Scale.Phrygian]: [1, 2, 2, 2, 1, 2, 2],
+  [Scale.Lydian]: [2, 2, 2, 1, 2, 2, 1],
+  [Scale.Mixolydian]: [2, 2, 1, 2, 2, 1, 2],
+  [Scale.Aeolian]: [2, 1, 2, 2, 1, 2, 2],
+  [Scale.Locrian]: [1, 2, 2, 1, 2, 2, 2],
+  [Scale.MajorPentatonic]: [2, 2, 3, 2, 3],
+  [Scale.MinorPentatonic]: [3, 2, 2, 3, 2],
+  [Scale.MajorBlues]: [2, 2, 1, 1, 3, 2],
+  [Scale.MinorBlues]: [3, 2, 1, 1, 2, 3],
+  [Scale.HarmonicMinor]: [2, 1, 2, 2, 1, 3, 1],
+  [Scale.HarmonicMajor]: [2, 2, 1, 2, 1, 3, 1],
+  [Scale.MelodicMinor]: [2, 1, 2, 2, 2, 2, 1],
+  [Scale.MelodicMajor]: [2, 2, 1, 2, 2, 1, 2],
+  [Scale.HungarianMinor]: [2, 1, 3, 1, 2, 3, 1],
+  [Scale.Persian]: [1, 3, 1, 2, 1, 3, 1],
+  [Scale.JapaneseDark]: [1, 2, 2, 1, 2, 2, 2],
+  [Scale.JapaneseInsen]: [1, 4, 2, 3, 2],
+  [Scale.JapaneseBright]: [2, 2, 1, 2, 2, 1],
+  [Scale.LydianDominant]: [2, 2, 2, 1, 2, 1, 2],
+  [Scale.NeapolitanMinor]: [1, 2, 2, 2, 1, 3, 1],
+} as const;
 const MAX_MIDI_NOTE_NUMBER = 120;
 
 export class ScaleService {
@@ -69,10 +65,10 @@ export class ScaleService {
     // To reset scale cycle, the user shall pass in the current scale
     // Clone the array so that the original step patterns are note disturbed
     this.currentNoteCycle = [
-      ...(SCALE_STEP_MAP.get(scale) ?? CHROMATIC_SCALE_STEPS),
+      ...(SCALE_STEP_MAP[scale] ?? CHROMATIC_SCALE_STEPS),
     ];
     this.originalNoteCycle = [
-      ...(SCALE_STEP_MAP.get(scale) ?? CHROMATIC_SCALE_STEPS),
+      ...(SCALE_STEP_MAP[scale] ?? CHROMATIC_SCALE_STEPS),
     ];
   }
 

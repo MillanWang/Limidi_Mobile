@@ -106,7 +106,10 @@ export function ScaleSelector() {
         </ScrollView>
       </View>
       <View style={styles.applyScaleView}>
-        <Label>Selected: {formatScaleName(currentScale)}</Label>
+        <Label>Selected scale:</Label>
+        <Label style={{ fontWeight: "400" }}>
+          {formatScaleName(currentScale)}
+        </Label>
         <GridThemedButton
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}
