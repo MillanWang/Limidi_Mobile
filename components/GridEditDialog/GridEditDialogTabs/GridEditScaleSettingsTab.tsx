@@ -30,7 +30,7 @@ export function ScaleRootNoteSelector() {
   const dispatch = useAppDispatch();
   const { startingNoteNumber, scale } = useCurrentGridPreset();
 
-  const rootNote = `Root Note: ${getNoteKeyFromNoteNumber(startingNoteNumber)}`;
+  const rootNote = getNoteKeyFromNoteNumber(startingNoteNumber);
   const currentOctave = Math.floor(startingNoteNumber / 12);
 
   const updateOctave = (isIncreasing: boolean) => () => {
@@ -40,10 +40,14 @@ export function ScaleRootNoteSelector() {
   };
 
   const noteSelectorHeader = (
-    <View style={{}}>
-      <Label>Active scale: {scale}</Label>
-      <Label>{rootNote}</Label>
-    </View>
+    <>
+      <Label>
+        Active scale: <Label fontWeight="300">{scale}</Label>
+      </Label>
+      <Label>
+        Root Note: <Label fontWeight="300">{rootNote}</Label>
+      </Label>
+    </>
   );
 
   return (
@@ -107,9 +111,7 @@ export function ScaleSelector() {
       </View>
       <View style={styles.applyScaleView}>
         <Label>Selected scale:</Label>
-        <Label style={{ fontWeight: "400" }}>
-          {formatScaleName(currentScale)}
-        </Label>
+        <Label fontWeight="300">{formatScaleName(currentScale)}</Label>
         <GridThemedButton
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}

@@ -138,7 +138,7 @@ export const VelocityRangeSlider = ({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
+    paddingTop: 16,
     alignItems: "center",
   },
 });

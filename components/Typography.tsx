@@ -72,7 +72,13 @@ export const BodyText: React.FC<{
   kind?: TypographyKind;
   numberOfLines?: number;
   ellipsizeMode?: "head" | "middle" | "tail" | "clip";
-}> = ({ children, style, kind = TypographyKind.DEFAULT, numberOfLines, ellipsizeMode }) => (
+}> = ({
+  children,
+  style,
+  kind = TypographyKind.DEFAULT,
+  numberOfLines,
+  ellipsizeMode,
+}) => (
   <Text
     numberOfLines={numberOfLines}
     ellipsizeMode={ellipsizeMode}
@@ -109,12 +115,13 @@ export const Label: React.FC<{
   children: React.ReactNode;
   style?: TextStyle;
   kind?: TypographyKind;
-}> = ({ children, style, kind = TypographyKind.DEFAULT }) => (
+  fontWeight?: "300" | "400" | "500" | "600" | "700";
+}> = ({ children, style, kind = TypographyKind.DEFAULT, fontWeight }) => (
   <Text
     style={[
       baseTextStyle,
       styles.label,
-      { color: getColorForKind(kind) },
+      { color: getColorForKind(kind), fontWeight },
       style,
     ]}
   >

@@ -8,6 +8,8 @@ import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
 import { Page, usePageContext } from "../hooks/usePageContext";
 
+// Header bar
+
 export function GridScreenToolbar() {
   const gridTheme = useCurrentGridPresetColors();
   const { togglePlayMode, toggleSettings, page, isInSettings } =
@@ -51,7 +53,7 @@ export function GridScreenToolbar() {
           }}
         >
           <Icon
-            name={!isInSettings ? "grid-outline" : "settings-outline"}
+            name={isInSettings ? "grid-outline" : "settings-outline"}
             color={gridTheme.highlightColor}
             type="ionicon"
           />

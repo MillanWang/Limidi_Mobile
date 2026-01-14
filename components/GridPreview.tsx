@@ -99,7 +99,7 @@ export const GridPreviewSizeSelector = () => {
         isPlus
       />
       <Label style={{ ...styles.rowsLabelText, ...styles.labelText }}>
-        Rows: {rowCount}
+        Rows: <Label fontWeight="300">{rowCount}</Label>
       </Label>
       <IncrementorButton
         disabled={rowCount === 1}
@@ -115,7 +115,7 @@ export const GridPreviewSizeSelector = () => {
         onPress={() => dispatch(setColumnCount(columnCount - 1))}
       />
       <Label style={{ ...styles.columnsLabelText, ...styles.labelText }}>
-        Columns: {columnCount}
+        Columns: <Label fontWeight="300">{columnCount}</Label>
       </Label>
       <IncrementorButton
         disabled={columnCount === MaxGridDimension}

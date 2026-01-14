@@ -6,14 +6,13 @@
   - Emergency backing-store reset upon load failure
   - Getting the backing store to actually be reliable. Pretty questionable in the current state with occasional resets and things not actually getting persisted
 - SETTINGS
+  - Update copy in network config area
 - SCALES
-  - Add more musical scales. Japanese, pentatonic, hamonic, melodic, etc.
-    - Validate recent additions
-  - Add FL studio FPC default for 4 column
-  - Improve scale selector component
+
 - COLOR
   - Add many more color presets
   - Improve color themes for grid icons
+  - Audit color themes
 - DESKTOP APP
   - Styling
 - LAUNCH

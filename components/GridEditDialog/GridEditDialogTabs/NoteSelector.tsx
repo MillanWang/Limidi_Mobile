@@ -26,13 +26,14 @@ export const NoteSelector = ({
   return (
     <View>
       <View style={{ flexDirection: "row" }}>
-        {header}
+        <View style={{ flex: 1, justifyContent: "center" }}>{header}</View>
 
         <View
           style={{
             marginLeft: "auto",
             flexDirection: "row",
             alignItems: "center",
+            marginBottom: 4,
           }}
         >
           <IncrementorButton
@@ -41,7 +42,7 @@ export const NoteSelector = ({
             disabled={currentOctave === 0}
           />
           <Label style={{ width: 64, marginLeft: 4 }}>
-            Octave: {currentOctave}
+            Octave: <Label fontWeight="300">{currentOctave}</Label>
           </Label>
           <IncrementorButton
             index={index}

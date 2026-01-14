@@ -25,7 +25,7 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
   const dispatch = useAppDispatch();
 
   const currentOctave = Math.floor(noteNumber / 12);
-  const noteKey = `Note: ${getNoteKeyFromNoteNumber(noteNumber)}`;
+  const noteKey = getNoteKeyFromNoteNumber(noteNumber);
 
   const updateOctave = (isIncreasing: boolean) => () => {
     const desiredOctave = currentOctave + (isIncreasing ? 1 : -1);
@@ -47,20 +47,18 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
         noteNumber={noteNumber}
         setNoteNumber={setNoteNumber}
         header={
-          <View>
-            <Label>{noteKey}</Label>
-          </View>
+          <Label>
+            Note: <Label fontWeight="300">{noteKey}</Label>
+          </Label>
         }
       />
-
-      <View>
-        <Label>Velocity Direction:</Label>
-        <VelocityDirectionSelector index={index} />
-      </View>
-
       <View>
         <Label>Velocity range:</Label>
         <ElementVelocityAdjustSlider index={index} />
+      </View>
+      <View>
+        <Label>Velocity Direction:</Label>
+        <VelocityDirectionSelector index={index} />
       </View>
     </>
   );
