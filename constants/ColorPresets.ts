@@ -28,7 +28,7 @@ export interface ColorPreset {
 
 export const DEFAULT: ColorPreset = {
   name: "Default",
-  primaryColor: "#333333", //Dark dark grey
+  primaryColor: "#232323", //Dark dark grey
   highlightColor: "#EEEEEE", //Light light grey
 };
 export const FROST: ColorPreset = {
