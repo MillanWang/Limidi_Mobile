@@ -1,9 +1,9 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
-import React, { useEffect } from "react";
+import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { FirstLaunchModal } from "./components/FirstLaunchModal";
 import useCachedResources from "./hooks/useCachedResources";
 import { PageProvider } from "./hooks/usePageContext";
 import { WebSocketProvider } from "./hooks/useWebSocketContext";
@@ -27,6 +27,7 @@ export default function App() {
               <WebSocketProvider>
                 <StatusBar />
                 <GridScreen />
+                <FirstLaunchModal />
               </WebSocketProvider>
             </PageProvider>
           </PersistGate>

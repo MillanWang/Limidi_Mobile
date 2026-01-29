@@ -1,13 +1,14 @@
 import { Icon } from "@rneui/themed";
-import { BodyText, TypographyKind } from "../Typography";
 import { Camera, CameraView } from "expo-camera";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
+import { useWebSocketContext } from "../../hooks/useWebSocketContext";
 import { useAppDispatch } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import { StyledIcon } from "../GridThemedComponents/StyledIcon";
+import { BodyText, TypographyKind } from "../Typography";
 import { isValidIpWithPort } from "./AddressValidationIcon";
 
 export function ConnectionCodeScanner(props: { onCancel: () => void }) {
@@ -15,15 +16,16 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
   const dispatch = useAppDispatch();
 
   const [hasScanError, setHasScanError] = useState(false);
+  const { tryConnection } = useWebSocketContext();
 
-  const { hasPermission, canAskAgain, getCameraPermissions } =
-    useCameraPermissions();
+  const { hasPermission, canAskAgain, getCameraPermissions } = useCameraPermissions();
 
   const handleBarCodeScanned = useCallback(
     (result: { type: string; data: string }) => {
       if (result.type === "qr") {
         if (isValidIpWithPort(result.data)) {
           dispatch(setBaseAddress({ baseAddress: result.data }));
+          tryConnection();
           onCancel();
           setHasScanError(false);
         } else {
@@ -31,15 +33,14 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
         }
       }
     },
-    [dispatch, onCancel, setHasScanError]
+    [dispatch, onCancel, setHasScanError],
   );
 
   if (!hasPermission) {
     return (
       <View>
         <BodyText>
-          Go to settings and enable camera permissions to scan the Limidi
-          Desktop QR code
+          Go to settings and enable camera permissions to scan the LiMIDI Desktop QR code
         </BodyText>
         {canAskAgain && (
           <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
@@ -77,8 +78,7 @@ const useCameraPermissions = () => {
   const [canAskAgain, setCanAskAgain] = useState(false);
 
   const getCameraPermissions = useCallback(async () => {
-    const { status, canAskAgain } =
-      await Camera.requestCameraPermissionsAsync();
+    const { status, canAskAgain } = await Camera.requestCameraPermissionsAsync();
     setHasPermission(status === "granted");
     setCanAskAgain(canAskAgain);
   }, []);
@@ -104,14 +104,8 @@ const InvalidScanMessage = () => {
         backgroundColor: theme.color.background,
       }}
     >
-      <Icon
-        name="alert-circle"
-        type="ionicon"
-        color={theme.color.warningText}
-      />
-      <BodyText kind={TypographyKind.WARNING}>
-        {"Invalid scan. Try again"}
-      </BodyText>
+      <Icon name="alert-circle" type="ionicon" color={theme.color.warningText} />
+      <BodyText kind={TypographyKind.WARNING}>{"Invalid scan. Try again"}</BodyText>
     </View>
   );
 };

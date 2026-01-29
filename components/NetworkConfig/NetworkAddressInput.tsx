@@ -58,7 +58,7 @@ export function NetworkAddressInput() {
         placeholder={`Ex: ABCDEFGX123`}
         placeholderTextColor={"red"}
       />
-      <Caption>Enter the code shown in Limidi Desktop</Caption>
+      <Caption>Enter the code shown in LiMIDI Desktop</Caption>
     </View>
   );
 }
