@@ -1,22 +1,13 @@
 import { Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import {
-  getNoteKeyFromNoteNumber,
-  isNoteLabelStandard,
-} from "../../constants/MIDI_Notes";
-import {
-  useCurrentGridPreset,
-  useGridElementAtIndex,
-} from "../../hooks/useCurrentGridPreset";
+import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../constants/MIDI_Notes";
+import { useCurrentGridPreset, useGridElementAtIndex } from "../../hooks/useCurrentGridPreset";
 import { Page, usePageContext } from "../../hooks/usePageContext";
 import { GridThemedIcon } from "../GridThemedComponents/GridThemedIcon";
 import { BodyText, Caption } from "../Typography";
 import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
-import {
-  ControlChange,
-  useCcPersistedProperties,
-} from "./GridElementTypes/ControlChange";
+import { ControlChange, useCcPersistedProperties } from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
 import { useIsGridElementDirty } from "../../hooks/useIsGridElementDirty";
 
@@ -28,11 +19,7 @@ export default function GridElement({ index }: { index: number }) {
     return <GridElementEditButton index={index} />;
   }
 
-  return isMidiNote ? (
-    <DrumPad index={index} />
-  ) : (
-    <ControlChange index={index} />
-  );
+  return isMidiNote ? <DrumPad index={index} /> : <ControlChange index={index} />;
 }
 
 const GridElementEditButtonIconRow = (props: {
@@ -84,8 +71,9 @@ const GridElementEditButton = (props: { index: number }) => {
     midiNoteState: { noteNumber },
   } = useGridElementAtIndex(index);
 
-  const { safeIconName, xAxisControlIndex, yAxisControlIndex } =
-    useCcPersistedProperties({ index });
+  const { safeIconName, xAxisControlIndex, yAxisControlIndex } = useCcPersistedProperties({
+    index,
+  });
 
   const isDirty = useIsGridElementDirty(index);
 
@@ -112,15 +100,11 @@ const GridElementEditButton = (props: { index: number }) => {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <BodyText
-              style={{ color: colorState.highlightColor, marginRight: "auto" }}
-            >
+            <BodyText style={{ color: colorState.highlightColor, marginRight: "auto" }}>
               #{index}
               {isDirty && "*"}
             </BodyText>
-            {isLocked && (
-              <GridThemedIcon type="ionicon" name="lock-closed" size={12} />
-            )}
+            {isLocked && <GridThemedIcon type="ionicon" name="lock-closed" size={12} />}
           </View>
           <View
             style={{
@@ -145,6 +129,7 @@ const GridElementEditButton = (props: { index: number }) => {
                     style={{
                       color: colorState.highlightColor,
                       textAlign: "center",
+                      fontSize: 12,
                     }}
                   >
                     {name.trim() === "" ? "<Blank>" : name.trim()}
@@ -155,14 +140,12 @@ const GridElementEditButton = (props: { index: number }) => {
               <>
                 {xAxisControlIndex >= 0 && (
                   <Caption style={{ color: colorState.highlightColor }}>
-                    CC{yAxisControlIndex >= 0 ? " (X)" : ""}:{" "}
-                    {xAxisControlIndex}
+                    CC{yAxisControlIndex >= 0 ? " (X)" : ""}: {xAxisControlIndex}
                   </Caption>
                 )}
                 {yAxisControlIndex >= 0 && (
                   <Caption style={{ color: colorState.highlightColor }}>
-                    CC{xAxisControlIndex >= 0 ? " (Y)" : ""}:{" "}
-                    {yAxisControlIndex}
+                    CC{xAxisControlIndex >= 0 ? " (Y)" : ""}: {yAxisControlIndex}
                   </Caption>
                 )}
               </>
