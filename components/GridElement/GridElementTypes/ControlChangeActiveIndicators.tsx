@@ -1,6 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { default as React, useEffect } from "react";
-import { StyleSheet } from "react-native";
 import Animated, {
   FadeIn,
   FadeOut,
@@ -31,7 +30,6 @@ export const ControlChangeActiveIndicators = (props: {
 
   xPositionAbsolute: number;
   yPositionAbsolute: number;
-  safeIconName: string;
   color: string;
 }) => {
   const { show, controlChangeDirection, xPositionAbsolute, yPositionAbsolute, color } = props;
@@ -136,15 +134,3 @@ const HorizontalLevelLineIndicator = (props: LineIndicatorProps) => {
     </Animated.View>
   );
 };
-
-export const ICON_SIZE = 40;
-export const styles = StyleSheet.create({
-  ccIcon: {
-    position: "absolute",
-    height: ICON_SIZE,
-    width: ICON_SIZE,
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 100,
-  },
-});

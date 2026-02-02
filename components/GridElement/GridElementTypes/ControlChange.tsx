@@ -1,10 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
 import Animated, { runOnJS } from "react-native-reanimated";
 import { createMidiControlChange } from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
@@ -13,15 +9,10 @@ import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication"
 import { useElementSize } from "../../../hooks/useElementSize";
 import { debounce } from "../../../services/debounce";
 import { TouchPoint } from "../../../types";
-import { GridThemedIcon } from "../../GridThemedComponents/GridThemedIcon";
+import { ControlChangeIcon, useGridCcIconSize } from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
-import {
-  styles as ccStyles,
-  ControlChangeActiveIndicators,
-  ICON_SIZE,
-} from "./ControlChangeActiveIndicators";
+import { ControlChangeActiveIndicators } from "./ControlChangeActiveIndicators";
 
-const halfIconSize = ICON_SIZE / 2;
 const CcDebounceDelay = 50;
 
 type ControlChangeProps = { index: number };
@@ -32,7 +23,6 @@ export function ControlChange({ index }: ControlChangeProps) {
 
   const {
     currentControlChangeDirection,
-    safeIconName,
     hasVerticalControl,
     hasHorizontalControl,
     colorState,
@@ -46,35 +36,30 @@ export function ControlChange({ index }: ControlChangeProps) {
     yAxisControlIndex,
   });
 
-  const { elementWidth, elementHeight, onLayout } = useElementSize({
-    index,
-  });
+  const { elementWidth, elementHeight, onLayout } = useElementSize();
+
+  const iconSize = useGridCcIconSize();
+  const halfIconSize = iconSize / 2;
 
   const updateTouchPosition = useCallback(
     (touch: TouchPoint) => {
       // need to ensure that the touch is in bounds
       // Need to keep the touch on a line if not in XY mode
       const finalX = hasHorizontalControl
-        ? getInboundsTouchPosition(touch.x, elementWidth)
+        ? getInboundsTouchPosition(touch.x, elementWidth, iconSize)
         : elementWidth / 2;
       const finalY = hasVerticalControl
-        ? getInboundsTouchPosition(touch.y, elementHeight)
+        ? getInboundsTouchPosition(touch.y, elementHeight, iconSize)
         : elementHeight / 2;
       setTouch({ x: finalX, y: finalY });
       if (hasHorizontalControl) {
-        send_X_CcMessage(getPositionalPercent(finalX, elementWidth));
+        send_X_CcMessage(getPositionalPercent(finalX, elementWidth, iconSize));
       }
       if (hasVerticalControl) {
-        send_Y_CcMessage(1 - getPositionalPercent(finalY, elementHeight));
+        send_Y_CcMessage(1 - getPositionalPercent(finalY, elementHeight, iconSize));
       }
     },
-    [
-      setTouch,
-      elementWidth,
-      elementHeight,
-      hasVerticalControl,
-      hasHorizontalControl,
-    ]
+    [setTouch, elementWidth, elementHeight, hasVerticalControl, hasHorizontalControl, iconSize],
   );
 
   const gesture = Gesture.Pan()
@@ -123,22 +108,16 @@ export function ControlChange({ index }: ControlChangeProps) {
 
           {touch && (
             <>
-              <View
-                style={{
-                  ...ccStyles.ccIcon,
-                  left: touch.x - ICON_SIZE / 2,
-                  top: touch.y - ICON_SIZE / 2,
-                  backgroundColor: colorState.highlightColor,
+              <ControlChangeIcon
+                index={index}
+                containerStyle={{
+                  position: "absolute",
+                  left: touch.x - halfIconSize,
+                  top: touch.y - halfIconSize,
                   zIndex: 2,
                 }}
-              >
-                <GridThemedIcon
-                  index={index}
-                  invert
-                  name={safeIconName}
-                  type="ionicon"
-                />
-              </View>
+              />
+
               <ControlChangeLevelHighlights
                 touch={touch}
                 elementWidth={elementWidth}
@@ -147,6 +126,7 @@ export function ControlChange({ index }: ControlChangeProps) {
                 hasVerticalControl={hasVerticalControl}
                 hasHorizontalControl={hasHorizontalControl}
                 highlightColor={colorState.highlightColor}
+                iconSize={iconSize}
               />
               <ControlChangeActiveIndicators
                 show={isInMotion}
@@ -155,7 +135,6 @@ export function ControlChange({ index }: ControlChangeProps) {
                 xPositionAbsolute={touch.x}
                 yPositionAbsolute={touch.y}
                 elementWidth={elementWidth}
-                safeIconName={safeIconName}
                 color={colorState.highlightColor}
               />
             </>
@@ -174,11 +153,10 @@ type ControlChangeLevelHighlightsProps = {
   hasVerticalControl: boolean;
   hasHorizontalControl: boolean;
   highlightColor: string;
+  iconSize: number;
 };
 
-const ControlChangeLevelHighlights = (
-  props: ControlChangeLevelHighlightsProps
-) => {
+const ControlChangeLevelHighlights = (props: ControlChangeLevelHighlightsProps) => {
   const {
     touch,
     elementWidth,
@@ -187,6 +165,7 @@ const ControlChangeLevelHighlights = (
     hasVerticalControl,
     hasHorizontalControl,
     highlightColor,
+    iconSize,
   } = props;
 
   // Calculate opacity for each of the 4 grid sections positioned around the touch point
@@ -201,8 +180,8 @@ const ControlChangeLevelHighlights = (
       };
     }
 
-    const xPercent = getPositionalPercent(touch.x, elementWidth);
-    const yPercent = 1 - getPositionalPercent(touch.y, elementHeight);
+    const xPercent = getPositionalPercent(touch.x, elementWidth, iconSize);
+    const yPercent = 1 - getPositionalPercent(touch.y, elementHeight, iconSize);
     const opacityPercent = hasVerticalControl ? yPercent : xPercent;
 
     if (hasVerticalControl && hasHorizontalControl) {
@@ -246,6 +225,7 @@ const ControlChangeLevelHighlights = (
     hasHorizontalControl,
     elementWidth,
     elementHeight,
+    iconSize,
   ]);
 
   return (
@@ -324,34 +304,28 @@ const getHighlightColorOpacity = (opacityPercent: number) => {
 export const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
   const {
     colorState,
-    controlChangeState: { xAxisControlIndex, yAxisControlIndex, iconName },
+    controlChangeState: { xAxisControlIndex, yAxisControlIndex },
   } = useGridElementAtIndex(index);
 
   const currentControlChangeDirection = useMemo(
     () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
-    [xAxisControlIndex, yAxisControlIndex]
+    [xAxisControlIndex, yAxisControlIndex],
   );
 
   const hasVerticalControl = useMemo(
     () => currentControlChangeDirection !== ControlChangeDirection.Horizontal,
-    [currentControlChangeDirection]
+    [currentControlChangeDirection],
   );
 
   const hasHorizontalControl = useMemo(
     () => currentControlChangeDirection !== ControlChangeDirection.Vertical,
-    [currentControlChangeDirection]
-  );
-
-  const safeIconName = useMemo(
-    () => getSafeIconName(iconName, xAxisControlIndex, yAxisControlIndex),
-    [iconName, xAxisControlIndex, yAxisControlIndex]
+    [currentControlChangeDirection],
   );
 
   return {
     currentControlChangeDirection,
     hasVerticalControl,
     hasHorizontalControl,
-    safeIconName,
     colorState,
     xAxisControlIndex,
     yAxisControlIndex,
@@ -369,34 +343,22 @@ const useCcNetworkCommunication = (props: {
   /**
    * Separate debouncers are used here so that one won't interfere with the other. They should both have separate max waits
    */
-  const debouncedSendXCcMessage = useCallback(
-    debounce(sendMidiControlChange, CcDebounceDelay),
-    []
-  );
-  const debouncedSendYCcMessage = useCallback(
-    debounce(sendMidiControlChange, CcDebounceDelay),
-    []
-  );
+  const debouncedSendXCcMessage = useCallback(debounce(sendMidiControlChange, CcDebounceDelay), []);
+  const debouncedSendYCcMessage = useCallback(debounce(sendMidiControlChange, CcDebounceDelay), []);
 
   const send_X_CcMessage = useCallback(
     (valuePercent: number) => {
-      const ccInput = createMidiControlChange(
-        xAxisControlIndex,
-        Math.floor(127 * valuePercent)
-      );
+      const ccInput = createMidiControlChange(xAxisControlIndex, Math.floor(127 * valuePercent));
       debouncedSendXCcMessage(ccInput);
     },
-    [xAxisControlIndex, debouncedSendXCcMessage]
+    [xAxisControlIndex, debouncedSendXCcMessage],
   );
   const send_Y_CcMessage = useCallback(
     (valuePercent: number) => {
-      const ccInput = createMidiControlChange(
-        yAxisControlIndex,
-        Math.floor(127 * valuePercent)
-      );
+      const ccInput = createMidiControlChange(yAxisControlIndex, Math.floor(127 * valuePercent));
       debouncedSendYCcMessage(ccInput);
     },
-    [yAxisControlIndex, debouncedSendYCcMessage]
+    [yAxisControlIndex, debouncedSendYCcMessage],
   );
 
   return { send_X_CcMessage, send_Y_CcMessage };
@@ -421,50 +383,28 @@ const styles = StyleSheet.create({
   },
 });
 
-const getCcDirection = (
-  xAxisControlIndex: number,
-  yAxisControlIndex: number
-) => {
+const getCcDirection = (xAxisControlIndex: number, yAxisControlIndex: number) => {
   return xAxisControlIndex >= 0 && yAxisControlIndex >= 0
     ? ControlChangeDirection.XY
     : xAxisControlIndex >= 0
-    ? ControlChangeDirection.Horizontal
-    : ControlChangeDirection.Vertical;
-};
-
-const getSafeIconName = (
-  iconName: string,
-  xAxisControlIndex: number,
-  yAxisControlIndex: number
-) => {
-  if (iconName) {
-    return iconName;
-  } else if (xAxisControlIndex > 0 && yAxisControlIndex > 0) {
-    // XY default
-    return "move";
-  } else if (yAxisControlIndex > 0) {
-    // Vertical default
-    return "swap-vertical";
-  } else if (xAxisControlIndex > 0) {
-    // Horizontal default
-    return "swap-horizontal";
-  }
-  return "move";
+      ? ControlChangeDirection.Horizontal
+      : ControlChangeDirection.Vertical;
 };
 
 const getPositionalPercent = (
   touchPosition: number,
-  elementDimensionMax: number
+  elementDimensionMax: number,
+  iconSize: number,
 ) => {
-  return (touchPosition - halfIconSize) / (elementDimensionMax - ICON_SIZE);
+  const halfIconSize = iconSize / 2;
+  return (touchPosition - halfIconSize) / (elementDimensionMax - iconSize);
 };
 
 const getInboundsTouchPosition = (
   touchPosition: number,
-  elementDimensionMax: number
+  elementDimensionMax: number,
+  iconSize: number,
 ) => {
-  return Math.min(
-    Math.max(touchPosition, halfIconSize),
-    elementDimensionMax - halfIconSize
-  );
+  const halfIconSize = iconSize / 2;
+  return Math.min(Math.max(touchPosition, halfIconSize), elementDimensionMax - halfIconSize);
 };

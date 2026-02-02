@@ -3,13 +3,13 @@ import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../constants/MIDI_Notes";
 import { useCurrentGridPreset, useGridElementAtIndex } from "../../hooks/useCurrentGridPreset";
+import { useIsGridElementDirty } from "../../hooks/useIsGridElementDirty";
 import { Page, usePageContext } from "../../hooks/usePageContext";
-import { GridThemedIcon } from "../GridThemedComponents/GridThemedIcon";
+import { ControlChangeIcon, GridThemedIcon } from "../GridThemedComponents/GridThemedIcon";
 import { BodyText, Caption } from "../Typography";
 import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
 import { ControlChange, useCcPersistedProperties } from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
-import { useIsGridElementDirty } from "../../hooks/useIsGridElementDirty";
 
 export default function GridElement({ index }: { index: number }) {
   const { isMidiNote } = useCurrentGridPreset().gridElements[index];
@@ -23,11 +23,11 @@ export default function GridElement({ index }: { index: number }) {
 }
 
 const GridElementEditButtonIconRow = (props: {
-  safeIconName?: string;
+  index: number;
   isMidiNote: boolean;
   color: string;
 }) => {
-  const { isMidiNote, color, safeIconName } = props;
+  const { index, isMidiNote, color } = props;
   return (
     <View
       style={{
@@ -42,20 +42,7 @@ const GridElementEditButtonIconRow = (props: {
       ) : (
         <Icon color={color} type="feather" name={"sliders"} />
       )}
-      {!isMidiNote && safeIconName && (
-        <View
-          style={{
-            height: 24,
-            width: 24,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 100,
-            backgroundColor: color,
-          }}
-        >
-          <GridThemedIcon invert name={safeIconName} type="ionicon" size={18} />
-        </View>
-      )}
+      {!isMidiNote && <ControlChangeIcon index={index} />}
     </View>
   );
 };
@@ -71,7 +58,7 @@ const GridElementEditButton = (props: { index: number }) => {
     midiNoteState: { noteNumber },
   } = useGridElementAtIndex(index);
 
-  const { safeIconName, xAxisControlIndex, yAxisControlIndex } = useCcPersistedProperties({
+  const { xAxisControlIndex, yAxisControlIndex } = useCcPersistedProperties({
     index,
   });
 
@@ -114,7 +101,7 @@ const GridElementEditButton = (props: { index: number }) => {
             }}
           >
             <GridElementEditButtonIconRow
-              safeIconName={safeIconName}
+              index={index}
               color={colorState.highlightColor}
               isMidiNote={isMidiNote}
             />

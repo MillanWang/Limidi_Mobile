@@ -43,7 +43,7 @@ export default function DrumPad({ index }: DrumPadProps) {
     midiNoteState: { noteNumber, velocity },
     colorState,
   } = useGridElementAtIndex(index);
-  const { elementWidth, elementHeight, onLayout } = useElementSize({ index });
+  const { elementWidth, elementHeight, onLayout } = useElementSize();
   const [touch, setTouch] = useState<TouchPoint | null>(null);
 
   const { sendMidiNote } = useDesktopCommunication();

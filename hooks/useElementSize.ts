@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
 import { LayoutChangeEvent } from "react-native";
 
-export const useElementSize = (props: { index: number }) => {
-  const { index } = props;
+export const useElementSize = () => {
   const [elementWidth, setElementWidth] = useState(1);
   const [elementHeight, setElementHeight] = useState(1);
 
@@ -13,7 +12,10 @@ export const useElementSize = (props: { index: number }) => {
       setElementWidth(layoutWidth);
       setElementHeight(layoutHeight);
     },
-    [setElementWidth, setElementHeight, index]
+    [
+      setElementWidth,
+      setElementHeight, 
+    ]
   );
 
   return {

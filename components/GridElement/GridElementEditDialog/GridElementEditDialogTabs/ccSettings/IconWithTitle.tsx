@@ -1,26 +1,19 @@
-import { BodyText } from "../../../../Typography";
 import React, { useMemo } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { ioniconIconNameAliases } from "../../../../../constants/IconNames";
 import { theme } from "../../../../../constants/theme";
 import {
   useCurrentGridElementPresetColors,
   useCurrentGridPresetColors,
 } from "../../../../../hooks/useCurrentGridPreset";
-import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
+import { ControlChangeIcon } from "../../../../GridThemedComponents/GridThemedIcon";
+import { BodyText } from "../../../../Typography";
 
-const iconContainerSize = 45;
 interface IconWithTitleProps {
   name: string;
   width?: number;
-
-  index?: number;
+  index: number;
 }
-
-/*
-In the middle of adding custom color overrides here so that they can be thened to a specific elements color config
-
-*/
 
 export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
   const backgroundColor =
@@ -33,22 +26,7 @@ export const IconWithTitle = ({ name, width, index }: IconWithTitleProps) => {
 
   return (
     <View style={{ alignItems: "center", width }}>
-      <View
-        style={{
-          backgroundColor,
-          height: iconContainerSize,
-          width: iconContainerSize,
-          justifyContent: "center",
-          borderRadius: 100, //Big enough to be a circle
-        }}
-      >
-        <GridThemedIcon
-          name={name}
-          type="ionicon"
-          invert={true}
-          index={index}
-        />
-      </View>
+      <ControlChangeIcon index={index} name={name} />
       <BodyText style={{ color: backgroundColor ?? theme.color.lightText }}>
         {formattedName}
       </BodyText>
