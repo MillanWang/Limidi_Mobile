@@ -1,4 +1,3 @@
-import { BodyText } from "../../Typography";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -14,6 +13,7 @@ import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
 import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication";
 import { useElementSize } from "../../../hooks/useElementSize";
 import { TouchPoint } from "../../../types";
+import { BodyText } from "../../Typography";
 
 const NOTE_ON = true;
 const NOTE_OFF = false;
@@ -43,7 +43,7 @@ export default function DrumPad({ index }: DrumPadProps) {
     midiNoteState: { noteNumber, velocity },
     colorState,
   } = useGridElementAtIndex(index);
-  const { elementWidth, elementHeight, onLayout } = useElementSize();
+  const { elementWidth, elementHeight } = useElementSize();
   const [touch, setTouch] = useState<TouchPoint | null>(null);
 
   const { sendMidiNote } = useDesktopCommunication();
@@ -105,7 +105,7 @@ export default function DrumPad({ index }: DrumPadProps) {
   });
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayout}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <GestureDetector gesture={gesture}>
         <View
           style={[

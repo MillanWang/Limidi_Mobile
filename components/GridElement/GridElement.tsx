@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../constants/MIDI_Notes";
 import { useCurrentGridPreset, useGridElementAtIndex } from "../../hooks/useCurrentGridPreset";
+import { ElementSizeProvider } from "../../hooks/useElementSize";
 import { useIsGridElementDirty } from "../../hooks/useIsGridElementDirty";
 import { Page, usePageContext } from "../../hooks/usePageContext";
 import { ControlChangeIcon, GridThemedIcon } from "../GridThemedComponents/GridThemedIcon";
@@ -15,11 +16,18 @@ export default function GridElement({ index }: { index: number }) {
   const { isMidiNote } = useCurrentGridPreset().gridElements[index];
   const { page } = usePageContext();
   const isPlayMode = page === Page.Play;
-  if (!isPlayMode) {
-    return <GridElementEditButton index={index} />;
-  }
 
-  return isMidiNote ? <DrumPad index={index} /> : <ControlChange index={index} />;
+  return (
+    <ElementSizeProvider>
+      {!isPlayMode ? (
+        <GridElementEditButton index={index} />
+      ) : isMidiNote ? (
+        <DrumPad index={index} />
+      ) : (
+        <ControlChange index={index} />
+      )}
+    </ElementSizeProvider>
+  );
 }
 
 const GridElementEditButtonIconRow = (props: {

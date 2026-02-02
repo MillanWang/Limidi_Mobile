@@ -8,15 +8,16 @@ import {
 } from "../../hooks/useCurrentGridPreset";
 import { useElementSize } from "../../hooks/useElementSize";
 
-const DEFAULT_ICON_SIZE = 20;
+const DEFAULT_ICON_MAX_SIZE = 40;
+const DEFAULT_ICON_MIN_SIZE = 20;
 
 export const useGridCcIconSize = () => {
   const { elementWidth, elementHeight } = useElementSize();
 
   return useMemo(() => {
-    const elementHypotenuse = Math.sqrt(elementWidth ** 2 + elementHeight ** 2);
-
-    return DEFAULT_ICON_SIZE;
+    const elementSmallestDimension = Math.min(elementWidth, elementHeight);
+    const elementBasedIconSize = Math.floor(elementSmallestDimension * 0.2);
+    return Math.max(DEFAULT_ICON_MIN_SIZE, Math.min(DEFAULT_ICON_MAX_SIZE, elementBasedIconSize));
   }, [elementWidth, elementHeight]);
 };
 

@@ -31,12 +31,11 @@ export function ControlChange({ index }: ControlChangeProps) {
   } = useCcPersistedProperties({ index });
 
   const { send_X_CcMessage, send_Y_CcMessage } = useCcNetworkCommunication({
-    index,
     xAxisControlIndex,
     yAxisControlIndex,
   });
 
-  const { elementWidth, elementHeight, onLayout } = useElementSize();
+  const { elementWidth, elementHeight } = useElementSize();
 
   const iconSize = useGridCcIconSize();
   const halfIconSize = iconSize / 2;
@@ -91,7 +90,7 @@ export function ControlChange({ index }: ControlChangeProps) {
   }, [updateTouchPosition, elementWidth, elementHeight]);
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }} onLayout={onLayout}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <GestureDetector gesture={gesture}>
         <View
           style={{
@@ -333,11 +332,10 @@ export const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
 };
 
 const useCcNetworkCommunication = (props: {
-  index: number;
   xAxisControlIndex: number;
   yAxisControlIndex: number;
 }) => {
-  const { index, xAxisControlIndex, yAxisControlIndex } = props;
+  const { xAxisControlIndex, yAxisControlIndex } = props;
   const { sendMidiControlChange } = useDesktopCommunication();
 
   /**
