@@ -1,7 +1,7 @@
 import { Label } from "./Typography";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
-import { DEFAULT, HULK } from "../constants/ColorPresets";
+import { DEFAULT, TERMINAL } from "../constants/ColorPresets";
 import { NOTE } from "../constants/MIDI_Notes";
 import {
   useCurrentGridElementPresetColors,
@@ -22,18 +22,14 @@ export interface PianoProps {
 const accidentalNoteNumbers = [1, 3, 6, 8, 10];
 
 const colorsWithAlternateKeyColors = [DEFAULT.highlightColor];
-const defaultSelectedKeyColor = HULK.highlightColor;
+const defaultSelectedKeyColor = TERMINAL.highlightColor;
 
 const usePianoKeyColors = (index?: number) => {
   const gridTheme =
-    index !== undefined
-      ? useCurrentGridElementPresetColors(index)
-      : useCurrentGridPresetColors();
+    index !== undefined ? useCurrentGridElementPresetColors(index) : useCurrentGridPresetColors();
 
   return {
-    highLightedKeyColor: colorsWithAlternateKeyColors.includes(
-      gridTheme.highlightColor
-    )
+    highLightedKeyColor: colorsWithAlternateKeyColors.includes(gridTheme.highlightColor)
       ? defaultSelectedKeyColor
       : gridTheme.highlightColor,
     noteLabelColor: gridTheme.primaryColor,
@@ -72,10 +68,9 @@ export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
             }}
             onPress={() => setNoteNumber(currentNoteNumber)}
           >
-            {accidentalNoteNumbers.includes(noteNumber) &&
-              noteNumber === currentNoteNumber && (
-                <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />
-              )}
+            {accidentalNoteNumbers.includes(noteNumber) && noteNumber === currentNoteNumber && (
+              <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />
+            )}
           </Pressable>
         ))}
       </View>

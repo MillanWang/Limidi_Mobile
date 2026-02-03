@@ -1,19 +1,73 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  defaultPreset1,
-  defaultPreset2,
-  defaultPreset3,
-  defaultPreset4,
-  defaultPreset5,
-  defaultPreset6,
-} from "../functions/createDefaultGridPresets";
+import { PRESET_COLOR_LIST } from "../../constants/ColorPresets";
+import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../constants/MIDI_Notes";
+import { Scale } from "../../constants/Scales";
+import { createGridElements } from "../functions/createDefaultGridPresets";
+import { rescaleGridElements } from "../functions/rescaleGridElements";
 import { GridPresetsState } from "../interfaces/GridPresetsState";
 import { GridState } from "../interfaces/GridState";
-import { rescaleGridElements } from "../functions/rescaleGridElements";
-import {
-  getNoteKeyFromNoteNumber,
-  isNoteLabelStandard,
-} from "../../constants/MIDI_Notes";
+
+const defaultGlobalVelocity = { floor: 64, ceiling: 127 };
+
+const defaultPreset1: GridState = rescaleGridElements({
+  columnCount: 4,
+  rowCount: 4,
+  startingNoteNumber: 60, // C5
+  scale: Scale.Chromatic,
+  gridElements: createGridElements(PRESET_COLOR_LIST[0]),
+  gridTheme: PRESET_COLOR_LIST[0],
+  globalVelocity: defaultGlobalVelocity,
+});
+
+const defaultPreset2: GridState = rescaleGridElements({
+  columnCount: 4,
+  rowCount: 5,
+  startingNoteNumber: 48, // C4
+  scale: Scale.Ionian,
+  gridElements: createGridElements(PRESET_COLOR_LIST[1]),
+  gridTheme: PRESET_COLOR_LIST[1],
+  globalVelocity: defaultGlobalVelocity,
+});
+
+const defaultPreset3: GridState = rescaleGridElements({
+  columnCount: 5,
+  rowCount: 5,
+  startingNoteNumber: 36, // C3
+  scale: Scale.Dorian,
+  gridElements: createGridElements(PRESET_COLOR_LIST[2]),
+  gridTheme: PRESET_COLOR_LIST[2],
+  globalVelocity: defaultGlobalVelocity,
+});
+
+const defaultPreset4: GridState = rescaleGridElements({
+  columnCount: 6,
+  rowCount: 6,
+  startingNoteNumber: 24, // C2
+  scale: Scale.Phrygian,
+  gridElements: createGridElements(PRESET_COLOR_LIST[3]),
+  gridTheme: PRESET_COLOR_LIST[3],
+  globalVelocity: defaultGlobalVelocity,
+});
+
+const defaultPreset5: GridState = rescaleGridElements({
+  columnCount: 2,
+  rowCount: 2,
+  startingNoteNumber: 36, // C3
+  scale: Scale.Mixolydian,
+  gridElements: createGridElements(PRESET_COLOR_LIST[4]),
+  gridTheme: PRESET_COLOR_LIST[4],
+  globalVelocity: defaultGlobalVelocity,
+});
+
+const defaultPreset6: GridState = rescaleGridElements({
+  columnCount: 3,
+  rowCount: 3,
+  startingNoteNumber: 60, // C5
+  scale: Scale.Aeolian,
+  gridElements: createGridElements(PRESET_COLOR_LIST[5]),
+  gridTheme: PRESET_COLOR_LIST[5],
+  globalVelocity: defaultGlobalVelocity,
+});
 
 export const defaultPresets: GridState[] = [
   defaultPreset1,
@@ -47,8 +101,7 @@ export const GridPresetsSlice = createSlice({
       state.currentPresetIndex = index;
     },
     restoreCurrentPresetToDefault: (state, action) => {
-      state.gridPresets[state.currentPresetIndex] =
-        defaultPresets[state.currentPresetIndex];
+      state.gridPresets[state.currentPresetIndex] = defaultPresets[state.currentPresetIndex];
     },
 
     // Grid operations
@@ -61,18 +114,12 @@ export const GridPresetsSlice = createSlice({
       }
     },
     setColumnCount: (state, action) => {
-      const newColumnCount = Math.min(
-        Math.max(action.payload, 1),
-        MaxGridDimension
-      );
+      const newColumnCount = Math.min(Math.max(action.payload, 1), MaxGridDimension);
 
       state.gridPresets[state.currentPresetIndex].columnCount = newColumnCount;
     },
     setRowCount: (state, action) => {
-      const newRowCount = Math.min(
-        Math.max(action.payload, 1),
-        MaxGridDimension
-      );
+      const newRowCount = Math.min(Math.max(action.payload, 1), MaxGridDimension);
 
       state.gridPresets[state.currentPresetIndex].rowCount = newRowCount;
     },
@@ -153,16 +200,14 @@ export const GridPresetsSlice = createSlice({
       const { index, newNoteNumber } = action.payload;
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
       for (let grid of gridsToUpdate) {
-        const originalNoteNumber =
-          grid.gridElements[index].midiNoteState.noteNumber;
+        const originalNoteNumber = grid.gridElements[index].midiNoteState.noteNumber;
 
         const originalNoteName = grid.gridElements[index].name;
         const originalOctaveOffset = Math.floor(originalNoteNumber / 12) * 12;
         const finalNoteNumber = newNoteNumber + originalOctaveOffset;
 
         if (isNoteLabelStandard(originalNoteNumber, originalNoteName)) {
-          grid.gridElements[index].name =
-            getNoteKeyFromNoteNumber(finalNoteNumber);
+          grid.gridElements[index].name = getNoteKeyFromNoteNumber(finalNoteNumber);
         }
 
         grid.gridElements[index].midiNoteState.noteNumber = finalNoteNumber;
@@ -173,8 +218,7 @@ export const GridPresetsSlice = createSlice({
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        const originalNoteNumber =
-          grid.gridElements[index].midiNoteState.noteNumber;
+        const originalNoteNumber = grid.gridElements[index].midiNoteState.noteNumber;
 
         const originalNoteName = grid.gridElements[index].name;
 
@@ -183,8 +227,7 @@ export const GridPresetsSlice = createSlice({
           newNoteOctave * 12; //Add octave offset
 
         if (isNoteLabelStandard(originalNoteNumber, originalNoteName)) {
-          grid.gridElements[index].name =
-            getNoteKeyFromNoteNumber(newNoteNumber);
+          grid.gridElements[index].name = getNoteKeyFromNoteNumber(newNoteNumber);
         }
 
         grid.gridElements[index].midiNoteState.noteNumber = newNoteNumber;
@@ -262,8 +305,7 @@ export const GridPresetsSlice = createSlice({
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridElements[index].controlChangeState.xAxisControlIndex =
-          xAxisControlIndex;
+        grid.gridElements[index].controlChangeState.xAxisControlIndex = xAxisControlIndex;
       }
     },
     setGridElementControlChangeYIndex: (state, action) => {
@@ -271,8 +313,7 @@ export const GridPresetsSlice = createSlice({
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridElements[index].controlChangeState.yAxisControlIndex =
-          yAxisControlIndex;
+        grid.gridElements[index].controlChangeState.yAxisControlIndex = yAxisControlIndex;
       }
     },
     setGridElementControlChangeIconString: (state, action) => {
