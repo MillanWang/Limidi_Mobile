@@ -1,15 +1,16 @@
-import { Label } from "./Typography";
 import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { DEFAULT, TERMINAL } from "../constants/ColorPresets";
 import { NOTE } from "../constants/MIDI_Notes";
+import { theme } from "../constants/theme";
 import {
   useCurrentGridElementPresetColors,
   useCurrentGridPresetColors,
 } from "../hooks/useCurrentGridPreset";
+import { Label } from "./Typography";
 
-const naturalNoteColor = "#888888";
-const accidentalNoteColor = "#333333";
+const naturalNoteColor = theme.color.naturalNoteColor;
+const accidentalNoteColor = theme.color.accidentalNoteColor;
 
 const naturalNoteNumbers = [0, 2, 4, 5, 7, 9, 11];
 

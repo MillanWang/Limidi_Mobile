@@ -1,13 +1,3 @@
-//Should be a tab view for different colors
-// Tabs do not even need to have the same number of colors. They should just be rectangular
-/*
-Tab ideas - 4 Palettes, each based on a classical element
-- FIRE: Red, yellow, orange, pink
-- WATER: Blue green cyan teal purple
-- EARTH: green, brown, stone, blacks
-- AIR: bbBlue, whites, lightgreys, pinks
- */
-
 export const theme = {
   color: {
     background: "#121212",
@@ -15,9 +5,11 @@ export const theme = {
     black: "#000000",
     lightText: "#dddddd",
     darkText: "#555555",
-    warningText: "#eed202",
+    warningText: "#fee12b",
     successText: "#4caf50",
-    errorText: "#f44336",
+    errorText: "#de0a26",
     modalBackground: "#282828",
+    naturalNoteColor: "#888888",
+    accidentalNoteColor: "#333333",
   },
 };

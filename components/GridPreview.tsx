@@ -1,16 +1,12 @@
 import { Icon } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { Label } from "./Typography";
 import { theme } from "../constants/theme";
-import { useAppDispatch } from "../redux/hooks";
-import {
-  MaxGridDimension,
-  setColumnCount,
-  setRowCount,
-} from "../redux/slices/GridPresetsSlice";
-import { IncrementorButton } from "./IncrementorButton";
 import { useCurrentGridPreset } from "../hooks/useCurrentGridPreset";
+import { useAppDispatch } from "../redux/hooks";
+import { MaxGridDimension, setColumnCount, setRowCount } from "../redux/slices/GridPresetsSlice";
+import { IncrementorButton } from "./IncrementorButton";
+import { Label } from "./Typography";
 
 interface GridPreviewProps {
   index?: number;
@@ -33,10 +29,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
     <View style={{ height: 150, width: 150 }}>
       <View style={{ flex: 1, backgroundColor: theme.color.black }}>
         {rows.map((col, i) => (
-          <View
-            style={{ flexDirection: "row", flexGrow: 1 }}
-            key={`gridPreviewRow_${i}`}
-          >
+          <View style={{ flexDirection: "row", flexGrow: 1 }} key={`gridPreviewRow_${i}`}>
             {col.map((_, j) => {
               const currentElementIndex = (rowCount - 1 - i) * columnCount + j;
               const isCurrentElementHighlighted =
@@ -52,9 +45,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
                   key={`gridPreviewElementIndex_${index}_${i}_${j}`}
                   style={{
                     flex: 1,
-                    backgroundColor: isCurrentElementHighlighted
-                      ? highlightColor
-                      : primaryColor,
+                    backgroundColor: isCurrentElementHighlighted ? highlightColor : primaryColor,
                     borderWidth: 1,
                     borderColor: theme.color.black,
                   }}
@@ -69,12 +60,7 @@ export const GridPreview = ({ index }: GridPreviewProps) => {
                     }}
                   >
                     {isLocked && (
-                      <Icon
-                        size={10}
-                        type="ionicon"
-                        name={"lock-closed"}
-                        color={highlightColor}
-                      />
+                      <Icon size={10} type="ionicon" name={"lock-closed"} color={highlightColor} />
                     )}
                   </View>
                 </View>
@@ -141,12 +127,6 @@ export const styles = StyleSheet.create({
   scaleManagementView: { flexDirection: "row", paddingTop: 20 },
   scaleSelector: { height: 180, flexDirection: "column", width: "60%" },
   scaleSelectorScrollView: { width: "100%" },
-  scaleItem: {
-    borderWidth: 1,
-    height: 30,
-    flexDirection: "row",
-    backgroundColor: "#bbbbbb",
-  },
   scaleItemText: { alignSelf: "center" },
   applyScaleView: { width: "40%" },
   labelText: { color: theme.color.lightText },

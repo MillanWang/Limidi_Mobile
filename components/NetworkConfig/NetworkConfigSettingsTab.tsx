@@ -119,11 +119,11 @@ const StatusIndicator = () => {
       case WebSocketStatus.Connected:
         return { iconName: "checkmark", color: theme.color.white };
       case WebSocketStatus.Connecting:
-        return { iconName: "sync", color: "yellow", spin: true };
+        return { iconName: "sync", color: theme.color.warningText, spin: true };
       case WebSocketStatus.Disconnected:
       case WebSocketStatus.Error:
       default:
-        return { iconName: "close", color: "red" };
+        return { iconName: "close", color: theme.color.errorText };
     }
   }, [status]);
 

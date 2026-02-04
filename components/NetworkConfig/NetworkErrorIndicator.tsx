@@ -3,10 +3,7 @@ import React, { useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 import { theme } from "../../constants/theme";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
-import {
-  useWebSocketContext,
-  WebSocketStatus,
-} from "../../hooks/useWebSocketContext";
+import { useWebSocketContext, WebSocketStatus } from "../../hooks/useWebSocketContext";
 
 interface NetworkConfigButtonProps {
   forceVisible?: boolean;
@@ -32,9 +29,9 @@ export const NetworkErrorIndicator = ({
       case WebSocketStatus.Connected:
         return theme.color.white;
       case WebSocketStatus.Connecting:
-        return "yellow";
+        return theme.color.warningText;
       default:
-        return "red";
+        return theme.color.errorText;
     }
   }, [status]);
 
