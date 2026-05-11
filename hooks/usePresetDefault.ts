@@ -3,7 +3,7 @@ import { defaultPresets } from "../redux/slices/GridPresetsSlice";
 
 export const usePresetDefault = () => {
   const currentGridPresetIndex = useAppSelector(
-    (state) => state.gridPresetsReducer.currentPresetIndex
+    (state) => state.gridPresetsReducer.currentPresetIndex,
   );
   return defaultPresets[currentGridPresetIndex];
 };

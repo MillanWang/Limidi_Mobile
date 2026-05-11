@@ -7,7 +7,7 @@ export const useCheckCcIndexUniqueness = () => {
 
   const getOtherElementIndexesWithMatchingCcIndex = (
     currentElementIndex: number,
-    ccIndex: number
+    ccIndex: number,
   ) => {
     if (ccIndex < 0 || ccIndex > 127) {
       return [];

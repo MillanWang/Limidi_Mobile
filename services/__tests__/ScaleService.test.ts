@@ -1,88 +1,91 @@
-import * as React from 'react';
-import { DEFAULT_NOTE_NUMBER, ScaleService } from '../ScaleService';
-import { NOTE } from '../../constants/MIDI_Notes';
-import { Scale } from '../../constants/Scales';
+import * as React from "react";
+import { DEFAULT_NOTE_NUMBER, ScaleService } from "../ScaleService";
+import { NOTE } from "../../constants/MIDI_Notes";
+import { Scale } from "../../constants/Scales";
 
 const NATURAL_NOTE_SEQUENCE = [
-    NOTE.C,
-    NOTE.D,
-    NOTE.E,
-    NOTE.F,
-    NOTE.G,
-    NOTE.A,
-    NOTE.B,
+  NOTE.C,
+  NOTE.D,
+  NOTE.E,
+  NOTE.F,
+  NOTE.G,
+  NOTE.A,
+  NOTE.B,
 ];
 
+describe("ScaleService", () => {
+  let ss: ScaleService;
+  beforeEach(() => {
+    ss = new ScaleService();
+  });
 
-describe('ScaleService', () => {
+  it("should instantiate", () => {
+    expect(ss).toBeDefined();
+  });
 
-    let ss: ScaleService;
-    beforeEach(() => {
-        ss = new ScaleService();
-    });
+  it("should default to the chromatic scale and have the note number resetable", () => {
+    for (let i = 0; i < 60; i++) {
+      //Should always increase by one when chromatic
+      expect(ss.getNextNoteNumber()).toBe(DEFAULT_NOTE_NUMBER + i);
+    }
 
-    it('should instantiate', () => {
-        expect(ss).toBeDefined();
-    });
+    // Reset the note number to C0
+    ss.setStartingNoteNumber(0);
+    for (let i = 0; i < 60; i++) {
+      //Should always increase by one when chromatic
+      expect(ss.getNextNoteNumber()).toBe(i);
+    }
+  });
 
-    it('should default to the chromatic scale and have the note number resetable', () => {
-        for (let i = 0; i < 60; i++) {
-            //Should always increase by one when chromatic
-            expect(ss.getNextNoteNumber()).toBe(DEFAULT_NOTE_NUMBER + i);
-        }
+  it("should return only natural notes for C Major based modal scales", () => {
+    // HELPER FUNCTIONS
+    function getNoteNumber(noteLetter: string): number {
+      return Object.keys(NOTE).indexOf(noteLetter);
+    }
 
-        // Reset the note number to C0 
-        ss.setStartingNoteNumber(0);
-        for (let i = 0; i < 60; i++) {
-            //Should always increase by one when chromatic
-            expect(ss.getNextNoteNumber()).toBe(i);
-        }
-    });
+    function testModalScale(
+      scale: Scale,
+      modeNumber: number,
+      initialNoteNumberOffset: number,
+    ): void {
+      ss.setScale(scale);
 
-    it('should return only natural notes for C Major based modal scales', () => {
-        // HELPER FUNCTIONS
-        function getNoteNumber(noteLetter: string): number {
-            return Object.keys(NOTE).indexOf(noteLetter);
-        }
+      //Root note at 5th octave
+      ss.setStartingNoteNumber(DEFAULT_NOTE_NUMBER + initialNoteNumberOffset);
 
-        function testModalScale(scale: Scale, modeNumber: number, initialNoteNumberOffset: number): void {
-            ss.setScale(scale);
+      // Make a clone of the natural note sequence. Shift it according to the initialNoteNumberOffset
+      const currentNaturalNoteSequence = [...NATURAL_NOTE_SEQUENCE];
+      for (let i = 1; i < modeNumber; i++) {
+        // Should be impossible to get Ab. Just for TS checking
+        currentNaturalNoteSequence.push(
+          currentNaturalNoteSequence.shift() ?? NOTE.Ab,
+        );
+      }
 
-            //Root note at 5th octave
-            ss.setStartingNoteNumber(DEFAULT_NOTE_NUMBER + initialNoteNumberOffset);
+      //At 5 octave
+      currentNaturalNoteSequence.forEach((note) => {
+        expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
+      });
 
-            // Make a clone of the natural note sequence. Shift it according to the initialNoteNumberOffset
-            const currentNaturalNoteSequence = [...NATURAL_NOTE_SEQUENCE];
-            for (let i = 1; i < modeNumber; i++) {
-                // Should be impossible to get Ab. Just for TS checking 
-                currentNaturalNoteSequence.push(currentNaturalNoteSequence.shift() ?? NOTE.Ab);
-            }
+      // At higher 6 octave. 1 octave above starting value
+      currentNaturalNoteSequence.forEach((note) => {
+        expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
+      });
 
-            //At 5 octave
-            currentNaturalNoteSequence.forEach((note) => {
-                expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
-            });
+      //Reset to 0 Octave
+      ss.setStartingNoteNumber(initialNoteNumberOffset);
+      currentNaturalNoteSequence.forEach((note) => {
+        expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
+      });
+    }
 
-            // At higher 6 octave. 1 octave above starting value
-            currentNaturalNoteSequence.forEach((note) => {
-                expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
-            });
-
-            //Reset to 0 Octave
-            ss.setStartingNoteNumber(initialNoteNumberOffset);
-            currentNaturalNoteSequence.forEach((note) => {
-                expect(Object.values(NOTE)[ss.getNextNoteNumber() % 12]).toBe(note);
-            })
-        };
-
-        // TEST
-        testModalScale(Scale.Ionian, 1, getNoteNumber('C'));
-        testModalScale(Scale.Dorian, 2, getNoteNumber('D'));
-        testModalScale(Scale.Phrygian, 3, getNoteNumber('E'));
-        testModalScale(Scale.Lydian, 4, getNoteNumber('F'));
-        testModalScale(Scale.Mixolydian, 5, getNoteNumber('G'));
-        testModalScale(Scale.Aeolian, 6, getNoteNumber('A'));
-        testModalScale(Scale.Locrian, 7, getNoteNumber('B'));
-    });
-
+    // TEST
+    testModalScale(Scale.Ionian, 1, getNoteNumber("C"));
+    testModalScale(Scale.Dorian, 2, getNoteNumber("D"));
+    testModalScale(Scale.Phrygian, 3, getNoteNumber("E"));
+    testModalScale(Scale.Lydian, 4, getNoteNumber("F"));
+    testModalScale(Scale.Mixolydian, 5, getNoteNumber("G"));
+    testModalScale(Scale.Aeolian, 6, getNoteNumber("A"));
+    testModalScale(Scale.Locrian, 7, getNoteNumber("B"));
+  });
 });

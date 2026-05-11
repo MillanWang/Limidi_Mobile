@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Animated, { runOnJS } from "react-native-reanimated";
 import { createMidiControlChange } from "../../../constants/MIDI_Notes";
 import { theme } from "../../../constants/theme";
@@ -9,7 +13,10 @@ import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication"
 import { useElementSize } from "../../../hooks/useElementSize";
 import { debounce } from "../../../services/debounce";
 import { TouchPoint } from "../../../types";
-import { ControlChangeIcon, useGridCcIconSize } from "../../GridThemedComponents/GridThemedIcon";
+import {
+  ControlChangeIcon,
+  useGridCcIconSize,
+} from "../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 import { ControlChangeActiveIndicators } from "./ControlChangeActiveIndicators";
 
@@ -55,10 +62,19 @@ export function ControlChange({ index }: ControlChangeProps) {
         send_X_CcMessage(getPositionalPercent(finalX, elementWidth, iconSize));
       }
       if (hasVerticalControl) {
-        send_Y_CcMessage(1 - getPositionalPercent(finalY, elementHeight, iconSize));
+        send_Y_CcMessage(
+          1 - getPositionalPercent(finalY, elementHeight, iconSize),
+        );
       }
     },
-    [setTouch, elementWidth, elementHeight, hasVerticalControl, hasHorizontalControl, iconSize],
+    [
+      setTouch,
+      elementWidth,
+      elementHeight,
+      hasVerticalControl,
+      hasHorizontalControl,
+      iconSize,
+    ],
   );
 
   const gesture = Gesture.Pan()
@@ -155,7 +171,9 @@ type ControlChangeLevelHighlightsProps = {
   iconSize: number;
 };
 
-const ControlChangeLevelHighlights = (props: ControlChangeLevelHighlightsProps) => {
+const ControlChangeLevelHighlights = (
+  props: ControlChangeLevelHighlightsProps,
+) => {
   const {
     touch,
     elementWidth,
@@ -341,19 +359,31 @@ const useCcNetworkCommunication = (props: {
   /**
    * Separate debouncers are used here so that one won't interfere with the other. They should both have separate max waits
    */
-  const debouncedSendXCcMessage = useCallback(debounce(sendMidiControlChange, CcDebounceDelay), []);
-  const debouncedSendYCcMessage = useCallback(debounce(sendMidiControlChange, CcDebounceDelay), []);
+  const debouncedSendXCcMessage = useCallback(
+    debounce(sendMidiControlChange, CcDebounceDelay),
+    [],
+  );
+  const debouncedSendYCcMessage = useCallback(
+    debounce(sendMidiControlChange, CcDebounceDelay),
+    [],
+  );
 
   const send_X_CcMessage = useCallback(
     (valuePercent: number) => {
-      const ccInput = createMidiControlChange(xAxisControlIndex, Math.floor(127 * valuePercent));
+      const ccInput = createMidiControlChange(
+        xAxisControlIndex,
+        Math.floor(127 * valuePercent),
+      );
       debouncedSendXCcMessage(ccInput);
     },
     [xAxisControlIndex, debouncedSendXCcMessage],
   );
   const send_Y_CcMessage = useCallback(
     (valuePercent: number) => {
-      const ccInput = createMidiControlChange(yAxisControlIndex, Math.floor(127 * valuePercent));
+      const ccInput = createMidiControlChange(
+        yAxisControlIndex,
+        Math.floor(127 * valuePercent),
+      );
       debouncedSendYCcMessage(ccInput);
     },
     [yAxisControlIndex, debouncedSendYCcMessage],
@@ -381,7 +411,10 @@ const styles = StyleSheet.create({
   },
 });
 
-const getCcDirection = (xAxisControlIndex: number, yAxisControlIndex: number) => {
+const getCcDirection = (
+  xAxisControlIndex: number,
+  yAxisControlIndex: number,
+) => {
   return xAxisControlIndex >= 0 && yAxisControlIndex >= 0
     ? ControlChangeDirection.XY
     : xAxisControlIndex >= 0
@@ -404,5 +437,8 @@ const getInboundsTouchPosition = (
   iconSize: number,
 ) => {
   const halfIconSize = iconSize / 2;
-  return Math.min(Math.max(touchPosition, halfIconSize), elementDimensionMax - halfIconSize);
+  return Math.min(
+    Math.max(touchPosition, halfIconSize),
+    elementDimensionMax - halfIconSize,
+  );
 };

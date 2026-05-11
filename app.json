@@ -16,9 +16,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.anonymous.LiMIDI"
@@ -33,10 +31,6 @@
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-asset",
-      "expo-font",
-      "expo-web-browser"
-    ]
+    "plugins": ["expo-asset", "expo-font", "expo-web-browser"]
   }
 }

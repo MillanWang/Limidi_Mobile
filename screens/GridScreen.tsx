@@ -15,7 +15,7 @@ export default function GridScreen() {
   const { isInSettings } = usePageContext();
 
   const currentPresetIndex = useAppSelector(
-    (state) => state.gridPresetsReducer.currentPresetIndex
+    (state) => state.gridPresetsReducer.currentPresetIndex,
   );
 
   const isPresetPaywalled = currentPresetIndex > 0;

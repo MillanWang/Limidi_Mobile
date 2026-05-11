@@ -6,7 +6,7 @@ import { Label, TypographyKind } from "../Typography";
 
 export function AddressValidationIcon() {
   const { baseAddress } = useAppSelector(
-    (state) => state.httpCommunicationsReducer.httpCommunicationInfo
+    (state) => state.httpCommunicationsReducer.httpCommunicationInfo,
   );
   const isValid = useMemo(() => isValidIpWithPort(baseAddress), [baseAddress]);
 

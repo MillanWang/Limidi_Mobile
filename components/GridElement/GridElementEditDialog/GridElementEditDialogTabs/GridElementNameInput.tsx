@@ -1,7 +1,10 @@
 import { Input } from "@rneui/themed";
 import { Label } from "../../../Typography";
 import React from "react";
-import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../../../constants/MIDI_Notes";
+import {
+  getNoteKeyFromNoteNumber,
+  isNoteLabelStandard,
+} from "../../../../constants/MIDI_Notes";
 import { theme } from "../../../../constants/theme";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
@@ -16,7 +19,9 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
   } = useGridElementAtIndex(index);
 
   const resetElementName = () =>
-    dispatch(setGridElementName({ index, name: getNoteKeyFromNoteNumber(noteNumber) }));
+    dispatch(
+      setGridElementName({ index, name: getNoteKeyFromNoteNumber(noteNumber) }),
+    );
 
   const rightIcon = isNoteLabelStandard(noteNumber, name) ? (
     false
@@ -38,7 +43,9 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
         maxLength={8}
         rightIcon={rightIcon}
         value={name}
-        onChangeText={(value) => dispatch(setGridElementName({ index, name: value }))}
+        onChangeText={(value) =>
+          dispatch(setGridElementName({ index, name: value }))
+        }
       />
     </>
   );

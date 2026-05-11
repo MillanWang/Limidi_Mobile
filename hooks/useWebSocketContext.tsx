@@ -26,7 +26,7 @@ type WebSocketContextType = {
 };
 
 const WebSocketContext = createContext<WebSocketContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
@@ -34,14 +34,15 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   const wsRef = useRef<WebSocket | null>(null);
   const [status, setStatus] = useState<WebSocketStatus>(
-    WebSocketStatus.Connecting
+    WebSocketStatus.Connecting,
   );
 
   const { navigateTo } = usePageContext();
 
   console.log("status :", status);
   const baseAddress = useAppSelector(
-    (state) => state.httpCommunicationsReducer.httpCommunicationInfo.baseAddress
+    (state) =>
+      state.httpCommunicationsReducer.httpCommunicationInfo.baseAddress,
   );
   const url = `ws://${baseAddress}`;
 
@@ -79,7 +80,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         navigateTo(Page.NetworkSettings);
       }
     },
-    [url, setConnectionAttempts]
+    [url, setConnectionAttempts],
   );
   console.log("url :", url);
 
@@ -118,7 +119,7 @@ export function useWebSocketContext() {
   const context = useContext(WebSocketContext);
   if (context === undefined) {
     throw new Error(
-      "useWebSocketContext must be used within a WebSocketProvider"
+      "useWebSocketContext must be used within a WebSocketProvider",
     );
   }
   return context;

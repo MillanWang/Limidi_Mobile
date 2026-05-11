@@ -3,7 +3,10 @@ import React, { useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 import { theme } from "../../constants/theme";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
-import { useWebSocketContext, WebSocketStatus } from "../../hooks/useWebSocketContext";
+import {
+  useWebSocketContext,
+  WebSocketStatus,
+} from "../../hooks/useWebSocketContext";
 
 interface NetworkConfigButtonProps {
   forceVisible?: boolean;

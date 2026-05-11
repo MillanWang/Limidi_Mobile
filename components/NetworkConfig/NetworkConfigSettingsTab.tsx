@@ -2,7 +2,10 @@ import { Icon } from "@rneui/themed";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Easing, ScrollView, StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
-import { useWebSocketContext, WebSocketStatus } from "../../hooks/useWebSocketContext";
+import {
+  useWebSocketContext,
+  WebSocketStatus,
+} from "../../hooks/useWebSocketContext";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import { StyledIcon } from "../GridThemedComponents/StyledIcon";
 import { BodyText } from "../Typography";
@@ -18,7 +21,9 @@ enum NetworkConfigState {
 export default function NetworkConfigSettingsTab() {
   const { status } = useWebSocketContext();
   const [scannerState, setScannerState] = useState<NetworkConfigState>(
-    status === WebSocketStatus.Connected ? NetworkConfigState.Idle : NetworkConfigState.Scanning,
+    status === WebSocketStatus.Connected
+      ? NetworkConfigState.Idle
+      : NetworkConfigState.Scanning,
   );
 
   const handleScanButtonPress = () =>
@@ -59,16 +64,26 @@ export default function NetworkConfigSettingsTab() {
 
       <View style={styles.dialogContentContainer}>
         {NetworkConfigState.Idle === scannerState && <StatusMessage />}
-        {NetworkConfigState.ManualEntry === scannerState && <NetworkAddressInput />}
+        {NetworkConfigState.ManualEntry === scannerState && (
+          <NetworkAddressInput />
+        )}
         {NetworkConfigState.Scanning === scannerState && (
-          <ConnectionCodeScanner onCancel={() => setScannerState(NetworkConfigState.Idle)} />
+          <ConnectionCodeScanner
+            onCancel={() => setScannerState(NetworkConfigState.Idle)}
+          />
         )}
       </View>
     </ScrollView>
   );
 }
 
-const SpinWrapper = ({ children, spin }: { children: React.ReactNode; spin?: boolean }) => {
+const SpinWrapper = ({
+  children,
+  spin,
+}: {
+  children: React.ReactNode;
+  spin?: boolean;
+}) => {
   const rotation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -128,7 +143,9 @@ const StatusIndicator = () => {
   }, [status]);
 
   return (
-    <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
+    <View
+      style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}
+    >
       <SpinWrapper spin={spin}>
         <Icon name={iconName} type="ionicon" color={color} />
       </SpinWrapper>
@@ -146,13 +163,13 @@ const StatusMessage = () => {
         <></>
       ) : status === WebSocketStatus.Disconnected ? (
         <BodyText>
-          Connection to LiMIDI Desktop is required to use this app. Connect by scanning the QR code
-          or inputting the code.
+          Connection to LiMIDI Desktop is required to use this app. Connect by
+          scanning the QR code or inputting the code.
         </BodyText>
       ) : status === WebSocketStatus.Error ? (
         <BodyText>
-          Connection to LiMIDI Desktop is required to use this app. Please check your connection and
-          try again.
+          Connection to LiMIDI Desktop is required to use this app. Please check
+          your connection and try again.
         </BodyText>
       ) : status === WebSocketStatus.Connecting ? (
         <BodyText>Connecting...</BodyText>

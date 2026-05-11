@@ -12,7 +12,7 @@ export function GridElementGrid() {
       <GridElementRow
         rowStartingIndex={i * currentGridPreset.columnCount}
         key={`GridElementRow_${i}`}
-      />
+      />,
     );
   }
 

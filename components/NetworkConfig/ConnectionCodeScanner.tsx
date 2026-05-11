@@ -18,7 +18,8 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
   const [hasScanError, setHasScanError] = useState(false);
   const { tryConnection } = useWebSocketContext();
 
-  const { hasPermission, canAskAgain, getCameraPermissions } = useCameraPermissions();
+  const { hasPermission, canAskAgain, getCameraPermissions } =
+    useCameraPermissions();
 
   const handleBarCodeScanned = useCallback(
     (result: { type: string; data: string }) => {
@@ -40,7 +41,8 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
     return (
       <View>
         <BodyText>
-          Go to settings and enable camera permissions to scan the LiMIDI Desktop QR code
+          Go to settings and enable camera permissions to scan the LiMIDI
+          Desktop QR code
         </BodyText>
         {canAskAgain && (
           <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
@@ -78,7 +80,8 @@ const useCameraPermissions = () => {
   const [canAskAgain, setCanAskAgain] = useState(false);
 
   const getCameraPermissions = useCallback(async () => {
-    const { status, canAskAgain } = await Camera.requestCameraPermissionsAsync();
+    const { status, canAskAgain } =
+      await Camera.requestCameraPermissionsAsync();
     setHasPermission(status === "granted");
     setCanAskAgain(canAskAgain);
   }, []);
@@ -104,8 +107,14 @@ const InvalidScanMessage = () => {
         backgroundColor: theme.color.background,
       }}
     >
-      <Icon name="alert-circle" type="ionicon" color={theme.color.warningText} />
-      <BodyText kind={TypographyKind.WARNING}>{"Invalid scan. Try again"}</BodyText>
+      <Icon
+        name="alert-circle"
+        type="ionicon"
+        color={theme.color.warningText}
+      />
+      <BodyText kind={TypographyKind.WARNING}>
+        {"Invalid scan. Try again"}
+      </BodyText>
     </View>
   );
 };

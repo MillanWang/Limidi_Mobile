@@ -6,8 +6,15 @@ import { theme } from "../../constants/theme";
 import { useWebSocketContext } from "../../hooks/useWebSocketContext";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
-import { AddressValidationIcon, isValidIpWithPort } from "./AddressValidationIcon";
-import { decodeIpPort, encodeIpPort, getForceValidEncodedAddress } from "./ipEncodeDecode";
+import {
+  AddressValidationIcon,
+  isValidIpWithPort,
+} from "./AddressValidationIcon";
+import {
+  decodeIpPort,
+  encodeIpPort,
+  getForceValidEncodedAddress,
+} from "./ipEncodeDecode";
 import { BodyText, Caption } from "../Typography";
 
 export function NetworkAddressInput() {
@@ -15,12 +22,14 @@ export function NetworkAddressInput() {
   const { tryConnection } = useWebSocketContext();
 
   const baseAddress = useAppSelector(
-    (state) => state.httpCommunicationsReducer.httpCommunicationInfo.baseAddress,
+    (state) =>
+      state.httpCommunicationsReducer.httpCommunicationInfo.baseAddress,
   );
   const [displayedCode, setDisplayedCode] = useState(encodeIpPort(baseAddress));
 
   const onChangeHandler = (encodedAddress: string) => {
-    const forceValidEncodedAddress = getForceValidEncodedAddress(encodedAddress);
+    const forceValidEncodedAddress =
+      getForceValidEncodedAddress(encodedAddress);
     if (forceValidEncodedAddress.length > 15) {
       return;
     }

@@ -1,15 +1,27 @@
 import { Icon } from "@rneui/themed";
 import React, { useState } from "react";
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../constants/MIDI_Notes";
-import { useCurrentGridPreset, useGridElementAtIndex } from "../../hooks/useCurrentGridPreset";
+import {
+  getNoteKeyFromNoteNumber,
+  isNoteLabelStandard,
+} from "../../constants/MIDI_Notes";
+import {
+  useCurrentGridPreset,
+  useGridElementAtIndex,
+} from "../../hooks/useCurrentGridPreset";
 import { ElementSizeProvider } from "../../hooks/useElementSize";
 import { useIsGridElementDirty } from "../../hooks/useIsGridElementDirty";
 import { Page, usePageContext } from "../../hooks/usePageContext";
-import { ControlChangeIcon, GridThemedIcon } from "../GridThemedComponents/GridThemedIcon";
+import {
+  ControlChangeIcon,
+  GridThemedIcon,
+} from "../GridThemedComponents/GridThemedIcon";
 import { BodyText, Caption } from "../Typography";
 import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
-import { ControlChange, useCcPersistedProperties } from "./GridElementTypes/ControlChange";
+import {
+  ControlChange,
+  useCcPersistedProperties,
+} from "./GridElementTypes/ControlChange";
 import DrumPad from "./GridElementTypes/DrumPad";
 
 export default function GridElement({ index }: { index: number }) {
@@ -95,11 +107,15 @@ const GridElementEditButton = (props: { index: number }) => {
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <BodyText style={{ color: colorState.highlightColor, marginRight: "auto" }}>
+            <BodyText
+              style={{ color: colorState.highlightColor, marginRight: "auto" }}
+            >
               #{index}
               {isDirty && "*"}
             </BodyText>
-            {isLocked && <GridThemedIcon type="ionicon" name="lock-closed" size={12} />}
+            {isLocked && (
+              <GridThemedIcon type="ionicon" name="lock-closed" size={12} />
+            )}
           </View>
           <View
             style={{
@@ -135,12 +151,14 @@ const GridElementEditButton = (props: { index: number }) => {
               <>
                 {xAxisControlIndex >= 0 && (
                   <Caption style={{ color: colorState.highlightColor }}>
-                    CC{yAxisControlIndex >= 0 ? " (X)" : ""}: {xAxisControlIndex}
+                    CC{yAxisControlIndex >= 0 ? " (X)" : ""}:{" "}
+                    {xAxisControlIndex}
                   </Caption>
                 )}
                 {yAxisControlIndex >= 0 && (
                   <Caption style={{ color: colorState.highlightColor }}>
-                    CC{xAxisControlIndex >= 0 ? " (Y)" : ""}: {yAxisControlIndex}
+                    CC{xAxisControlIndex >= 0 ? " (Y)" : ""}:{" "}
+                    {yAxisControlIndex}
                   </Caption>
                 )}
               </>

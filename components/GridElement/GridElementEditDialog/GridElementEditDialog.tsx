@@ -28,8 +28,7 @@ import {
 } from "./GridElementEditDialogTabs/GridElementEditStyleSettingsTab";
 
 interface GridElementEditDialogProps
-  extends GridElementEditMidiProps,
-    GridElementEditStyleProps {
+  extends GridElementEditMidiProps, GridElementEditStyleProps {
   dialogVisible: boolean;
   setDialogVisible(dialogVisible: boolean): void;
 }

@@ -11,7 +11,7 @@ export const GridThemedButton = (
     borderless?: boolean;
     unfocused?: boolean;
     flex?: boolean;
-  }
+  },
 ) => {
   const { highlightColor, primaryColor } =
     props.index !== undefined

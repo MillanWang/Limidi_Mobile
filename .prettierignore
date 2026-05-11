@@ -1,0 +1,11 @@
+node_modules
+.expo
+dist
+web-build
+coverage
+android/app/build
+android/build
+ios/Pods
+ios/build
+*.lock
+hooks/messaging/proto_bundle.js

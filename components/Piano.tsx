@@ -27,10 +27,14 @@ const defaultSelectedKeyColor = TERMINAL.highlightColor;
 
 const usePianoKeyColors = (index?: number) => {
   const gridTheme =
-    index !== undefined ? useCurrentGridElementPresetColors(index) : useCurrentGridPresetColors();
+    index !== undefined
+      ? useCurrentGridElementPresetColors(index)
+      : useCurrentGridPresetColors();
 
   return {
-    highLightedKeyColor: colorsWithAlternateKeyColors.includes(gridTheme.highlightColor)
+    highLightedKeyColor: colorsWithAlternateKeyColors.includes(
+      gridTheme.highlightColor,
+    )
       ? defaultSelectedKeyColor
       : gridTheme.highlightColor,
     noteLabelColor: gridTheme.primaryColor,
@@ -69,9 +73,10 @@ export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
             }}
             onPress={() => setNoteNumber(currentNoteNumber)}
           >
-            {accidentalNoteNumbers.includes(noteNumber) && noteNumber === currentNoteNumber && (
-              <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />
-            )}
+            {accidentalNoteNumbers.includes(noteNumber) &&
+              noteNumber === currentNoteNumber && (
+                <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />
+              )}
           </Pressable>
         ))}
       </View>

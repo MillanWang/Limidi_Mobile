@@ -15,7 +15,7 @@ export function GridElementRow({ rowStartingIndex }: GridElementRowProps) {
   for (let i = 0; i < currentGridPreset.columnCount; i++) {
     const currentIndex = i + rowStartingIndex;
     gridElements.push(
-      <GridElement index={currentIndex} key={`gridElement_${currentIndex}`} />
+      <GridElement index={currentIndex} key={`gridElement_${currentIndex}`} />,
     );
   }
 

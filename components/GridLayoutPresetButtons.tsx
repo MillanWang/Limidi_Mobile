@@ -11,7 +11,7 @@ const PRESET_ICON_NAMES = ["one", "two", "3", "4", "5", "6"];
 export function GridLayoutPresetButtons() {
   const dispatch = useAppDispatch();
   const { currentPresetIndex } = useAppSelector(
-    (state) => state.gridPresetsReducer
+    (state) => state.gridPresetsReducer,
   );
 
   const gridTheme = useCurrentGridPresetColors();

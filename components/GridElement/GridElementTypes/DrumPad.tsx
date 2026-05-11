@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { Gesture, GestureDetector, GestureHandlerRootView } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import Animated, {
   runOnJS,
   useAnimatedStyle,
@@ -23,14 +27,20 @@ interface DrumPadProps {
   index: number;
 }
 
-const useDrumPadLevelOpacity = (props: { isActive: boolean; opacityPercent: number }) => {
+const useDrumPadLevelOpacity = (props: {
+  isActive: boolean;
+  opacityPercent: number;
+}) => {
   const { isActive, opacityPercent } = props;
 
   const opacity = useSharedValue(1);
   useEffect(() => {
-    opacity.value = withTiming(isActive ? Math.max(1 - opacityPercent, minOpacity) : 1, {
-      duration: isActive ? 0 : 100,
-    });
+    opacity.value = withTiming(
+      isActive ? Math.max(1 - opacityPercent, minOpacity) : 1,
+      {
+        duration: isActive ? 0 : 100,
+      },
+    );
   }, [isActive, opacity, opacityPercent]);
 
   const animatedStyle = useAnimatedStyle(() => ({ opacity: opacity.value }));
@@ -139,7 +149,10 @@ export default function DrumPad({ index }: DrumPadProps) {
   );
 }
 
-const getPositionalPercent = (touchPosition: number, elementDimensionMax: number) => {
+const getPositionalPercent = (
+  touchPosition: number,
+  elementDimensionMax: number,
+) => {
   return touchPosition / elementDimensionMax;
 };
 

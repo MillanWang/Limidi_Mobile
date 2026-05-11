@@ -2,7 +2,9 @@ import { ColorPreset } from "../../constants/ColorPresets";
 import { placeholderElementName } from "../../constants/MIDI_Notes";
 import { GridElementState } from "../interfaces/GridElement/GridElementState";
 
-export function createGridElements(colorPreset: ColorPreset): GridElementState[] {
+export function createGridElements(
+  colorPreset: ColorPreset,
+): GridElementState[] {
   const allGridElements: GridElementState[] = [];
 
   //Make a state for all possible GridElements. 102rows*10Columns is the biggest possible grid

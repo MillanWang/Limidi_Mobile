@@ -19,13 +19,13 @@ export enum ControlChangeDirection {
 
 export function getControlChangeDirection(
   xAxisControlIndexState: number,
-  yAxisControlIndexState: number
+  yAxisControlIndexState: number,
 ) {
   return xAxisControlIndexState >= 0 && yAxisControlIndexState >= 0
     ? ControlChangeDirection.XY
     : xAxisControlIndexState >= 0
-    ? ControlChangeDirection.Horizontal
-    : ControlChangeDirection.Vertical;
+      ? ControlChangeDirection.Horizontal
+      : ControlChangeDirection.Vertical;
 }
 
 export const useControlChangeIndexController = (props: { index: number }) => {
@@ -45,13 +45,13 @@ export const useControlChangeIndexController = (props: { index: number }) => {
 
   const setXAxisControlChangeIndex = (ccIndex: number) => {
     dispatch(
-      setGridElementControlChangeXIndex({ index, xAxisControlIndex: ccIndex })
+      setGridElementControlChangeXIndex({ index, xAxisControlIndex: ccIndex }),
     );
   };
 
   const setYAxisControlChangeIndex = (ccIndex: number) => {
     dispatch(
-      setGridElementControlChangeYIndex({ index, yAxisControlIndex: ccIndex })
+      setGridElementControlChangeYIndex({ index, yAxisControlIndex: ccIndex }),
     );
   };
 
@@ -61,14 +61,14 @@ export const useControlChangeIndexController = (props: { index: number }) => {
 
   const iconIsDefault = useMemo(
     () => !ioniconValidIconNames.includes(iconNameState),
-    [iconNameState]
+    [iconNameState],
   );
 
   const horizontalIndex = {
     value: xAxisControlIndexState,
     otherIndicesWithMatchingCcIndex: getOtherElementIndexesWithMatchingCcIndex(
       index,
-      xAxisControlIndexState
+      xAxisControlIndexState,
     ),
     decrement: () => {
       const candidateNumber = Math.abs(xAxisControlIndexState) - 1;
@@ -87,7 +87,7 @@ export const useControlChangeIndexController = (props: { index: number }) => {
     value: yAxisControlIndexState,
     otherIndicesWithMatchingCcIndex: getOtherElementIndexesWithMatchingCcIndex(
       index,
-      yAxisControlIndexState
+      yAxisControlIndexState,
     ),
     decrement: () => {
       const candidateNumber = Math.abs(yAxisControlIndexState) - 1;
@@ -104,7 +104,7 @@ export const useControlChangeIndexController = (props: { index: number }) => {
 
   const currentMode = getControlChangeDirection(
     horizontalIndex.value,
-    verticalIndex.value
+    verticalIndex.value,
   );
   const mode = {
     current: currentMode,
@@ -114,7 +114,7 @@ export const useControlChangeIndexController = (props: { index: number }) => {
       }
       setXAxisControlChangeIndex(getEnabledIndexNumber(xAxisControlIndexState));
       setYAxisControlChangeIndex(
-        getDisabledIndexNumber(yAxisControlIndexState)
+        getDisabledIndexNumber(yAxisControlIndexState),
       );
       if (iconIsDefault) setControlChangeIcon("swap-horizontal");
     },
@@ -125,16 +125,16 @@ export const useControlChangeIndexController = (props: { index: number }) => {
       }
       setYAxisControlChangeIndex(getEnabledIndexNumber(yAxisControlIndexState));
       setXAxisControlChangeIndex(
-        getDisabledIndexNumber(xAxisControlIndexState)
+        getDisabledIndexNumber(xAxisControlIndexState),
       );
       if (iconIsDefault) setControlChangeIcon("swap-vertical");
     },
     setXY: () => {
       setXAxisControlChangeIndex(
-        Math.abs(getEnabledIndexNumber(xAxisControlIndexState))
+        Math.abs(getEnabledIndexNumber(xAxisControlIndexState)),
       );
       setYAxisControlChangeIndex(
-        Math.abs(getEnabledIndexNumber(yAxisControlIndexState))
+        Math.abs(getEnabledIndexNumber(yAxisControlIndexState)),
       );
       if (iconIsDefault) setControlChangeIcon("move");
     },

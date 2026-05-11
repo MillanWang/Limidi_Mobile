@@ -9,7 +9,10 @@ import Animated, {
 } from "react-native-reanimated";
 import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 
-export const useCcLevelOpacity = (props: { isInMotion: boolean; opacityPercent: number }) => {
+export const useCcLevelOpacity = (props: {
+  isInMotion: boolean;
+  opacityPercent: number;
+}) => {
   const { isInMotion, opacityPercent } = props;
   const opacity = useSharedValue(1);
   useEffect(() => {
@@ -32,7 +35,13 @@ export const ControlChangeActiveIndicators = (props: {
   yPositionAbsolute: number;
   color: string;
 }) => {
-  const { show, controlChangeDirection, xPositionAbsolute, yPositionAbsolute, color } = props;
+  const {
+    show,
+    controlChangeDirection,
+    xPositionAbsolute,
+    yPositionAbsolute,
+    color,
+  } = props;
 
   if (!show) {
     return null;
@@ -58,7 +67,12 @@ const CcLevelLines = (props: {
   xPositionAbsolute: number;
   color: string;
 }) => {
-  const { controlChangeDirection, yPositionAbsolute, xPositionAbsolute, color } = props;
+  const {
+    controlChangeDirection,
+    yPositionAbsolute,
+    xPositionAbsolute,
+    color,
+  } = props;
   return (
     <>
       {controlChangeDirection !== ControlChangeDirection.Horizontal && (

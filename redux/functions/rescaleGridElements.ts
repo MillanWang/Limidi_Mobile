@@ -17,12 +17,12 @@ export function rescaleGridElements(grid: GridState) {
       if (
         isNoteLabelStandard(
           currentGridElement.midiNoteState.noteNumber,
-          currentGridElement.name
+          currentGridElement.name,
         )
       ) {
         // If the name has been changed, then don't overwrite it when rescaling
         currentGridElement.name = `${getNoteKeyFromNoteNumber(
-          currentNoteNumber
+          currentNoteNumber,
         )}`;
       }
       currentGridElement.midiNoteState.noteNumber = currentNoteNumber;

@@ -1,0 +1,43 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "unicorn", "oxc", "jest"],
+  "categories": {
+    "correctness": "warn",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "rules": {
+    "eslint/no-unused-vars": "warn",
+    "eslint/no-unused-expressions": "warn",
+    "eslint/no-shadow": "warn",
+    "unicorn/no-empty-file": "warn",
+    "unicorn/no-new-array": "warn",
+    "unicorn/prefer-set-has": "warn",
+    "jest/expect-expect": "off"
+  },
+  "env": {
+    "builtin": true,
+    "es2024": true
+  },
+  "ignorePatterns": [
+    "node_modules",
+    ".expo",
+    "dist",
+    "web-build",
+    "coverage",
+    "android",
+    "ios",
+    "hooks/messaging/proto_bundle.js"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,tsx}",
+        "**/__tests__/**"
+      ],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
+}

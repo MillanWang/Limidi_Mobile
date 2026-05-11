@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PRESET_COLOR_LIST } from "../../constants/ColorPresets";
-import { getNoteKeyFromNoteNumber, isNoteLabelStandard } from "../../constants/MIDI_Notes";
+import {
+  getNoteKeyFromNoteNumber,
+  isNoteLabelStandard,
+} from "../../constants/MIDI_Notes";
 import { Scale } from "../../constants/Scales";
 import { createGridElements } from "../functions/createDefaultGridPresets";
 import { rescaleGridElements } from "../functions/rescaleGridElements";
@@ -101,7 +104,8 @@ export const GridPresetsSlice = createSlice({
       state.currentPresetIndex = index;
     },
     restoreCurrentPresetToDefault: (state, action) => {
-      state.gridPresets[state.currentPresetIndex] = defaultPresets[state.currentPresetIndex];
+      state.gridPresets[state.currentPresetIndex] =
+        defaultPresets[state.currentPresetIndex];
     },
 
     // Grid operations
@@ -114,12 +118,18 @@ export const GridPresetsSlice = createSlice({
       }
     },
     setColumnCount: (state, action) => {
-      const newColumnCount = Math.min(Math.max(action.payload, 1), MaxGridDimension);
+      const newColumnCount = Math.min(
+        Math.max(action.payload, 1),
+        MaxGridDimension,
+      );
 
       state.gridPresets[state.currentPresetIndex].columnCount = newColumnCount;
     },
     setRowCount: (state, action) => {
-      const newRowCount = Math.min(Math.max(action.payload, 1), MaxGridDimension);
+      const newRowCount = Math.min(
+        Math.max(action.payload, 1),
+        MaxGridDimension,
+      );
 
       state.gridPresets[state.currentPresetIndex].rowCount = newRowCount;
     },
@@ -200,14 +210,16 @@ export const GridPresetsSlice = createSlice({
       const { index, newNoteNumber } = action.payload;
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
       for (let grid of gridsToUpdate) {
-        const originalNoteNumber = grid.gridElements[index].midiNoteState.noteNumber;
+        const originalNoteNumber =
+          grid.gridElements[index].midiNoteState.noteNumber;
 
         const originalNoteName = grid.gridElements[index].name;
         const originalOctaveOffset = Math.floor(originalNoteNumber / 12) * 12;
         const finalNoteNumber = newNoteNumber + originalOctaveOffset;
 
         if (isNoteLabelStandard(originalNoteNumber, originalNoteName)) {
-          grid.gridElements[index].name = getNoteKeyFromNoteNumber(finalNoteNumber);
+          grid.gridElements[index].name =
+            getNoteKeyFromNoteNumber(finalNoteNumber);
         }
 
         grid.gridElements[index].midiNoteState.noteNumber = finalNoteNumber;
@@ -218,7 +230,8 @@ export const GridPresetsSlice = createSlice({
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        const originalNoteNumber = grid.gridElements[index].midiNoteState.noteNumber;
+        const originalNoteNumber =
+          grid.gridElements[index].midiNoteState.noteNumber;
 
         const originalNoteName = grid.gridElements[index].name;
 
@@ -227,7 +240,8 @@ export const GridPresetsSlice = createSlice({
           newNoteOctave * 12; //Add octave offset
 
         if (isNoteLabelStandard(originalNoteNumber, originalNoteName)) {
-          grid.gridElements[index].name = getNoteKeyFromNoteNumber(newNoteNumber);
+          grid.gridElements[index].name =
+            getNoteKeyFromNoteNumber(newNoteNumber);
         }
 
         grid.gridElements[index].midiNoteState.noteNumber = newNoteNumber;
@@ -305,7 +319,8 @@ export const GridPresetsSlice = createSlice({
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridElements[index].controlChangeState.xAxisControlIndex = xAxisControlIndex;
+        grid.gridElements[index].controlChangeState.xAxisControlIndex =
+          xAxisControlIndex;
       }
     },
     setGridElementControlChangeYIndex: (state, action) => {
@@ -313,7 +328,8 @@ export const GridPresetsSlice = createSlice({
       const gridsToUpdate = [state.gridPresets[state.currentPresetIndex]];
 
       for (let grid of gridsToUpdate) {
-        grid.gridElements[index].controlChangeState.yAxisControlIndex = yAxisControlIndex;
+        grid.gridElements[index].controlChangeState.yAxisControlIndex =
+          yAxisControlIndex;
       }
     },
     setGridElementControlChangeIconString: (state, action) => {

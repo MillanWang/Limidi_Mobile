@@ -48,7 +48,7 @@ export const useIsGridElementDirty = (elementIndex: number): boolean => {
 export function isGridElementDirty(
   gridElement: GridElementState,
   elementIndex: number,
-  grid: GridState
+  grid: GridState,
 ): boolean {
   const { colorState } = gridElement;
   const { gridTheme } = grid;
@@ -123,7 +123,7 @@ export const useResetGridElement = (elementIndex: number): (() => void) => {
     const { primaryColor, highlightColor } = grid.gridTheme;
     dispatch(setGridElementprimaryColor({ index: elementIndex, primaryColor }));
     dispatch(
-      setGridElementhighlightColor({ index: elementIndex, highlightColor })
+      setGridElementhighlightColor({ index: elementIndex, highlightColor }),
     );
 
     // Reset velocity to global velocity
@@ -134,7 +134,7 @@ export const useResetGridElement = (elementIndex: number): (() => void) => {
       setGridElementVelocityIsVertical({
         index: elementIndex,
         isVertical: true,
-      })
+      }),
     );
 
     if (isMidiNote) {
@@ -155,10 +155,13 @@ export const useResetGridElement = (elementIndex: number): (() => void) => {
         setGridElementOctave({
           index: elementIndex,
           newNoteOctave: expectedOctave,
-        })
+        }),
       );
       dispatch(
-        setGridElementNote({ index: elementIndex, newNoteNumber: expectedNote })
+        setGridElementNote({
+          index: elementIndex,
+          newNoteNumber: expectedNote,
+        }),
       );
       const name = getNoteKeyFromNoteNumber(expectedNoteNumber);
       dispatch(setGridElementName({ index: elementIndex, name }));
@@ -170,13 +173,13 @@ export const useResetGridElement = (elementIndex: number): (() => void) => {
         setGridElementControlChangeXIndex({
           index: elementIndex,
           xAxisControlIndex,
-        })
+        }),
       );
       dispatch(
         setGridElementControlChangeYIndex({
           index: elementIndex,
           yAxisControlIndex,
-        })
+        }),
       );
     }
   }, [dispatch, grid, isMidiNote, elementIndex]);

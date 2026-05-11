@@ -35,7 +35,7 @@ export interface MidiNoteProps {
 export function createMidiNote(
   noteNumber: number,
   velocity: number,
-  isNoteOn: boolean
+  isNoteOn: boolean,
 ): MidiNoteProps {
   return {
     noteNumber: noteNumber,
@@ -51,7 +51,7 @@ export interface MidiControlChangeProps {
 
 export function createMidiControlChange(
   controlIndex: number,
-  level: number
+  level: number,
 ): MidiControlChangeProps {
   return {
     controlIndex: controlIndex,

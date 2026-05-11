@@ -1,7 +1,10 @@
 import { Button, Dialog } from "@rneui/themed";
 import React from "react";
 import { ScrollView, View } from "react-native";
-import { iconNames, ioniconValidIconNames } from "../../../../constants/IconNames";
+import {
+  iconNames,
+  ioniconValidIconNames,
+} from "../../../../constants/IconNames";
 import { theme } from "../../../../constants/theme";
 import {
   useCurrentGridElementPresetColors,
@@ -10,16 +13,24 @@ import {
 import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementControlChangeIconString } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
-import { ControlChangeIcon, GridThemedIcon } from "../../../GridThemedComponents/GridThemedIcon";
+import {
+  ControlChangeIcon,
+  GridThemedIcon,
+} from "../../../GridThemedComponents/GridThemedIcon";
 import { BodyText, Label } from "../../../Typography";
 import { ControlChangeSettingsPanelProps } from "./ccSettings/ControlChangeSettingsPanel";
-import { IconWithTitle, useGetFormattedIconName } from "./ccSettings/IconWithTitle";
+import {
+  IconWithTitle,
+  useGetFormattedIconName,
+} from "./ccSettings/IconWithTitle";
 import {
   getControlChangeDirection,
   useControlChangeIndexController,
 } from "./useControlChangeIndexController";
 
-export const ControlChangeIconSettings = ({ index }: ControlChangeSettingsPanelProps) => {
+export const ControlChangeIconSettings = ({
+  index,
+}: ControlChangeSettingsPanelProps) => {
   const { icon } = useControlChangeIndexController({ index });
   const [iconDialogOpen, setIconDialogOpen] = React.useState(false);
 
@@ -57,15 +68,23 @@ interface IconSelectDialogProps {
   setDialogVisible(dialogVisible: boolean): void;
 }
 
-const IconSelectDialog = ({ index, dialogVisible, setDialogVisible }: IconSelectDialogProps) => {
+const IconSelectDialog = ({
+  index,
+  dialogVisible,
+  setDialogVisible,
+}: IconSelectDialogProps) => {
   const currentGridElementState = useGridElementAtIndex(index);
 
   const iconNameState = currentGridElementState.controlChangeState.iconName;
-  const xAxisControlIndexState = currentGridElementState.controlChangeState.xAxisControlIndex;
-  const yAxisControlIndexState = currentGridElementState.controlChangeState.yAxisControlIndex;
+  const xAxisControlIndexState =
+    currentGridElementState.controlChangeState.xAxisControlIndex;
+  const yAxisControlIndexState =
+    currentGridElementState.controlChangeState.yAxisControlIndex;
 
   const allDirectionalIcons: string[] =
-    iconNames[getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)];
+    iconNames[
+      getControlChangeDirection(xAxisControlIndexState, yAxisControlIndexState)
+    ];
   const directionalIconRows = getIconNameRows(iconsPerRow, allDirectionalIcons);
   const generalIconRows = getGeneralIconNameRows(iconsPerRow);
 
@@ -86,11 +105,16 @@ const IconSelectDialog = ({ index, dialogVisible, setDialogVisible }: IconSelect
         index={index}
       />
 
-      <ScrollView style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}>
+      <ScrollView
+        style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}
+      >
         <Label>Directional Icons</Label>
         <View style={{ flexDirection: "column" }}>
           {directionalIconRows.map((row, i) => (
-            <View style={{ flexDirection: "row", flex: 1 }} key={`icon_row-${i}`}>
+            <View
+              style={{ flexDirection: "row", flex: 1 }}
+              key={`icon_row-${i}`}
+            >
               {row.map((iconName, j) => (
                 <SelectableIconButton
                   index={index}
@@ -106,7 +130,10 @@ const IconSelectDialog = ({ index, dialogVisible, setDialogVisible }: IconSelect
         <Label>General Icons</Label>
         <View style={{ flexDirection: "column" }}>
           {generalIconRows.map((row, i) => (
-            <View style={{ flexDirection: "row", flex: 1 }} key={`icon_row-${i}`}>
+            <View
+              style={{ flexDirection: "row", flex: 1 }}
+              key={`icon_row-${i}`}
+            >
               {row.map((iconName, j) => (
                 <SelectableIconButton
                   index={index}
@@ -146,7 +173,9 @@ const DialogHeaderRow = ({
       <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
         <View style={{ flexDirection: "column" }}>
           <Label>{`Selected:  `}</Label>
-          <BodyText style={{ color: mainColor }}>{getFormattedIconName(selectedIconName)}</BodyText>
+          <BodyText style={{ color: mainColor }}>
+            {getFormattedIconName(selectedIconName)}
+          </BodyText>
         </View>
         <View style={{ flex: 1, alignItems: "center" }}>
           <ControlChangeIcon name={selectedIconName} index={index} />
@@ -179,7 +208,9 @@ const SelectableIconButton = ({
   const dispatch = useAppDispatch();
   const borderColor = useCurrentGridElementPresetColors(index).highlightColor;
   const iconTouchHandler = (name: string) => () => {
-    dispatch(setGridElementControlChangeIconString({ index, iconString: name }));
+    dispatch(
+      setGridElementControlChangeIconString({ index, iconString: name }),
+    );
   };
 
   if (!iconName) {

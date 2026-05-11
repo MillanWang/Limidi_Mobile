@@ -39,7 +39,12 @@ export const FirstLaunchModal = () => {
   if (!visible) return null;
 
   return (
-    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      statusBarTranslucent
+    >
       <View style={styles.overlay}>
         <View style={styles.content}>
           <Heading style={styles.title}>Welcome to LiMIDI</Heading>
@@ -48,10 +53,15 @@ export const FirstLaunchModal = () => {
             LiMIDI turns your device into a customizable MIDI controller
           </BodyText>
 
-          <ButtetPoint>Connect to LiMIDI Desktop to send MIDI signals to your DAW</ButtetPoint>
-          <ButtetPoint>Use the grid cells to send MIDI notes and control changes</ButtetPoint>
           <ButtetPoint>
-            Open the settings to customize notes, control changes, scales, colors, and layout
+            Connect to LiMIDI Desktop to send MIDI signals to your DAW
+          </ButtetPoint>
+          <ButtetPoint>
+            Use the grid cells to send MIDI notes and control changes
+          </ButtetPoint>
+          <ButtetPoint>
+            Open the settings to customize notes, control changes, scales,
+            colors, and layout
           </ButtetPoint>
 
           <GridThemedButton onPress={handleDismiss} style={{ marginTop: 24 }}>

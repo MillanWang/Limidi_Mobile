@@ -17,7 +17,10 @@ export const useGridCcIconSize = () => {
   return useMemo(() => {
     const elementSmallestDimension = Math.min(elementWidth, elementHeight);
     const elementBasedIconSize = Math.floor(elementSmallestDimension * 0.2);
-    return Math.max(DEFAULT_ICON_MIN_SIZE, Math.min(DEFAULT_ICON_MAX_SIZE, elementBasedIconSize));
+    return Math.max(
+      DEFAULT_ICON_MIN_SIZE,
+      Math.min(DEFAULT_ICON_MAX_SIZE, elementBasedIconSize),
+    );
   }, [elementWidth, elementHeight]);
 };
 
@@ -29,7 +32,9 @@ export const GridThemedIcon = (
       ? useCurrentGridElementPresetColors(props.index)
       : useCurrentGridPresetColors();
 
-  const color = props.color ?? (props.invert ? gridTheme.primaryColor : gridTheme.highlightColor);
+  const color =
+    props.color ??
+    (props.invert ? gridTheme.primaryColor : gridTheme.highlightColor);
 
   return <Icon color={color} {...props} />;
 };
