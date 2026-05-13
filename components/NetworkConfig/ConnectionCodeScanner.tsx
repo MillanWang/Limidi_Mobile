@@ -57,22 +57,26 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
   }
 
   return (
-    <View style={{ height: "100%" }}>
+    <View style={styles.scannerRoot}>
       <CameraView
         onBarcodeScanned={handleBarCodeScanned}
-        style={{ ...StyleSheet.absoluteFillObject }}
+        style={StyleSheet.absoluteFillObject}
         barcodeScannerSettings={{
           barcodeTypes: ["qr"],
         }}
       />
-      <View style={{ display: "flex", flexDirection: "row" }}>
-        {hasScanError && <InvalidScanMessage />}
+      <View style={styles.messageFooter} pointerEvents="box-none">
+        <View style={styles.footerContent}>
+          <BodyText style={styles.instructionText}>
+            Scan the QR code in the LiMIDI Desktop app on your Mac.
+          </BodyText>
+          <View style={styles.invalidScanSlot}>{hasScanError ? <InvalidScanMessage /> : null}</View>
+        </View>
       </View>
     </View>
   );
 }
 
-const BackIcon = () => <StyledIcon name="arrow-back-outline" />;
 const CameraIcon = () => <StyledIcon name="camera-outline" />;
 
 const useCameraPermissions = () => {
@@ -95,18 +99,39 @@ const useCameraPermissions = () => {
   return { hasPermission, canAskAgain, getCameraPermissions };
 };
 
+const styles = StyleSheet.create({
+  scannerRoot: {
+    flex: 1,
+  },
+  messageFooter: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: theme.color.background,
+    justifyContent: "center",
+  },
+  footerContent: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    gap: 10,
+    alignItems: "center",
+  },
+  instructionText: {
+    textAlign: "center",
+  },
+  /** Keeps footer height stable so the camera preview area covered by this overlay does not grow when an error appears. */
+  invalidScanSlot: {
+    minHeight: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
+});
+
 const InvalidScanMessage = () => {
   return (
-    <View
-      style={{
-        flexDirection: "row",
-        gap: 8,
-        alignItems: "center",
-        justifyContent: "center",
-        flex: 1,
-        backgroundColor: theme.color.background,
-      }}
-    >
+    <View style={invalidScanStyles.row}>
       <Icon
         name="alert-circle"
         type="ionicon"
@@ -118,3 +143,13 @@ const InvalidScanMessage = () => {
     </View>
   );
 };
+
+const invalidScanStyles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    gap: 8,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 4,
+  },
+});
