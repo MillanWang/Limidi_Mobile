@@ -123,7 +123,7 @@ const MidiTypeIcon = (props: { index: number; isMidiNote: boolean }) => {
     <GridThemedIcon
       index={props.index}
       style={{ marginRight: 4 }}
-      type={props.isMidiNote ? "material-community" : "feather"}
+      type={props.isMidiNote ? "material-design" : "feather"}
       name={props.isMidiNote ? "piano" : "sliders"}
     />
   );

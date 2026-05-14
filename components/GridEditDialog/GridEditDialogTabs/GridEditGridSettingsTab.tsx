@@ -23,7 +23,7 @@ export function GridEditGridSettingsTab() {
             flex
           >
             <GridThemedIcon
-              type="material-community"
+              type="material-design"
               name="music"
               style={{ marginRight: 4 }}
             />
@@ -35,7 +35,7 @@ export function GridEditGridSettingsTab() {
             flex
           >
             <GridThemedIcon
-              type="material-community"
+              type="material-design"
               name="speedometer"
               style={{ marginRight: 4 }}
             />

@@ -58,7 +58,7 @@ const GridElementEditButtonIconRow = (props: {
       }}
     >
       {isMidiNote ? (
-        <Icon color={color} type="material-community" name={"piano"} />
+        <Icon color={color} type="material-design" name={"piano"} />
       ) : (
         <Icon color={color} type="feather" name={"sliders"} />
       )}

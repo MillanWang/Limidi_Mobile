@@ -30,7 +30,7 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
         >
           <GridThemedIcon
             index={index}
-            type="material-community"
+            type="material-design"
             name={"piano"}
             style={{ marginRight: 4 }}
           />
