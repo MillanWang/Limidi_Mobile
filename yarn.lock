@@ -1669,6 +1669,13 @@
   dependencies:
     "@react-native-vector-icons/common" "^13.0.0"
 
+"@react-native-vector-icons/material-icons@^13.1.1":
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/@react-native-vector-icons/material-icons/-/material-icons-13.1.1.tgz#cb4ae4ffbde0fbcda3116e5b3a5126c475d5c696"
+  integrity sha512-u13/5ITff+qGBZBnv3QQ+vLNCNgJzxUfXnMnZDK1rHgpUjH6lex3tSORX5XLYbCuaHDW7WFF0cqzoaephYZApg==
+  dependencies:
+    "@react-native-vector-icons/common" "^13.0.0"
+
 "@react-native/assets-registry@0.81.5":
   version "0.81.5"
   resolved "https://registry.yarnpkg.com/@react-native/assets-registry/-/assets-registry-0.81.5.tgz#d22c924fa6f6d4a463c5af34ce91f38756c0fa7d"
@@ -2985,9 +2992,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.5.328:
-  version "1.5.355"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.355.tgz#ea6acfbb850595c54814125a3906336edd619856"
-  integrity sha512-LUPZhKzZPYSPme1jEYohpkA+ybYCJztr1quAdBd7E7h3+VOBVcKkwwtBJu41nrjawrRzfb8mtMfzWozoaK0ZIQ==
+  version "1.5.356"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.5.356.tgz#6de16c06bc84869cab8bdd6e7b9020ff5bf31389"
+  integrity sha512-9NgFd7m5t5MCJ5rUSjJITUXAH9mEGlrlofnMf4YEr+pz6JlP7cWmTAH+JFmbPnaSW8koVTkuW7pacORWAnA5Yw==
 
 emittery@^0.13.1:
   version "0.13.1"
