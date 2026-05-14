@@ -45,12 +45,23 @@ export const NetworkErrorIndicator = ({
     return "wifi-off";
   }, [status]);
 
+  const a11yLabel =
+    status === WebSocketStatus.Connected
+      ? "Connected to desktop. Tap to reconnect."
+      : status === WebSocketStatus.Connecting
+        ? "Connecting to desktop."
+        : "Disconnected from desktop. Tap to retry.";
+
   if (!isButtonVisible) {
     return null;
   }
 
   return (
-    <TouchableOpacity onPress={tryConnection}>
+    <TouchableOpacity
+      onPress={tryConnection}
+      accessibilityRole="button"
+      accessibilityLabel={a11yLabel}
+    >
       <Icon size={24} name={iconName} color={color} {...iconProps} />
     </TouchableOpacity>
   );

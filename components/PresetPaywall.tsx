@@ -5,8 +5,10 @@ import { theme } from "../constants/theme";
 import { GridThemedButton } from "./GridThemedComponents/GridThemedButton";
 import { BodyText, Heading } from "./Typography";
 
-const APP_STORE_URL =
-  "https://apps.apple.com/app/limidi/TODO_GET_FULL_VERSION_APP_URL";
+// Set this once the Pro app is live on the App Store, e.g.
+// "https://apps.apple.com/app/id1234567890". The button is hidden when null
+// so we never ship a broken link to App Review.
+const APP_STORE_URL: string | null = null;
 
 export const PresetPaywall = () => {
   return (
@@ -32,9 +34,11 @@ export const PresetPaywall = () => {
         </View>
       </View>
 
-      <GridThemedButton onPress={() => Linking.openURL(APP_STORE_URL)}>
-        <BodyText>Get full version</BodyText>
-      </GridThemedButton>
+      {APP_STORE_URL && (
+        <GridThemedButton onPress={() => Linking.openURL(APP_STORE_URL)}>
+          <BodyText>Get full version</BodyText>
+        </GridThemedButton>
+      )}
     </View>
   );
 };

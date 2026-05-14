@@ -36,10 +36,17 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [status, setStatus] = useState<WebSocketStatus>(
     WebSocketStatus.Connecting,
   );
+  // Mirrors `status` so the message hot path can check it without
+  // triggering a React setState when nothing has changed.
+  const statusRef = useRef<WebSocketStatus>(WebSocketStatus.Connecting);
+  const updateStatus = useCallback((next: WebSocketStatus) => {
+    if (statusRef.current === next) return;
+    statusRef.current = next;
+    setStatus(next);
+  }, []);
 
   const { navigateTo } = usePageContext();
 
-  console.log("status :", status);
   const baseAddress = useAppSelector(
     (state) =>
       state.httpCommunicationsReducer.httpCommunicationInfo.baseAddress,
@@ -48,59 +55,76 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   const connectWebSocket = useCallback(
     (attempt: number) => {
-      // Close existing connection if any
+      // Detach handlers on the previous socket before closing so its
+      // asynchronous close/error events can't overwrite the new socket's
+      // status — this was causing the "disconnected" icon to flash on
+      // top of a live connection.
       if (wsRef.current) {
+        wsRef.current.onopen = null;
+        wsRef.current.onerror = null;
+        wsRef.current.onclose = null;
         wsRef.current.close();
       }
 
       const ws = new WebSocket(url);
       wsRef.current = ws;
 
-      setStatus(WebSocketStatus.Connecting);
+      updateStatus(WebSocketStatus.Connecting);
 
       ws.onopen = () => {
+        if (wsRef.current !== ws) return;
         setConnectionAttempts(0);
-        setStatus(WebSocketStatus.Connected);
-        console.log("WebSocket connected:", url);
+        updateStatus(WebSocketStatus.Connected);
       };
 
       ws.onerror = (err) => {
-        setStatus(WebSocketStatus.Error);
-        console.error("WebSocket error:", err);
+        if (wsRef.current !== ws) return;
+        updateStatus(WebSocketStatus.Error);
+        if (__DEV__) console.error("WebSocket error:", err);
       };
 
       ws.onclose = () => {
-        setStatus(WebSocketStatus.Disconnected);
-        console.log("WebSocket closed");
+        if (wsRef.current !== ws) return;
+        updateStatus(WebSocketStatus.Disconnected);
       };
 
-      console.log("failedAttempts :", attempt);
       setConnectionAttempts((attempt) => attempt + 1);
       if (attempt >= MAX_CONNECTION_ATTEMPTS) {
         navigateTo(Page.NetworkSettings);
       }
     },
-    [url, setConnectionAttempts],
+    [url, setConnectionAttempts, updateStatus],
   );
-  console.log("url :", url);
 
   useEffect(() => {
     connectWebSocket(0);
 
     return () => {
       if (wsRef.current) {
+        wsRef.current.onopen = null;
+        wsRef.current.onerror = null;
+        wsRef.current.onclose = null;
         wsRef.current.close();
       }
     };
   }, [connectWebSocket]);
 
-  const sendMessage = useCallback((message: Uint8Array<ArrayBufferLike>) => {
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(message);
-    } else {
-      console.warn("WebSocket not connected. Cannot send message.");
-    }
-  }, []);
+  const sendMessage = useCallback(
+    (message: Uint8Array<ArrayBufferLike>) => {
+      const ws = wsRef.current;
+      if (ws?.readyState === WebSocket.OPEN) {
+        ws.send(message);
+        // Cheap correction: ref compare in the steady-state hot path is
+        // free; setState only runs if a stale event left status wrong.
+        if (statusRef.current !== WebSocketStatus.Connected) {
+          updateStatus(WebSocketStatus.Connected);
+        }
+      } else if (__DEV__) {
+        console.warn("WebSocket not connected. Cannot send message.");
+      }
+    },
+    [updateStatus],
+  );
 
   return (
     <WebSocketContext.Provider

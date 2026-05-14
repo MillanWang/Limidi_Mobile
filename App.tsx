@@ -3,6 +3,7 @@ import React from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import { FirstLaunchModal } from "./components/FirstLaunchModal";
 import useCachedResources from "./hooks/useCachedResources";
 import { PageProvider } from "./hooks/usePageContext";
@@ -12,15 +13,13 @@ import GridScreen from "./screens/GridScreen";
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
-  // useEffect(() => {
-  //   AsyncStorage.clear();
-  // }, []);
 
   if (!isLoadingComplete) {
     return null;
-  } else {
-    return (
-      <SafeAreaProvider>
+  }
+  return (
+    <SafeAreaProvider>
+      <ErrorBoundary>
         <Provider store={store}>
           <PersistGate persistor={persistor}>
             <PageProvider>
@@ -32,7 +31,7 @@ export default function App() {
             </PageProvider>
           </PersistGate>
         </Provider>
-      </SafeAreaProvider>
-    );
-  }
+      </ErrorBoundary>
+    </SafeAreaProvider>
+  );
 }

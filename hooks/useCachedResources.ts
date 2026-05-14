@@ -18,8 +18,7 @@ export default function useCachedResources() {
           "space-mono": require("../assets/fonts/SpaceMono-Regular.ttf"),
         });
       } catch (e) {
-        // We might want to provide this error information to an error reporting service
-        console.warn(e);
+        if (__DEV__) console.warn(e);
       } finally {
         setLoadingComplete(true);
         SplashScreen.hideAsync();

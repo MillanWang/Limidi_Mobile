@@ -70,7 +70,9 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
           <BodyText style={styles.instructionText}>
             Scan the QR code in the LiMIDI Desktop app on your Mac.
           </BodyText>
-          <View style={styles.invalidScanSlot}>{hasScanError ? <InvalidScanMessage /> : null}</View>
+          <View style={styles.invalidScanSlot}>
+            {hasScanError ? <InvalidScanMessage /> : null}
+          </View>
         </View>
       </View>
     </View>

@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "limidi",
     "newArchEnabled": true,
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -19,18 +19,28 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.LiMIDI"
+      "bundleIdentifier": "com.millanwang.limidi",
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSCameraUsageDescription": "LiMIDI uses the camera to scan the QR code shown by the LiMIDI desktop app so your phone can connect to it.",
+        "NSLocalNetworkUsageDescription": "LiMIDI connects to the LiMIDI desktop app on your local network to send MIDI messages.",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false,
+          "NSAllowsLocalNetworking": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.LiMIDI"
+      "package": "com.millanwang.limidi"
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": ["expo-asset", "expo-font", "expo-web-browser"]
+    "plugins": ["expo-asset", "expo-camera", "expo-font", "expo-web-browser"]
   }
 }
