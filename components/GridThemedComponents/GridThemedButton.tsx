@@ -1,5 +1,5 @@
 import { Button, ButtonProps } from "@rneui/themed";
-import React from "react";
+import React, { ReactNode } from "react";
 import {
   useCurrentGridElementPresetColors,
   useCurrentGridPresetColors,
@@ -22,9 +22,14 @@ export const GridThemedButton = (
     ? {}
     : { borderColor: highlightColor, borderWidth: 1, borderRadius: 0 };
 
+  // RNE v5's ButtonProps inherits PressableProps where children may be a
+  // function-as-child; the underlying Button only accepts a ReactNode, so
+  // we narrow before forwarding.
+  const { children, ...rest } = props;
+
   return (
     <Button
-      {...props}
+      {...rest}
       titleStyle={{
         color: highlightColor,
         ...(props.titleStyle as any),
@@ -41,6 +46,8 @@ export const GridThemedButton = (
         ...(props.flex ? { flex: 1 } : {}),
         ...(props.containerStyle as any),
       }}
-    />
+    >
+      {children as ReactNode}
+    </Button>
   );
 };

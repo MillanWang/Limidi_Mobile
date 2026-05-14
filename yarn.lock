@@ -1840,22 +1840,20 @@
     redux-thunk "^2.4.2"
     reselect "^4.1.8"
 
-"@rneui/base@^4.0.0-rc.8":
-  version "4.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@rneui/base/-/base-4.0.0-rc.8.tgz#6fbf9b3049a9207d47c3c53b70c0f68f3627a170"
-  integrity sha512-teJ6bUki+TQ+r+abefEWYb2wRUaMgRhp1oxtKa84UfDqTiCF0ItyJ0L8FhMb6AAkTOkWC34301T7j3H4df6ueA==
+"@rneui/base@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@rneui/base/-/base-5.0.0.tgz#48b544cf89036f096874c6e450ed794fa22389f0"
+  integrity sha512-8nXCybRiLExmQlbTtCR5NEQudfTXTEkpoLBXinnxtBHPIF5L8YEdtuX00GlFoT/iU1h58AOl5koDMy35qSxgFQ==
   dependencies:
-    "@types/react-native-vector-icons" "^6.4.10"
     color "^3.2.1"
     deepmerge "^4.2.2"
     hoist-non-react-statics "^3.3.2"
-    react-native-ratings "^8.1.0"
     react-native-size-matters "^0.4.0"
 
-"@rneui/themed@^4.0.0-rc.8":
-  version "4.0.0-rc.8"
-  resolved "https://registry.yarnpkg.com/@rneui/themed/-/themed-4.0.0-rc.8.tgz#5c0e1aaa3d190ead88936693c5cef50ec404cd05"
-  integrity sha512-8L/XOrL9OK/r+/iBLvx63TbIdZOXF8SIjN9eArMYm6kRbMr8m4BitXllDN8nBhBsSPNYvL6EAgjk+i2MfY4sBA==
+"@rneui/themed@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@rneui/themed/-/themed-5.0.0.tgz#e08afdf3cca88e54319955e31f89b89c91f63993"
+  integrity sha512-bNmJLOnXqyot7+mN45Y9yNoANfGJAstnkT8J9W8pSMyDMd5yYxDhyYkDfTZOLuBAW7znNm0bPh6nJC64zMpE+Q==
 
 "@sinclair/typebox@^0.27.8":
   version "0.27.10"
@@ -1976,7 +1974,7 @@
   dependencies:
     undici-types ">=7.24.0 <7.24.7"
 
-"@types/react-native-vector-icons@^6.4.10":
+"@types/react-native-vector-icons@^6.4.18":
   version "6.4.18"
   resolved "https://registry.yarnpkg.com/@types/react-native-vector-icons/-/react-native-vector-icons-6.4.18.tgz#18671c617b9d0958747bc959903470dde91a8c79"
   integrity sha512-YGlNWb+k5laTBHd7+uZowB9DpIK3SXUneZqAiKQaj1jnJCZM0x71GDim5JCTMi4IFkhc9m8H/Gm28T5BjyivUw==
@@ -4406,7 +4404,7 @@ lodash.throttle@^4.1.1:
   resolved "https://registry.yarnpkg.com/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
   integrity sha512-wIkUCfVKpVsWo3JSZlc+8MB5it+2AN5W8J7YVMST30UrvcQNZ1Okbj+rbVniijTWE6FGYy4XJq/rHkas8qJMLQ==
 
-lodash@^4.17.15, lodash@^4.17.19:
+lodash@^4.17.19:
   version "4.18.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.18.1.tgz#ff2b66c1f6326d59513de2407bf881439812771c"
   integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
@@ -5529,13 +5527,6 @@ react-native-is-edge-to-edge@^1.2.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.3.1.tgz#feb9a6a8faf0874298947edd556e5af22044e139"
   integrity sha512-NIXU/iT5+ORyCc7p0z2nnlkouYKX425vuU1OEm6bMMtWWR9yvb+Xg5AZmImTKoF9abxCPqrKC3rOZsKzUYgYZA==
-
-react-native-ratings@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-ratings/-/react-native-ratings-8.1.0.tgz#3fa9ad29128dc3a88e59518ba151e61c59dd0647"
-  integrity sha512-+QOJ4G3NjVkI1D+tk4EGx1dCvVfbD2nQdkrj9cXrcAoEiwmbep4z4bZbCKmWMpQ5h2dqbxABU8/eBnbDmvAc3g==
-  dependencies:
-    lodash "^4.17.15"
 
 react-native-reanimated@~4.1.1:
   version "4.1.7"

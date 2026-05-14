@@ -22,6 +22,5 @@
     - Set real `APP_STORE_URL` in `components/PresetPaywall.tsx` once the Pro app is live on the App Store (currently `null`, which hides the upgrade button).
     - Add `ios/LiMIDI/PrivacyInfo.xcprivacy` to the Xcode target — open `ios/LiMIDI.xcworkspace`, right-click the LiMIDI group → "Add Files to LiMIDI…", select the file, ensure the LiMIDI target is checked. Without this it won't ship in the bundle.
     - Re-export `assets/images/icon.png` from source as opaque 24-bit sRGB (currently 8-bit indexed colormap).
-    - Move `@rneui/themed` off the `4.0.0-rc.8` release candidate once a stable release is available.
     - Resolve remaining TODOs: `components/NetworkConfig/AddressValidationIcon.tsx:17` (error color), `components/GridEditDialog/GridEditDialogTabs/FullGridOperationButtons.tsx:26` (destructive action needs confirmation modal), `services/ScaleService.ts:48` (note-number ceiling math).
     - Accessibility sweep across grid elements and toolbar buttons — add `accessibilityLabel`/`accessibilityRole` to interactive components (`NetworkErrorIndicator` is already done).
