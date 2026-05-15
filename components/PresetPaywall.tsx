@@ -14,7 +14,7 @@ export const PresetPaywall = () => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Heading style={styles.title}>Unlock All Presets</Heading>
+        <Heading style={styles.title}>Unlock all presets</Heading>
 
         <BodyText style={styles.description}>
           Get access to multiple presets to customize your MIDI controller

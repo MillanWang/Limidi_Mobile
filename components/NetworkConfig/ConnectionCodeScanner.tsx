@@ -53,7 +53,7 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
               {...REQUEST_CAMERA_PERMISSION_A11Y}
             >
               <CameraIcon />
-              Request Camera Permission
+              Request camera permission
             </GridThemedButton>
           </View>
         )}

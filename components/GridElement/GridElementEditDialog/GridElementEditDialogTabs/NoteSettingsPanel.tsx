@@ -57,7 +57,7 @@ export function NoteSettingsPanel({ index }: NoteSettingsPanelProps) {
         <ElementVelocityAdjustSlider index={index} />
       </View>
       <View>
-        <Label>Velocity Direction:</Label>
+        <Label>Velocity direction:</Label>
         <VelocityDirectionSelector index={index} />
       </View>
     </>

@@ -45,7 +45,7 @@ export function ScaleRootNoteSelector() {
         Active scale: <Label fontWeight="300">{scale}</Label>
       </Label>
       <Label>
-        Root Note: <Label fontWeight="300">{rootNote}</Label>
+        Root note: <Label fontWeight="300">{rootNote}</Label>
       </Label>
     </>
   );

@@ -91,7 +91,7 @@ const ColorThemeSelector = () => {
           }}
           {...APPLY_COLOR_GLOBALLY_A11Y}
         >
-          Apply Color Globally
+          Apply color globally
         </Button>
 
         <FullGridOperationButtons

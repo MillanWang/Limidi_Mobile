@@ -70,7 +70,7 @@ export const FirstLaunchModal = () => {
             style={{ marginTop: 24 }}
             {...DISMISS_WELCOME_A11Y}
           >
-            <BodyText>Get Started</BodyText>
+            <BodyText>Get started</BodyText>
           </GridThemedButton>
         </View>
       </View>

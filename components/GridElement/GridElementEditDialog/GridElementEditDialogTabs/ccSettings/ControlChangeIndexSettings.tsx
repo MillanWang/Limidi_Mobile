@@ -84,14 +84,14 @@ export const ControlChangeIndexSettings = ({
 
       {showHorizontalControlChangeIndexSelector && (
         <View>
-          <Label>{`${isXY ? "Horizontal " : ""}MIDI CC Index:`}</Label>
+          <Label>{`${isXY ? "Horizontal " : ""}MIDI CC index:`}</Label>
           <ControlChangeIndexSelector index={index} isVertical={false} />
         </View>
       )}
 
       {showVerticalControlChangeIndexSelector && (
         <View>
-          <Label>{`${isXY ? "Vertical " : ""}MIDI CC Index:`}</Label>
+          <Label>{`${isXY ? "Vertical " : ""}MIDI CC index:`}</Label>
           <ControlChangeIndexSelector index={index} isVertical />
         </View>
       )}

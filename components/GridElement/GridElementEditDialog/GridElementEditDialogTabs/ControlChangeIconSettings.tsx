@@ -115,7 +115,7 @@ const IconSelectDialog = ({
         <ScrollView
           style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}
         >
-          <Label>Directional Icons</Label>
+          <Label>Directional icons</Label>
           <View style={{ flexDirection: "column" }}>
             {directionalIconRows.map((row, i) => (
               <View
@@ -134,7 +134,7 @@ const IconSelectDialog = ({
             ))}
           </View>
 
-          <Label>General Icons</Label>
+          <Label>General icons</Label>
           <View style={{ flexDirection: "column" }}>
             {generalIconRows.map((row, i) => (
               <View

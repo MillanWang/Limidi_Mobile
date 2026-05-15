@@ -108,7 +108,7 @@ export function GridElementEditStyleSettingsTab({
           }}
           {...APPLY_COLOR_TO_PAD_A11Y}
         >
-          Apply Color
+          Apply color
         </Button>
 
         <GridThemedButton

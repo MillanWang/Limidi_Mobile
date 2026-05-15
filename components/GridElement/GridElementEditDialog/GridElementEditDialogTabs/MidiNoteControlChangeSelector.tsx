@@ -33,7 +33,7 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
             name={"piano"}
             style={{ marginRight: 4 }}
           />
-          MIDI Note
+          MIDI note
         </GridThemedButton>
         <GridThemedButton
           index={index}
@@ -48,7 +48,7 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
             type="feather"
             style={{ marginRight: 4 }}
           />
-          Control Change
+          Control change
         </GridThemedButton>
       </View>
     </View>

@@ -18,7 +18,7 @@ export const GlobalVelocityAdjustSlider = () => {
 
   return (
     <View style={styles.container}>
-      <Label style={{ marginBottom: 8 }}>Global Velocity Range</Label>
+      <Label style={{ marginBottom: 8 }}>Global velocity range</Label>
       <VelocityRangeSlider
         floor={globalVelocity.floor}
         ceiling={globalVelocity.ceiling}

@@ -46,7 +46,7 @@ export const FullGridOperationButtons = (props: {
           type="ionicon"
           style={{ marginRight: 4 }}
         />
-        Unlock All
+        Unlock all
       </GridThemedButton>
       <GridThemedButton
         onPress={confirmResetAll}
@@ -57,7 +57,7 @@ export const FullGridOperationButtons = (props: {
           type={"ionicon"}
           style={{ marginRight: 4 }}
         />
-        Reset All
+        Reset all
       </GridThemedButton>
     </View>
   );
