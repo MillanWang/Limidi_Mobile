@@ -188,7 +188,11 @@ const styles = StyleSheet.create({
     flex: 2,
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
+    // Half-width on each element so neighbouring borders sum to a full
+    // stroke. With each side contributing its own colour, mismatched
+    // neighbours show a split-colour line. The outer perimeter is matched by
+    // the wrapper in GridElementGrid.
+    borderWidth: 0.5,
   },
   gridElementEditView: {
     flexDirection: "row",

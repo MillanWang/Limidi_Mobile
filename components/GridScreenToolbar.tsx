@@ -34,6 +34,7 @@ export function GridScreenToolbar() {
               ? gridTheme.primaryColor
               : gridTheme.highlightColor,
             borderWidth: 1,
+            borderBottomWidth: 0,
             borderRadius: 0,
           }}
         >
@@ -55,6 +56,7 @@ export function GridScreenToolbar() {
             backgroundColor: gridTheme.primaryColor,
             borderColor: gridTheme.highlightColor,
             borderWidth: 1,
+            borderBottomWidth: 0,
             borderRadius: 0,
           }}
         >
