@@ -14,15 +14,15 @@ export function AddressValidationIcon() {
     return <></>;
   }
 
-  const color = theme.color.lightText; // TODO - Error color
-  const labelText = baseAddress === "" ? "Missing" : "Invalid";
+  const isMissing = baseAddress === "";
+  const color = isMissing ? theme.color.warningText : theme.color.errorText;
+  const labelKind = isMissing ? TypographyKind.WARNING : TypographyKind.ERROR;
+  const labelText = isMissing ? "Missing" : "Invalid";
+  const iconName = isMissing ? "warning" : "alert-circle";
   return (
     <>
-      <Icon name="warning" type="ionicon" color={color} />
-      <Label
-        kind={TypographyKind.WARNING}
-        style={{ width: 50, textAlign: "center" }}
-      >
+      <Icon name={iconName} type="ionicon" color={color} />
+      <Label kind={labelKind} style={{ width: 50, textAlign: "center" }}>
         {labelText}
       </Label>
     </>
