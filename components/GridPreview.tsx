@@ -97,6 +97,7 @@ export const GridPreviewSizeSelector = () => {
         disabled={rowCount === MaxGridDimension}
         onPress={() => dispatch(setRowCount(rowCount + 1))}
         isPlus
+        accessibilityTarget="row count"
       />
       <Label style={{ ...styles.rowsLabelText, ...styles.labelText }}>
         Rows: <Label fontWeight="300">{rowCount}</Label>
@@ -104,6 +105,7 @@ export const GridPreviewSizeSelector = () => {
       <IncrementorButton
         disabled={rowCount === 1}
         onPress={() => dispatch(setRowCount(rowCount - 1))}
+        accessibilityTarget="row count"
       />
     </View>
   );
@@ -113,6 +115,7 @@ export const GridPreviewSizeSelector = () => {
       <IncrementorButton
         disabled={columnCount === 1}
         onPress={() => dispatch(setColumnCount(columnCount - 1))}
+        accessibilityTarget="column count"
       />
       <Label style={{ ...styles.columnsLabelText, ...styles.labelText }}>
         Columns: <Label fontWeight="300">{columnCount}</Label>
@@ -121,6 +124,7 @@ export const GridPreviewSizeSelector = () => {
         disabled={columnCount === MaxGridDimension}
         onPress={() => dispatch(setColumnCount(columnCount + 1))}
         isPlus
+        accessibilityTarget="column count"
       />
     </View>
   );

@@ -5,6 +5,7 @@ import {
   arePresetsEqual,
   PRESET_COLOR_LIST,
 } from "../../../constants/ColorPresets";
+import { APPLY_COLOR_GLOBALLY_A11Y } from "../../../hooks/accessibilityHooks";
 import { useCurrentGridPresetColors } from "../../../hooks/useCurrentGridPreset";
 import { usePresetDefault } from "../../../hooks/usePresetDefault";
 import { useScrollToSelected } from "../../../hooks/useScrollToSelected";
@@ -43,17 +44,24 @@ const ColorThemeSelector = () => {
     <View style={styles.colorPresetContainer}>
       <ScrollView ref={scrollViewRef} style={styles.colorPresetSelector}>
         {PRESET_COLOR_LIST.map((preset) => {
+          const isSelected = arePresetsEqual(currentPreset, preset);
+          const isApplied = arePresetsEqual(currentPresetColors, preset);
           return (
             <Button
               buttonStyle={{
                 backgroundColor: preset.primaryColor,
-                borderColor: arePresetsEqual(currentPreset, preset)
+                borderColor: isSelected
                   ? preset.highlightColor
                   : preset.primaryColor,
                 ...styles.colorPresetButton,
               }}
               key={`ColorPreset_${preset.name}`}
               onPress={() => setCurrentPreset(preset)}
+              accessibilityRole="button"
+              accessibilityLabel={`${preset.name} color preset${
+                isApplied ? ", currently applied" : ""
+              }`}
+              accessibilityState={{ selected: isSelected }}
             >
               <BodyText
                 style={{
@@ -63,7 +71,7 @@ const ColorThemeSelector = () => {
               >
                 {preset.name}
               </BodyText>
-              {arePresetsEqual(currentPresetColors, preset) && (
+              {isApplied && (
                 <View style={styles.selectedCheckmarkIcon}>
                   <Icon name="done" color={preset.highlightColor} />
                 </View>
@@ -81,6 +89,7 @@ const ColorThemeSelector = () => {
             borderColor: currentPreset.highlightColor,
             borderWidth: 2,
           }}
+          {...APPLY_COLOR_GLOBALLY_A11Y}
         >
           Apply Color Globally
         </Button>

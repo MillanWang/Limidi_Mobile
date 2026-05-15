@@ -58,6 +58,8 @@ export function NetworkAddressInput() {
         onChangeText={onChangeHandler}
         placeholder={`Ex: ABCDEFGX123`}
         placeholderTextColor={theme.color.errorText}
+        accessibilityLabel="Connection code"
+        accessibilityHint="Enter the code shown in LiMIDI Desktop."
       />
       <Caption>Enter the code shown in LiMIDI Desktop</Caption>
     </View>

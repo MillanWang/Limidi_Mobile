@@ -1,5 +1,9 @@
 import React from "react";
 import { View } from "react-native";
+import {
+  RESET_PRESET_TO_DEFAULTS_A11Y,
+  UNLOCK_ALL_PADS_A11Y,
+} from "../../../hooks/accessibilityHooks";
 import { useAppDispatch } from "../../../redux/hooks";
 import {
   restoreCurrentPresetToDefault,
@@ -14,7 +18,10 @@ export const FullGridOperationButtons = (props: {
   const dispatch = useAppDispatch();
   return (
     <View style={{ gap: 4 }}>
-      <GridThemedButton onPress={() => dispatch(unlockAllGridElements(null))}>
+      <GridThemedButton
+        onPress={() => dispatch(unlockAllGridElements(null))}
+        {...UNLOCK_ALL_PADS_A11Y}
+      >
         <GridThemedIcon
           name={"lock-open"}
           type="ionicon"
@@ -28,6 +35,7 @@ export const FullGridOperationButtons = (props: {
           dispatch(restoreCurrentPresetToDefault(null));
           props.resetCallback();
         }}
+        {...RESET_PRESET_TO_DEFAULTS_A11Y}
       >
         <GridThemedIcon
           name={"sync"}

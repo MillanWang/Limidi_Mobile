@@ -7,6 +7,12 @@ import {
   View,
 } from "react-native";
 import { theme } from "../../../constants/theme";
+import {
+  DISCARD_CHANGES_A11Y,
+  getElementDialogModeTabA11y,
+  getLockButtonA11y,
+  SAVE_AND_CLOSE_PAD_EDITOR_A11Y,
+} from "../../../hooks/accessibilityHooks";
 import { useGridElementAtIndex } from "../../../hooks/useCurrentGridPreset";
 import {
   useIsGridElementDirty,
@@ -52,10 +58,17 @@ export const GridElementEditDialog = ({
   return (
     <Dialog isVisible={dialogVisible} overlayStyle={styles.dialogOverlay}>
       <TouchableWithoutFeedback onPressIn={Keyboard.dismiss}>
-        <View style={styles.dialogTabSelectorContainer}>
+        <View
+          style={styles.dialogTabSelectorContainer}
+          accessibilityViewIsModal
+        >
           <View style={{ flexDirection: "row" }}>
             {isDirty && (
-              <GridThemedButton onPress={resetElement} index={index}>
+              <GridThemedButton
+                onPress={resetElement}
+                index={index}
+                {...DISCARD_CHANGES_A11Y}
+              >
                 <GridThemedIcon
                   name="refresh-outline"
                   type="ionicon"
@@ -64,12 +77,17 @@ export const GridElementEditDialog = ({
               </GridThemedButton>
             )}
             <View style={{ flexDirection: "row", marginLeft: "auto" }}>
-              <GridThemedButton onPress={toggleElementMidiLock} index={index}>
+              <GridThemedButton
+                onPress={toggleElementMidiLock}
+                index={index}
+                {...getLockButtonA11y(isLocked)}
+              >
                 <LockIcon index={index} isLocked={isLocked} />
               </GridThemedButton>
               <GridThemedButton
                 onPress={() => setDialogVisible(false)}
                 index={index}
+                {...SAVE_AND_CLOSE_PAD_EDITOR_A11Y}
               >
                 <SaveIcon index={index} /> Save
               </GridThemedButton>
@@ -82,6 +100,7 @@ export const GridElementEditDialog = ({
               unfocused={tabIndex !== 0}
               onPress={() => setTabIndex(0)}
               flex
+              {...getElementDialogModeTabA11y(true, tabIndex === 0)}
             >
               <MidiTypeIcon index={index} isMidiNote={isMidiNote} />
               {" MIDI"}
@@ -91,6 +110,7 @@ export const GridElementEditDialog = ({
               unfocused={tabIndex !== 1}
               onPress={() => setTabIndex(1)}
               flex
+              {...getElementDialogModeTabA11y(false, tabIndex === 1)}
             >
               <ColorIcon index={index} />
               {" Color"}

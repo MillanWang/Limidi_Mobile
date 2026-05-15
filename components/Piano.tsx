@@ -3,6 +3,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import { DEFAULT, TERMINAL } from "../constants/ColorPresets";
 import { NOTE } from "../constants/MIDI_Notes";
 import { theme } from "../constants/theme";
+import { getPianoKeyA11y } from "../hooks/accessibilityHooks";
 import {
   useCurrentGridElementPresetColors,
   useCurrentGridPresetColors,
@@ -72,6 +73,7 @@ export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
               }),
             }}
             onPress={() => setNoteNumber(currentNoteNumber)}
+            {...getPianoKeyA11y(currentNoteNumber, noteNumber)}
           >
             {accidentalNoteNumbers.includes(noteNumber) &&
               noteNumber === currentNoteNumber && (
@@ -93,6 +95,7 @@ export function Piano({ noteNumber, setNoteNumber, index }: PianoProps) {
                 }),
               }}
               onPress={() => setNoteNumber(currentNoteNumber)}
+              {...getPianoKeyA11y(currentNoteNumber, noteNumber)}
             >
               {noteNumber === currentNoteNumber && (
                 <KeyLabel noteNumber={noteNumber} color={noteLabelColor} />

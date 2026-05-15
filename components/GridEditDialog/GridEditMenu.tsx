@@ -2,6 +2,7 @@ import { Icon } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
+import { getSettingsMenuTabA11y } from "../../hooks/accessibilityHooks";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
 import { GridThemedButton } from "../GridThemedComponents/GridThemedButton";
 import NetworkConfigSettingsTab from "../NetworkConfig/NetworkConfigSettingsTab";
@@ -44,6 +45,7 @@ export const GridEditMenu = () => {
             key={`settingsTab-${i}`}
             unfocused={page !== tab.page}
             flex
+            {...getSettingsMenuTabA11y(tab.name, page === tab.page)}
           >
             <TabIcon {...tab} color={gridTheme.highlightColor} />
             {tab.name}

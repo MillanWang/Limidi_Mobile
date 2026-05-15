@@ -18,6 +18,7 @@ import { useDesktopCommunication } from "../../../hooks/useDesktopCommunication"
 import { useElementSize } from "../../../hooks/useElementSize";
 import { TouchPoint } from "../../../types";
 import { BodyText } from "../../Typography";
+import { useDrumPadAccessibilityProps } from "../../../hooks/accessibilityHooks";
 
 const NOTE_ON = true;
 const NOTE_OFF = false;
@@ -114,10 +115,13 @@ export default function DrumPad({ index }: DrumPadProps) {
     opacityPercent: touch ? getTouchPercent(touch) : 0,
   });
 
+  const a11yProps = useDrumPadAccessibilityProps(index);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <GestureDetector gesture={gesture}>
         <View
+          {...a11yProps}
           style={[
             styles.gridElementBasePressedView,
             { backgroundColor: colorState.highlightColor },

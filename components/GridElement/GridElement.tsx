@@ -17,6 +17,7 @@ import {
   GridThemedIcon,
 } from "../GridThemedComponents/GridThemedIcon";
 import { BodyText, Caption } from "../Typography";
+import { useGridElementEditButtonAccessibilityProps } from "../../hooks/accessibilityHooks";
 import { GridElementEditDialog } from "./GridElementEditDialog/GridElementEditDialog";
 import {
   ControlChange,
@@ -84,6 +85,8 @@ const GridElementEditButton = (props: { index: number }) => {
 
   const isDirty = useIsGridElementDirty(index);
 
+  const a11yProps = useGridElementEditButtonAccessibilityProps(index);
+
   return (
     <>
       <TouchableOpacity
@@ -98,6 +101,7 @@ const GridElementEditButton = (props: { index: number }) => {
           },
         ]}
         onPress={() => setDialogVisible(true)}
+        {...a11yProps}
       >
         <View
           style={{

@@ -11,8 +11,6 @@
   - Add many more color presets
   - Improve color themes for grid icons
   - Audit color themes
-- DESKTOP APP
-  - Styling
 - LAUNCH
   - Phone-sized screen testing and theme fitting
   - Get pro version onto apple app store
@@ -22,4 +20,4 @@
     - Set real `APP_STORE_URL` in `components/PresetPaywall.tsx` once the Pro app is live on the App Store (currently `null`, which hides the upgrade button).
     - Add `ios/LiMIDI/PrivacyInfo.xcprivacy` to the Xcode target — open `ios/LiMIDI.xcworkspace`, right-click the LiMIDI group → "Add Files to LiMIDI…", select the file, ensure the LiMIDI target is checked. Without this it won't ship in the bundle.
     - Resolve remaining TODOs: `components/NetworkConfig/AddressValidationIcon.tsx:17` (error color), `components/GridEditDialog/GridEditDialogTabs/FullGridOperationButtons.tsx:26` (destructive action needs confirmation modal), `services/ScaleService.ts:48` (note-number ceiling math).
-    - Accessibility sweep across grid elements and toolbar buttons — add `accessibilityLabel`/`accessibilityRole` to interactive components (`NetworkErrorIndicator` is already done).
+    - Real-device VoiceOver pass before launch. Untested: whether `DrumPad` and `ControlChange` (raw `<View>` inside `<GestureDetector>`) are actually activatable by VoiceOver — `onAccessibilityTap` wired on `DrumPad`, but `ControlChange` is a draggable surface and may need `accessibilityRole="adjustable"` + `onAccessibilityAction` increment/decrement handlers if VO can't activate it. Also verify dialog focus trapping and that connection-state announcements fire as expected.

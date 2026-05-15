@@ -44,6 +44,7 @@ export const ControlChangeIndexSelector = (props: {
               isPlus={false}
               onPress={indexController.decrement}
               disabled={!canDecrement}
+              accessibilityTarget={`${isVertical ? "vertical" : "horizontal"} CC index`}
             />
           }
           inputStyle={{ color: theme.color.lightText, marginLeft: 8 }}
@@ -63,6 +64,7 @@ export const ControlChangeIndexSelector = (props: {
               isPlus
               onPress={indexController.increment}
               disabled={!canIncrement}
+              accessibilityTarget={`${isVertical ? "vertical" : "horizontal"} CC index`}
             />
           }
         />
@@ -81,6 +83,11 @@ export const ControlChangeIndexSelector = (props: {
               indexController.set(defaultCcIndex);
             }
           }}
+          accessibilityRole="button"
+          accessibilityLabel={`Reset ${
+            isVertical ? "vertical" : "horizontal"
+          } CC index to default (${defaultCcIndex})`}
+          accessibilityState={{ disabled: currentCcIndexIsDefault }}
         >
           <GridThemedIcon
             style={{ opacity: currentCcIndexIsDefault ? 0 : 1, marginRight: 8 }}

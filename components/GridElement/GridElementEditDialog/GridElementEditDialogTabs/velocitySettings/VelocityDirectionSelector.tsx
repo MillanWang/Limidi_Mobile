@@ -1,9 +1,7 @@
 import React from "react";
 import { View } from "react-native";
-import {
-  useCurrentGridElementPresetColors,
-  useGridElementAtIndex,
-} from "../../../../../hooks/useCurrentGridPreset";
+import { getVelocityDirectionA11y } from "../../../../../hooks/accessibilityHooks";
+import { useGridElementAtIndex } from "../../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../../redux/hooks";
 import { setGridElementVelocityIsVertical } from "../../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
@@ -37,6 +35,7 @@ export const VelocityDirectionSelector = ({ index }: { index: number }) => {
           onPress={setVelocityVertical}
           unfocused={!isVertical}
           flex
+          {...getVelocityDirectionA11y(true, isVertical)}
         >
           <GridThemedIcon name="swap-vertical" type="ionicon" index={index} />
           {" Vertical"}
@@ -46,6 +45,7 @@ export const VelocityDirectionSelector = ({ index }: { index: number }) => {
           onPress={setVelocityHorizontal}
           unfocused={isVertical}
           flex
+          {...getVelocityDirectionA11y(false, !isVertical)}
         >
           <GridThemedIcon name="swap-horizontal" type="ionicon" index={index} />
           {" Horizontal"}

@@ -3,6 +3,7 @@ import { Camera, CameraView } from "expo-camera";
 import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
+import { REQUEST_CAMERA_PERMISSION_A11Y } from "../../hooks/accessibilityHooks";
 import { useWebSocketContext } from "../../hooks/useWebSocketContext";
 import { useAppDispatch } from "../../redux/hooks";
 import { setBaseAddress } from "../../redux/slices/HttpCommunicationsSlice";
@@ -46,7 +47,11 @@ export function ConnectionCodeScanner(props: { onCancel: () => void }) {
         </BodyText>
         {canAskAgain && (
           <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
-            <GridThemedButton onPress={getCameraPermissions} borderless>
+            <GridThemedButton
+              onPress={getCameraPermissions}
+              borderless
+              {...REQUEST_CAMERA_PERMISSION_A11Y}
+            >
               <CameraIcon />
               Request Camera Permission
             </GridThemedButton>

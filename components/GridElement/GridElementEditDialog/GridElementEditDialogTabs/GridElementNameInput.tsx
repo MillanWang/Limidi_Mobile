@@ -6,6 +6,7 @@ import {
   isNoteLabelStandard,
 } from "../../../../constants/MIDI_Notes";
 import { theme } from "../../../../constants/theme";
+import { RESET_PAD_NAME_A11Y } from "../../../../hooks/accessibilityHooks";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementName } from "../../../../redux/slices/GridPresetsSlice";
@@ -31,6 +32,7 @@ export const GridElementNameInput = ({ index }: { index: number }) => {
       name="refresh-outline"
       type="ionicon"
       index={index}
+      {...RESET_PAD_NAME_A11Y}
     />
   );
   return (

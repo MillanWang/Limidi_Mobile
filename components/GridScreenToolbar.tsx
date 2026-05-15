@@ -3,6 +3,10 @@ import { Button } from "@rneui/themed";
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { theme } from "../constants/theme";
+import {
+  getPlayButtonA11y,
+  getSettingsButtonA11y,
+} from "../hooks/accessibilityHooks";
 import { useCurrentGridPresetColors } from "../hooks/useCurrentGridPreset";
 import { GridLayoutPresetButtons } from "./GridLayoutPresetButtons";
 import { NetworkErrorIndicator } from "./NetworkConfig/NetworkErrorIndicator";
@@ -21,6 +25,7 @@ export function GridScreenToolbar() {
       <View style={{ flexDirection: "row" }}>
         <Button
           onPress={togglePlayMode}
+          {...getPlayButtonA11y(isPlayMode)}
           style={{ borderRadius: 0 }}
           containerStyle={{ borderRadius: 0 }}
           buttonStyle={{
@@ -43,6 +48,7 @@ export function GridScreenToolbar() {
       {!isPlayMode && (
         <Button
           onPress={toggleSettings}
+          {...getSettingsButtonA11y(isInSettings)}
           style={{ borderRadius: 0 }}
           containerStyle={{ borderRadius: 0 }}
           buttonStyle={{

@@ -1,8 +1,7 @@
 import { Label } from "../../../../Typography";
-import React, { useCallback } from "react";
+import React from "react";
 import { View } from "react-native";
-import { theme } from "../../../../../constants/theme";
-import { useCurrentGridPresetColors } from "../../../../../hooks/useCurrentGridPreset";
+import { getCcDirectionA11y } from "../../../../../hooks/accessibilityHooks";
 import { GridThemedButton } from "../../../../GridThemedComponents/GridThemedButton";
 import { GridThemedIcon } from "../../../../GridThemedComponents/GridThemedIcon";
 import { ControlChangeIndexSelector } from "../ccSettings/ControlChangeIndexSelector";
@@ -16,7 +15,6 @@ export const ControlChangeIndexSettings = ({
   index,
 }: ControlChangeSettingsPanelProps) => {
   const { mode } = useControlChangeIndexController({ index });
-  const gridTheme = useCurrentGridPresetColors();
 
   const unidirectionalButtonList = [
     {
@@ -58,25 +56,29 @@ export const ControlChangeIndexSettings = ({
             flex: 1,
           }}
         >
-          {unidirectionalButtonList.map((element, i) => (
-            <GridThemedButton
-              index={index}
-              unfocused={mode.current !== element.enum}
-              flex
-              titleStyle={{ fontSize: 16 }}
-              onPress={element.onPress}
-              title={element.text}
-              key={`button_${element.text}_${i}`}
-            >
-              <GridThemedIcon
+          {unidirectionalButtonList.map((element, i) => {
+            const isActive = mode.current === element.enum;
+            return (
+              <GridThemedButton
+                key={`button_${element.text}_${i}`}
                 index={index}
-                name={element.iconName}
-                type="ionicon"
-                style={{ marginRight: 4 }}
-              />
-              {element.text}
-            </GridThemedButton>
-          ))}
+                unfocused={!isActive}
+                flex
+                titleStyle={{ fontSize: 16 }}
+                onPress={element.onPress}
+                title={element.text}
+                {...getCcDirectionA11y(element.enum, isActive)}
+              >
+                <GridThemedIcon
+                  index={index}
+                  name={element.iconName}
+                  type="ionicon"
+                  style={{ marginRight: 4 }}
+                />
+                {element.text}
+              </GridThemedButton>
+            );
+          })}
         </View>
       </View>
 

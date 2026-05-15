@@ -17,7 +17,11 @@ import {
   ControlChangeIcon,
   useGridCcIconSize,
 } from "../../GridThemedComponents/GridThemedIcon";
-import { ControlChangeDirection } from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
+import { useControlChangeAccessibilityProps } from "../../../hooks/accessibilityHooks";
+import {
+  ControlChangeDirection,
+  getControlChangeDirection,
+} from "../GridElementEditDialog/GridElementEditDialogTabs/useControlChangeIndexController";
 import { ControlChangeActiveIndicators } from "./ControlChangeActiveIndicators";
 
 const CcDebounceDelay = 50;
@@ -105,10 +109,13 @@ export function ControlChange({ index }: ControlChangeProps) {
     updateTouchPosition({ x, y });
   }, [updateTouchPosition, elementWidth, elementHeight]);
 
+  const a11yProps = useControlChangeAccessibilityProps(index);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <GestureDetector gesture={gesture}>
         <View
+          {...a11yProps}
           style={{
             ...styles.gridElementBasePressedView,
             backgroundColor: colorState.highlightColor,
@@ -325,7 +332,7 @@ export const useCcPersistedProperties = ({ index }: ControlChangeProps) => {
   } = useGridElementAtIndex(index);
 
   const currentControlChangeDirection = useMemo(
-    () => getCcDirection(xAxisControlIndex, yAxisControlIndex),
+    () => getControlChangeDirection(xAxisControlIndex, yAxisControlIndex),
     [xAxisControlIndex, yAxisControlIndex],
   );
 
@@ -410,17 +417,6 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
 });
-
-const getCcDirection = (
-  xAxisControlIndex: number,
-  yAxisControlIndex: number,
-) => {
-  return xAxisControlIndex >= 0 && yAxisControlIndex >= 0
-    ? ControlChangeDirection.XY
-    : xAxisControlIndex >= 0
-      ? ControlChangeDirection.Horizontal
-      : ControlChangeDirection.Vertical;
-};
 
 const getPositionalPercent = (
   touchPosition: number,

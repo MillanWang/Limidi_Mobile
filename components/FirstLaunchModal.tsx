@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, View } from "react-native";
 import { theme } from "../constants/theme";
+import { DISMISS_WELCOME_A11Y } from "../hooks/accessibilityHooks";
 import { GridThemedButton } from "./GridThemedComponents/GridThemedButton";
 import { BodyText, Heading } from "./Typography";
 
@@ -46,7 +47,7 @@ export const FirstLaunchModal = () => {
       statusBarTranslucent
     >
       <View style={styles.overlay}>
-        <View style={styles.content}>
+        <View style={styles.content} accessibilityViewIsModal>
           <Heading style={styles.title}>Welcome to LiMIDI</Heading>
 
           <BodyText style={styles.paragraph}>
@@ -64,7 +65,11 @@ export const FirstLaunchModal = () => {
             colors, and layout
           </ButtetPoint>
 
-          <GridThemedButton onPress={handleDismiss} style={{ marginTop: 24 }}>
+          <GridThemedButton
+            onPress={handleDismiss}
+            style={{ marginTop: 24 }}
+            {...DISMISS_WELCOME_A11Y}
+          >
             <BodyText>Get Started</BodyText>
           </GridThemedButton>
         </View>

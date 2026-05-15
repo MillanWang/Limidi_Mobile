@@ -2,6 +2,7 @@ import { Icon } from "@rneui/themed";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Easing, ScrollView, StyleSheet, View } from "react-native";
 import { theme } from "../../constants/theme";
+import { getNetworkConfigTabA11y } from "../../hooks/accessibilityHooks";
 import {
   useWebSocketContext,
   WebSocketStatus,
@@ -48,6 +49,10 @@ export default function NetworkConfigSettingsTab() {
           onPress={handleScanButtonPress}
           unfocused={scannerState !== NetworkConfigState.Scanning}
           flex
+          {...getNetworkConfigTabA11y(
+            "Scan",
+            scannerState === NetworkConfigState.Scanning,
+          )}
         >
           <QRIcon />
           Scan
@@ -56,6 +61,10 @@ export default function NetworkConfigSettingsTab() {
           onPress={handleManualEntryButtonPress}
           unfocused={scannerState !== NetworkConfigState.ManualEntry}
           flex
+          {...getNetworkConfigTabA11y(
+            "Input",
+            scannerState === NetworkConfigState.ManualEntry,
+          )}
         >
           <StyledIcon name="pencil-outline" />
           Input

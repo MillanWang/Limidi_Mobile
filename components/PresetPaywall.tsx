@@ -1,7 +1,7 @@
 import React from "react";
 import { Linking, StyleSheet, View } from "react-native";
 import { theme } from "../constants/theme";
-
+import { GET_FULL_VERSION_A11Y } from "../hooks/accessibilityHooks";
 import { GridThemedButton } from "./GridThemedComponents/GridThemedButton";
 import { BodyText, Heading } from "./Typography";
 
@@ -35,7 +35,10 @@ export const PresetPaywall = () => {
       </View>
 
       {APP_STORE_URL && (
-        <GridThemedButton onPress={() => Linking.openURL(APP_STORE_URL)}>
+        <GridThemedButton
+          onPress={() => Linking.openURL(APP_STORE_URL)}
+          {...GET_FULL_VERSION_A11Y}
+        >
           <BodyText>Get full version</BodyText>
         </GridThemedButton>
       )}

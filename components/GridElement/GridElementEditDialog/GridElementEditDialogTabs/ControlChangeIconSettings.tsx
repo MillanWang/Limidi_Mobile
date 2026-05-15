@@ -7,6 +7,10 @@ import {
 } from "../../../../constants/IconNames";
 import { theme } from "../../../../constants/theme";
 import {
+  A11Y_HIDDEN,
+  SAVE_CC_ICON_A11Y,
+} from "../../../../hooks/accessibilityHooks";
+import {
   useCurrentGridElementPresetColors,
   useGridElementAtIndex,
 } from "../../../../hooks/useCurrentGridPreset";
@@ -47,6 +51,8 @@ export const ControlChangeIconSettings = ({
           onPress={() => setIconDialogOpen(true)}
           index={index}
           style={{ minWidth: 90 }}
+          accessibilityRole="button"
+          accessibilityLabel={`Change control change icon, currently ${icon.name}`}
         >
           <IconWithTitle name={icon.name} index={index} />
         </GridThemedButton>
@@ -99,53 +105,55 @@ const IconSelectDialog = ({
         borderRadius: 16,
       }}
     >
-      <DialogHeaderRow
-        saveOnPress={() => setDialogVisible(false)}
-        selectedIconName={iconNameState}
-        index={index}
-      />
+      <View accessibilityViewIsModal style={{ flex: 1 }}>
+        <DialogHeaderRow
+          saveOnPress={() => setDialogVisible(false)}
+          selectedIconName={iconNameState}
+          index={index}
+        />
 
-      <ScrollView
-        style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}
-      >
-        <Label>Directional Icons</Label>
-        <View style={{ flexDirection: "column" }}>
-          {directionalIconRows.map((row, i) => (
-            <View
-              style={{ flexDirection: "row", flex: 1 }}
-              key={`icon_row-${i}`}
-            >
-              {row.map((iconName, j) => (
-                <SelectableIconButton
-                  index={index}
-                  iconName={iconName}
-                  isSelected={iconName === iconNameState}
-                  key={`directionalicon_row-${i}_elem-${j}_name-${iconName}`}
-                />
-              ))}
-            </View>
-          ))}
-        </View>
+        <ScrollView
+          style={{ height: 300, paddingRight: 8, paddingTop: 8, marginTop: 4 }}
+        >
+          <Label>Directional Icons</Label>
+          <View style={{ flexDirection: "column" }}>
+            {directionalIconRows.map((row, i) => (
+              <View
+                style={{ flexDirection: "row", flex: 1 }}
+                key={`icon_row-${i}`}
+              >
+                {row.map((iconName, j) => (
+                  <SelectableIconButton
+                    index={index}
+                    iconName={iconName}
+                    isSelected={iconName === iconNameState}
+                    key={`directionalicon_row-${i}_elem-${j}_name-${iconName}`}
+                  />
+                ))}
+              </View>
+            ))}
+          </View>
 
-        <Label>General Icons</Label>
-        <View style={{ flexDirection: "column" }}>
-          {generalIconRows.map((row, i) => (
-            <View
-              style={{ flexDirection: "row", flex: 1 }}
-              key={`icon_row-${i}`}
-            >
-              {row.map((iconName, j) => (
-                <SelectableIconButton
-                  index={index}
-                  iconName={iconName}
-                  isSelected={iconName === iconNameState}
-                  key={`icon_row-${i}_elem-${j}_name-${iconName}`}
-                />
-              ))}
-            </View>
-          ))}
-        </View>
-      </ScrollView>
+          <Label>General Icons</Label>
+          <View style={{ flexDirection: "column" }}>
+            {generalIconRows.map((row, i) => (
+              <View
+                style={{ flexDirection: "row", flex: 1 }}
+                key={`icon_row-${i}`}
+              >
+                {row.map((iconName, j) => (
+                  <SelectableIconButton
+                    index={index}
+                    iconName={iconName}
+                    isSelected={iconName === iconNameState}
+                    key={`icon_row-${i}_elem-${j}_name-${iconName}`}
+                  />
+                ))}
+              </View>
+            ))}
+          </View>
+        </ScrollView>
+      </View>
     </Dialog>
   );
 };
@@ -182,7 +190,11 @@ const DialogHeaderRow = ({
         </View>
       </View>
       <View style={{ flexDirection: "row" }}>
-        <GridThemedButton onPress={saveOnPress} index={index}>
+        <GridThemedButton
+          onPress={saveOnPress}
+          index={index}
+          {...SAVE_CC_ICON_A11Y}
+        >
           <GridThemedIcon
             index={index}
             style={{ marginRight: 4 }}
@@ -214,7 +226,13 @@ const SelectableIconButton = ({
   };
 
   if (!iconName) {
-    return <Button color={"transparent"} containerStyle={{ flex: 1 }} />;
+    return (
+      <Button
+        color={"transparent"}
+        containerStyle={{ flex: 1 }}
+        {...A11Y_HIDDEN}
+      />
+    );
   }
 
   return (
@@ -226,6 +244,9 @@ const SelectableIconButton = ({
         borderWidth: 2,
         borderColor: isSelected ? borderColor : "transparent",
       }}
+      accessibilityRole="button"
+      accessibilityLabel={`Select ${iconName} icon`}
+      accessibilityState={{ selected: isSelected }}
     >
       <IconWithTitle name={iconName} index={index} />
     </Button>

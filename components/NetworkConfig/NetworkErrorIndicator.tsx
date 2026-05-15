@@ -2,6 +2,7 @@ import { Icon, IconProps } from "@rneui/themed";
 import React, { useMemo } from "react";
 import { TouchableOpacity } from "react-native";
 import { theme } from "../../constants/theme";
+import { useNetworkErrorIndicatorAccessibilityProps } from "../../hooks/accessibilityHooks";
 import { useCurrentGridPresetColors } from "../../hooks/useCurrentGridPreset";
 import {
   useWebSocketContext,
@@ -45,23 +46,14 @@ export const NetworkErrorIndicator = ({
     return "wifi-off";
   }, [status]);
 
-  const a11yLabel =
-    status === WebSocketStatus.Connected
-      ? "Connected to desktop. Tap to reconnect."
-      : status === WebSocketStatus.Connecting
-        ? "Connecting to desktop."
-        : "Disconnected from desktop. Tap to retry.";
+  const a11yProps = useNetworkErrorIndicatorAccessibilityProps();
 
   if (!isButtonVisible) {
     return null;
   }
 
   return (
-    <TouchableOpacity
-      onPress={tryConnection}
-      accessibilityRole="button"
-      accessibilityLabel={a11yLabel}
-    >
+    <TouchableOpacity onPress={tryConnection} {...a11yProps}>
       <Icon size={24} name={iconName} color={color} {...iconProps} />
     </TouchableOpacity>
   );

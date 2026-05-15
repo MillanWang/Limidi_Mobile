@@ -6,6 +6,10 @@ import {
   PRESET_COLOR_LIST,
 } from "../../../../constants/ColorPresets";
 import {
+  APPLY_COLOR_TO_PAD_A11Y,
+  RESET_PAD_COLOR_A11Y,
+} from "../../../../hooks/accessibilityHooks";
+import {
   useCurrentGridPresetColors,
   useGridElementAtIndex,
 } from "../../../../hooks/useCurrentGridPreset";
@@ -69,6 +73,11 @@ export function GridElementEditStyleSettingsTab({
               }}
               key={`ColorPreset_${preset.name}_${i}`}
               onPress={() => setCurrentPreset(preset)}
+              accessibilityRole="button"
+              accessibilityLabel={`${preset.name} color preset${
+                isSet ? ", applied" : ""
+              }`}
+              accessibilityState={{ selected: isSelected }}
             >
               <BodyText
                 style={{
@@ -97,6 +106,7 @@ export function GridElementEditStyleSettingsTab({
             borderColor: currentPreset.highlightColor,
             borderWidth: 1,
           }}
+          {...APPLY_COLOR_TO_PAD_A11Y}
         >
           Apply Color
         </Button>
@@ -106,6 +116,7 @@ export function GridElementEditStyleSettingsTab({
             setCurrentPreset(gridColor);
             setColors(gridColor);
           }}
+          {...RESET_PAD_COLOR_A11Y}
         >
           <GridThemedIcon
             name={"sync"}

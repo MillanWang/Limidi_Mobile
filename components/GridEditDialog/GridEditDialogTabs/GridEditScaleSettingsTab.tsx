@@ -80,32 +80,43 @@ export function ScaleSelector() {
     <View style={styles.scaleManagementView}>
       <View style={styles.scaleSelector}>
         <ScrollView ref={scrollViewRef} style={styles.scaleSelectorScrollView}>
-          {scalesArray.map((scalePreset, i) => (
-            <Button
-              buttonStyle={{
-                height: 40,
-                borderColor:
-                  currentScale === scalePreset
+          {scalesArray.map((scalePreset, i) => {
+            const isSelected = currentScale === scalePreset;
+            const isApplied = scalePreset === scale;
+            return (
+              <Button
+                buttonStyle={{
+                  height: 40,
+                  borderColor: isSelected
                     ? gridTheme.highlightColor
                     : gridTheme.primaryColor,
-                borderWidth: 2,
-                backgroundColor: gridTheme.primaryColor,
-              }}
-              key={`ScalePreset_${scalePreset}_${i}`}
-              onPress={() => setCurrentScale(scalePreset)}
-            >
-              <BodyText
-                style={{ marginRight: "auto", color: gridTheme.highlightColor }}
+                  borderWidth: 2,
+                  backgroundColor: gridTheme.primaryColor,
+                }}
+                key={`ScalePreset_${scalePreset}_${i}`}
+                onPress={() => setCurrentScale(scalePreset)}
+                accessibilityRole="button"
+                accessibilityLabel={`${formatScaleName(scalePreset)} scale${
+                  isApplied ? ", currently applied" : ""
+                }`}
+                accessibilityState={{ selected: isSelected }}
               >
-                {scalePreset}
-              </BodyText>
-              {scalePreset === scale && (
-                <View style={{ marginLeft: "auto" }}>
-                  <Icon name="done" color={gridTheme.highlightColor} />
-                </View>
-              )}
-            </Button>
-          ))}
+                <BodyText
+                  style={{
+                    marginRight: "auto",
+                    color: gridTheme.highlightColor,
+                  }}
+                >
+                  {scalePreset}
+                </BodyText>
+                {isApplied && (
+                  <View style={{ marginLeft: "auto" }}>
+                    <Icon name="done" color={gridTheme.highlightColor} />
+                  </View>
+                )}
+              </Button>
+            );
+          })}
           <View style={{ height: 32 }} />
         </ScrollView>
       </View>
@@ -115,6 +126,10 @@ export function ScaleSelector() {
         <GridThemedButton
           onPress={() => dispatch(setScale(currentScale))}
           buttonStyle={{ flexWrap: "wrap" }}
+          accessibilityRole="button"
+          accessibilityLabel={`Apply ${formatScaleName(currentScale)} scale${
+            currentScale !== scale ? ", unsaved" : ""
+          }`}
         >
           Apply scale{currentScale !== scale ? "*" : ""}
         </GridThemedButton>

@@ -1,10 +1,8 @@
-import { Icon } from "@rneui/themed";
 import { Label } from "../../../Typography";
-import React, { useCallback } from "react";
+import React from "react";
 import { StyleSheet, View } from "react-native";
-import { theme } from "../../../../constants/theme";
+import { getMidiModeButtonA11y } from "../../../../hooks/accessibilityHooks";
 import { useGridElementAtIndex } from "../../../../hooks/useCurrentGridPreset";
-import { useCurrentGridPresetColors } from "../../../../hooks/useCurrentGridPreset";
 import { useAppDispatch } from "../../../../redux/hooks";
 import { setGridElementIsMidiNote } from "../../../../redux/slices/GridPresetsSlice";
 import { GridThemedButton } from "../../../GridThemedComponents/GridThemedButton";
@@ -27,6 +25,7 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
           onPress={setElementToMidiNote}
           flex
           unfocused={!isMidiNote}
+          {...getMidiModeButtonA11y(true, isMidiNote)}
         >
           <GridThemedIcon
             index={index}
@@ -41,6 +40,7 @@ export const MidiNoteControlChangeSelector = ({ index }: { index: number }) => {
           onPress={setElementToControlChange}
           flex
           unfocused={isMidiNote}
+          {...getMidiModeButtonA11y(false, !isMidiNote)}
         >
           <GridThemedIcon
             index={index}

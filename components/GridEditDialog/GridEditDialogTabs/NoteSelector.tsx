@@ -40,6 +40,7 @@ export const NoteSelector = ({
             index={index}
             onPress={decreaseOctave}
             disabled={currentOctave === 0}
+            accessibilityTarget="octave"
           />
           <Label style={{ width: 64, marginLeft: 4 }}>
             Octave: <Label fontWeight="300">{currentOctave}</Label>
@@ -49,6 +50,7 @@ export const NoteSelector = ({
             onPress={increaseOctave}
             isPlus
             disabled={currentOctave === 10}
+            accessibilityTarget="octave"
           />
         </View>
       </View>

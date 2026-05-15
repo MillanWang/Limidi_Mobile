@@ -1,6 +1,7 @@
 import { Button } from "@rneui/themed";
 import React from "react";
 import { StyleSheet } from "react-native";
+import { getIncrementorA11y } from "../hooks/accessibilityHooks";
 import {
   useCurrentGridElementPresetColors,
   useCurrentGridPresetColors,
@@ -11,8 +12,10 @@ export const IncrementorButton = (props: {
   isPlus?: boolean;
   disabled?: boolean;
   index?: number;
+  /** Describes what is being incremented, e.g. "octave", "rows". */
+  accessibilityTarget: string;
 }) => {
-  const { onPress, isPlus, disabled, index } = props;
+  const { onPress, isPlus, disabled, index, accessibilityTarget } = props;
   const gridTheme =
     index !== undefined
       ? useCurrentGridElementPresetColors(index)
@@ -35,6 +38,7 @@ export const IncrementorButton = (props: {
       disabledStyle={{ ...styles.gridSizeEditButtonDisabledStyle }}
       titleStyle={titleStyle}
       disabledTitleStyle={titleStyle}
+      {...getIncrementorA11y(accessibilityTarget, !!isPlus, !!disabled)}
     >
       {isPlus ? "+" : "-"}
     </Button>
