@@ -14,7 +14,7 @@ const gridPresetsPersistedReducer = persistReducer(
 );
 
 const httpCommunicationsPersistConfig = {
-  key: "gridPresets",
+  key: "httpCommunications",
   storage: AsyncStorage,
 };
 const httpCommunicationsPersistedReducer = persistReducer(
