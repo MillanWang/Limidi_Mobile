@@ -3,8 +3,6 @@
 ## TODO
 
 - DATA
-  - Emergency backing-store reset upon load failure
-  - Getting the backing store to actually be reliable. Pretty questionable in the current state with occasional resets and things not actually getting persisted
 - SETTINGS
 - SCALES
 - COLOR
