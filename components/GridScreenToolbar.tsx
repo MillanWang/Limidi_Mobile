@@ -1,7 +1,6 @@
 import { Icon } from "@rneui/themed";
-import { Button } from "@rneui/themed";
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { theme } from "../constants/theme";
 import {
   getPlayButtonA11y,
@@ -22,51 +21,30 @@ export function GridScreenToolbar() {
 
   return (
     <View style={styles.headerOptions}>
-      <View style={{ flexDirection: "row" }}>
-        <Button
-          onPress={togglePlayMode}
-          {...getPlayButtonA11y(isPlayMode)}
-          style={{ borderRadius: 0 }}
-          containerStyle={{ borderRadius: 0 }}
-          buttonStyle={{
-            backgroundColor: gridTheme.primaryColor,
-            borderColor: isPlayMode
-              ? gridTheme.primaryColor
-              : gridTheme.highlightColor,
-            borderWidth: 1,
-            borderBottomWidth: 0,
-            borderRadius: 0,
-          }}
-        >
-          <Icon
-            name={isPlayMode ? "construct-outline" : "play"}
-            color={gridTheme.highlightColor}
-            type="ionicon"
-          />
-        </Button>
-      </View>
+      <TouchableOpacity
+        onPress={togglePlayMode}
+        {...getPlayButtonA11y(isPlayMode)}
+        style={styles.iconButton}
+      >
+        <Icon
+          name={isPlayMode ? "construct-outline" : "play"}
+          color={gridTheme.highlightColor}
+          type="ionicon"
+        />
+      </TouchableOpacity>
 
       {!isPlayMode && (
-        <Button
+        <TouchableOpacity
           onPress={toggleSettings}
           {...getSettingsButtonA11y(isInSettings)}
-          style={{ borderRadius: 0 }}
-          containerStyle={{ borderRadius: 0 }}
-          buttonStyle={{
-            backgroundColor: gridTheme.primaryColor,
-            borderColor: gridTheme.highlightColor,
-            borderWidth: 1,
-            borderBottomWidth: 0,
-            borderRadius: 0,
-          }}
+          style={styles.iconButton}
         >
           <Icon
             name={isInSettings ? "grid-outline" : "settings-outline"}
             color={gridTheme.highlightColor}
             type="ionicon"
           />
-          <View style={{ flexDirection: "column" }}></View>
-        </Button>
+        </TouchableOpacity>
       )}
 
       <View style={styles.rightSideIconsContainer}>
@@ -82,6 +60,11 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  iconButton: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingHorizontal: 8,
+  },
   modeTextIndicator: {},
   modalButtonText: {
     color: theme.color.white,
@@ -91,7 +74,6 @@ export const styles = StyleSheet.create({
     color: theme.color.white,
     fontSize: 12,
   },
-
   rightSideIconsContainer: {
     flexDirection: "row",
     justifyContent: "flex-end",
