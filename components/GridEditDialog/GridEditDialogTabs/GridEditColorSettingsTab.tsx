@@ -87,7 +87,7 @@ const ColorThemeSelector = () => {
           buttonStyle={{
             backgroundColor: currentPreset.primaryColor,
             borderColor: currentPreset.highlightColor,
-            borderWidth: 2,
+            borderWidth: 1,
           }}
           {...APPLY_COLOR_GLOBALLY_A11Y}
         >
