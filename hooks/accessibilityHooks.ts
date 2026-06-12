@@ -341,11 +341,6 @@ export const REQUEST_CAMERA_PERMISSION_A11Y = {
   accessibilityLabel: "Request camera permission to scan QR code",
 };
 
-export const GET_FULL_VERSION_A11Y = {
-  accessibilityRole: "link" as const,
-  accessibilityLabel: "Get full version on the App Store",
-};
-
 export const DISMISS_WELCOME_A11Y = {
   accessibilityRole: "button" as const,
   accessibilityLabel: "Dismiss welcome instructions and start using LiMIDI",
